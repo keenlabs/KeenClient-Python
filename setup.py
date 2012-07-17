@@ -9,4 +9,5 @@ setup(name='keen-client',
       author_email='team@keen.io',
       url='https://github.com/keenlabs/KeenClient-Python',
       packages=['keen'],
+      install_requires=['requests']
      )
