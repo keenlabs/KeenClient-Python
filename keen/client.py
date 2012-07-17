@@ -1,5 +1,6 @@
 import json
-from keen import persistence_strategies
+from keen import persistence_strategies, exceptions
+from keen.persistence_strategies import BasePersistenceStrategy
 
 __author__ = 'dkador'
 
@@ -28,12 +29,24 @@ class Event(object):
 class KeenClient(object):
     def __init__(self, project_id, auth_token, persistence_strategy=None):
         super(KeenClient, self).__init__()
-        self.project_id = project_id
-        self.auth_token = auth_token
+
+        # do some validation
+        if not project_id or not isinstance(project_id, basestring):
+            raise exceptions.InvalidProjectIdError(project_id)
+        if not auth_token or not isinstance(auth_token, basestring):
+            raise exceptions.InvalidAuthTokenError(auth_token)
+
+        if persistence_strategy:
+            if not isinstance(persistence_strategy, BasePersistenceStrategy):
+                raise exceptions.InvalidPersistenceStrategyError()
         if not persistence_strategy:
             persistence_strategy = persistence_strategies\
             .DirectPersistenceStrategy(project_id, auth_token)
+
+        self.project_id = project_id
+        self.auth_token = auth_token
         self.persistence_strategy = persistence_strategy
+
 
     def add_event(self, collection_name, event_body, timestamp=None):
         event = Event(self.project_id, collection_name, event_body,
