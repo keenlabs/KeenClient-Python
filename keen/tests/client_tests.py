@@ -1,4 +1,4 @@
-from keen import PersistenceStrategy, exceptions
+from keen import  exceptions, persistence_strategies
 from keen.client import KeenClient
 from keen.tests.base_test_case import BaseTestCase
 
@@ -17,7 +17,7 @@ class ClientTests(BaseTestCase):
                             **kwargs):
             with self.assert_raises(expected_exception) as cm:
                 KeenClient(project_id, auth_token, **kwargs)
-            # try to turn the exception into a string to test the __str__
+                # try to turn the exception into a string to test the __str__
             # method
             self.assert_true(str(cm.exception))
             return cm.exception
@@ -35,12 +35,27 @@ class ClientTests(BaseTestCase):
         negative_helper(exceptions.InvalidAuthTokenError, "project_id", None)
         negative_helper(exceptions.InvalidAuthTokenError, "project_id", "")
 
-        # both persistence strategies should work
+        # test persistence strategies
+
+        # if you don't ask for a specific one, you get the direct strategy
+        client = positive_helper("project_id", "auth_token")
+        self.assert_is_instance(client.persistence_strategy,
+                                persistence_strategies.DirectPersistenceStrategy)
+        # specifying a valid one should work!
         client = positive_helper("project_id", "auth_token",
-                        save_type=PersistenceStrategy.DIRECT)
-        self.assert_equal(PersistenceStrategy.DIRECT,
-                          client.persistence_strategy)
-        positive_helper("project_id", "auth_token",
-                        save_type=PersistenceStrategy.REDIS)
-        self.assert_equal(PersistenceStrategy.REDIS,
-                          client.persistence_strategy)
+                                 persistence_strategy=None)
+        self.assert_is_instance(client.persistence_strategy,
+                                persistence_strategies.DirectPersistenceStrategy)
+        # needs to be an instance of a strategy, not anything else
+        negative_helper(exceptions.InvalidPersistenceStrategyError,
+                        "project_id", "auth_token", persistence_strategy="abc")
+        # needs to be an instance of a strategy, not the class
+        negative_helper(exceptions.InvalidPersistenceStrategyError,
+                        "project_id", "auth_token",
+                        persistence_strategy=persistence_strategies.DirectPersistenceStrategy)
+
+    def test_direct_persistence_strategy(self):
+        project_id = "5004ded1163d66114f000000"
+        auth_token = "2e79c6ec1d0145be8891bf668599c79a"
+        client = KeenClient(project_id, auth_token)
+        client.add_event("python_test", {"hello": "goodbye"})
