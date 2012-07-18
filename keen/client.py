@@ -1,5 +1,6 @@
 import json
 from keen import persistence_strategies, exceptions
+from keen.api import KeenApi
 from keen.persistence_strategies import BasePersistenceStrategy
 
 __author__ = 'dkador'
@@ -40,8 +41,9 @@ class KeenClient(object):
             if not isinstance(persistence_strategy, BasePersistenceStrategy):
                 raise exceptions.InvalidPersistenceStrategyError()
         if not persistence_strategy:
+            keen_api = KeenApi(project_id, auth_token)
             persistence_strategy = persistence_strategies\
-            .DirectPersistenceStrategy(project_id, auth_token)
+            .DirectPersistenceStrategy(keen_api)
 
         self.project_id = project_id
         self.auth_token = auth_token
