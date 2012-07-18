@@ -29,6 +29,10 @@ class DirectPersistenceStrategy(BasePersistenceStrategy):
         self.api = api
 
     def persist(self, event):
+        """ Posts the given event directly to the Keen API.
+
+        :param event: an Event to persist
+        """
         self.api.post_event(event)
 
 
