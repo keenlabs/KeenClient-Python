@@ -49,7 +49,6 @@ class KeenClient(object):
         self.auth_token = auth_token
         self.persistence_strategy = persistence_strategy
 
-
     def add_event(self, collection_name, event_body, timestamp=None):
         event = Event(self.project_id, collection_name, event_body,
                       timestamp=timestamp)
