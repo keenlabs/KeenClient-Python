@@ -2,7 +2,7 @@
 
 from distutils.core import setup
 
-setup(name="keen-client",
+setup(name="keen",
       version="0.1.2",
       description="Python Client for Keen.io",
       author="Keen Labs",
