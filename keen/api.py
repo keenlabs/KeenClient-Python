@@ -12,7 +12,7 @@ class KeenApi(object):
     # the default base URL of the Keen API
     base_url = "https://api.keen.io"
     # the default version of the Keen API
-    api_version = "2.0"
+    api_version = "3.0"
 
     def __init__(self, project_id, auth_token, base_url=None,
                  api_version=None):
@@ -38,7 +38,7 @@ class KeenApi(object):
 
         :param event: an Event to upload
         """
-        url = "{}/{}/projects/{}/{}".format(self.base_url, self.api_version,
+        url = "{}/{}/projects/{}/events/{}".format(self.base_url, self.api_version,
                                             self.project_id,
                                             event.collection_name)
         headers = {"Authorization": self.auth_token,

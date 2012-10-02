@@ -1,3 +1,4 @@
+import copy
 import json
 from keen import persistence_strategies, exceptions
 from keen.api import KeenApi
@@ -31,11 +32,9 @@ class Event(object):
 
         :returns: a string
         """
-        event_as_dict = {
-            "body": self.event_body
-        }
+        event_as_dict = copy.deepcopy(self.event_body)
         if self.timestamp:
-            event_as_dict["header"] = {"timestamp": self.timestamp.isoformat()}
+            event_as_dict["keen"] = {"timestamp": self.timestamp.isoformat()}
         return json.dumps(event_as_dict)
 
 
