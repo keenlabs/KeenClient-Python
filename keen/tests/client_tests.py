@@ -23,13 +23,13 @@ class ClientTests(BaseTestCase):
             return cm.exception
 
         # real strings for both project id and auth token should work
-        positive_helper("project_id", "auth_token")
+        positive_helper("project_id", "api_key")
 
         # non-strings shouldn't work
-        e = negative_helper(exceptions.InvalidProjectIdError, 5, "auth_token")
+        e = negative_helper(exceptions.InvalidProjectIdError, 5, "api_key")
         self.assert_equal(5, e.project_id)
-        negative_helper(exceptions.InvalidProjectIdError, None, "auth_token")
-        negative_helper(exceptions.InvalidProjectIdError, "", "auth_token")
+        negative_helper(exceptions.InvalidProjectIdError, None, "api_key")
+        negative_helper(exceptions.InvalidProjectIdError, "", "api_key")
         e = negative_helper(exceptions.InvalidAuthTokenError, "project_id", 6)
         self.assert_equal(6, e.auth_token)
         negative_helper(exceptions.InvalidAuthTokenError, "project_id", None)
@@ -38,20 +38,20 @@ class ClientTests(BaseTestCase):
         # test persistence strategies
 
         # if you don't ask for a specific one, you get the direct strategy
-        client = positive_helper("project_id", "auth_token")
+        client = positive_helper("project_id", "api_key")
         self.assert_is_instance(client.persistence_strategy,
                                 persistence_strategies.DirectPersistenceStrategy)
         # specifying a valid one should work!
-        client = positive_helper("project_id", "auth_token",
+        client = positive_helper("project_id", "api_key",
                                  persistence_strategy=None)
         self.assert_is_instance(client.persistence_strategy,
                                 persistence_strategies.DirectPersistenceStrategy)
         # needs to be an instance of a strategy, not anything else
         negative_helper(exceptions.InvalidPersistenceStrategyError,
-                        "project_id", "auth_token", persistence_strategy="abc")
+                        "project_id", "api_key", persistence_strategy="abc")
         # needs to be an instance of a strategy, not the class
         negative_helper(exceptions.InvalidPersistenceStrategyError,
-                        "project_id", "auth_token",
+                        "project_id", "api_key",
                         persistence_strategy=persistence_strategies.DirectPersistenceStrategy)
 
     def test_direct_persistence_strategy(self):
