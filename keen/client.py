@@ -11,18 +11,18 @@ class Event(object):
     An event in Keen.
     """
 
-    def __init__(self, project_id, collection_name, event_body,
+    def __init__(self, project_token, collection_name, event_body,
                  timestamp=None):
         """ Initializes a new Event.
 
-        :param project_id: the Keen project ID to insert the event to
+        :param project_token: the Keen project token to insert the event to
         :param collection_name: the Keen collection name to insert the event to
         :param event_body: a dict that contains the body of the event to insert
         :param timestamp: optional, specify a datetime to override the
         timestamp associated with the event in Keen
         """
         super(Event, self).__init__()
-        self.project_id = project_id
+        self.project_token = project_token
         self.collection_name = collection_name
         self.event_body = event_body
         self.timestamp = timestamp
@@ -41,7 +41,7 @@ class Event(object):
 class KeenClient(object):
     """
     The Keen Client is the main object to use to interface with Keen. It
-    requires a project ID and an auth token. Optionally,
+    requires a project ID. Optionally,
     you can also specify a persistence strategy to elect how events are
     handled when they're added. The default strategy is to send the event
     directly to Keen, in-line. This may not always be the best idea, though,
@@ -49,32 +49,28 @@ class KeenClient(object):
     for later processing).
     """
 
-    def __init__(self, project_id, auth_token, persistence_strategy=None):
+    def __init__(self, project_token, persistence_strategy=None):
         """ Initializes a KeenClient object.
 
-        :param project_id: the Keen project ID
-        :param auth_token: the Keen auth token
+        :param project_token: the Keen project ID
         :param persistence_strategy: optional, the strategy to use to persist
         the event
         """
         super(KeenClient, self).__init__()
 
         # do some validation
-        if not project_id or not isinstance(project_id, basestring):
-            raise exceptions.InvalidProjectIdError(project_id)
-        if not auth_token or not isinstance(auth_token, basestring):
-            raise exceptions.InvalidAuthTokenError(auth_token)
+        if not project_token or not isinstance(project_token, basestring):
+            raise exceptions.InvalidProjectIdError(project_token)
 
         if persistence_strategy:
             if not isinstance(persistence_strategy, BasePersistenceStrategy):
                 raise exceptions.InvalidPersistenceStrategyError()
         if not persistence_strategy:
-            keen_api = KeenApi(project_id, auth_token)
+            keen_api = KeenApi(project_token)
             persistence_strategy = persistence_strategies\
             .DirectPersistenceStrategy(keen_api)
 
-        self.project_id = project_id
-        self.auth_token = auth_token
+        self.project_token = project_token
         self.persistence_strategy = persistence_strategy
 
     def add_event(self, collection_name, event_body, timestamp=None):
@@ -89,6 +85,6 @@ class KeenClient(object):
         :param event_body: dict, the body of the event to insert the event to
         :param timestamp: datetime, optional, the timestamp of the event
         """
-        event = Event(self.project_id, collection_name, event_body,
+        event = Event(self.project_token, collection_name, event_body,
                       timestamp=timestamp)
         self.persistence_strategy.persist(event)
