@@ -64,7 +64,7 @@ class KeenClient(object):
         url = "https://api.keen.io/?api_key={0}".format(api_key)
         response = requests.get(url)
         if response.status_code != 200:
-            raise KeenApiError(response.json())
+            raise exceptions.KeenApiError(response.json())
         self.api_key = api_key
 
         # do some validation
