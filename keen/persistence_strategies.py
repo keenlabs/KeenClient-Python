@@ -1,5 +1,6 @@
 __author__ = 'dkador'
 
+
 class BasePersistenceStrategy(object):
     """
     A persistence strategy is responsible for persisting a given event

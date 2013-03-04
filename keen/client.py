@@ -1,10 +1,12 @@
 import copy
 import json
+import requests
 from keen import persistence_strategies, exceptions
 from keen.api import KeenApi
 from keen.persistence_strategies import BasePersistenceStrategy
 
 __author__ = 'dkador'
+
 
 class Event(object):
     """
@@ -49,14 +51,22 @@ class KeenClient(object):
     for later processing).
     """
 
-    def __init__(self, project_token, persistence_strategy=None):
+    def __init__(self, project_token, api_key, persistence_strategy=None):
         """ Initializes a KeenClient object.
 
         :param project_token: the Keen project ID
+        :param api_key: the Keen api key
         :param persistence_strategy: optional, the strategy to use to persist
         the event
         """
         super(KeenClient, self).__init__()
+
+        # Test the api_key
+        url = "https://api.keen.io/?api_key={0}".format(api_key)
+        response = requests.get(url)
+        if response.status_code != 200:
+            raise exceptions.KeenApiError(response.json())
+        self.api_key = api_key
 
         # do some validation
         if not project_token or not isinstance(project_token, basestring):
@@ -66,11 +76,12 @@ class KeenClient(object):
             if not isinstance(persistence_strategy, BasePersistenceStrategy):
                 raise exceptions.InvalidPersistenceStrategyError()
         if not persistence_strategy:
-            keen_api = KeenApi(project_token)
+            keen_api = KeenApi(project_token, api_key)
             persistence_strategy = persistence_strategies\
-            .DirectPersistenceStrategy(keen_api)
+                .DirectPersistenceStrategy(keen_api)
 
         self.project_token = project_token
+        self.api_key = api_key
         self.persistence_strategy = persistence_strategy
 
     def add_event(self, collection_name, event_body, timestamp=None):
