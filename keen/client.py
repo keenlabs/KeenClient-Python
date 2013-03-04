@@ -1,5 +1,6 @@
 import copy
 import json
+import requests
 from keen import persistence_strategies, exceptions
 from keen.api import KeenApi
 from keen.persistence_strategies import BasePersistenceStrategy
