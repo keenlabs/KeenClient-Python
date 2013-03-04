@@ -7,6 +7,7 @@ from keen.persistence_strategies import BasePersistenceStrategy
 
 __author__ = 'dkador'
 
+
 class Event(object):
     """
     An event in Keen.
@@ -77,7 +78,7 @@ class KeenClient(object):
         if not persistence_strategy:
             keen_api = KeenApi(project_token, api_key)
             persistence_strategy = persistence_strategies\
-            .DirectPersistenceStrategy(keen_api)
+                .DirectPersistenceStrategy(keen_api)
 
         self.project_token = project_token
         self.api_key = api_key
