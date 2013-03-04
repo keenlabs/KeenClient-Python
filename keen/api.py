@@ -36,9 +36,10 @@ class KeenApi(object):
 
         :param event: an Event to upload
         """
-        url = "{}/{}/projects/{}/events/{}".format(self.base_url, self.api_version,
+        url = "{}/{}/projects/{}/events/{}?api_key={}".format(self.base_url, self.api_version,
                                             self.project_token,
-                                            event.collection_name)
+                                            event.collection_name,
+                                            self.api_key)
         headers = {"Content-Type": "application/json"}
         payload = event.to_json()
         response = requests.post(url, data=payload, headers=headers)

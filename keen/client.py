@@ -62,7 +62,7 @@ class KeenClient(object):
         # Test the api_key
         url = "https://api.keen.io/?api_key={0}".format(api_key)
         response = requests.get(url)
-        if response.status_code == 401:
+        if response.status_code != 200:
             raise KeenApiError(response.json())
         self.api_key = api_key
 
@@ -74,11 +74,12 @@ class KeenClient(object):
             if not isinstance(persistence_strategy, BasePersistenceStrategy):
                 raise exceptions.InvalidPersistenceStrategyError()
         if not persistence_strategy:
-            keen_api = KeenApi(project_token)
+            keen_api = KeenApi(project_token, api_key)
             persistence_strategy = persistence_strategies\
             .DirectPersistenceStrategy(keen_api)
 
         self.project_token = project_token
+        self.api_key = api_key
         self.persistence_strategy = persistence_strategy
 
     def add_event(self, collection_name, event_body, timestamp=None):
