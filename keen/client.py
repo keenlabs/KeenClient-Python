@@ -49,14 +49,22 @@ class KeenClient(object):
     for later processing).
     """
 
-    def __init__(self, project_token, persistence_strategy=None):
+    def __init__(self, project_token, api_key, persistence_strategy=None):
         """ Initializes a KeenClient object.
 
         :param project_token: the Keen project ID
+        :param api_key: the Keen api key
         :param persistence_strategy: optional, the strategy to use to persist
         the event
         """
         super(KeenClient, self).__init__()
+
+        # Test the api_key
+        url = "https://api.keen.io/?api_key={0}".format(api_key)
+        response = requests.get(url)
+        if response.status_code == 401:
+            raise KeenApiError(response.json())
+        self.api_key = api_key
 
         # do some validation
         if not project_token or not isinstance(project_token, basestring):
