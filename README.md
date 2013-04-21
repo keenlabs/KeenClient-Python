@@ -16,22 +16,38 @@ This client is known to work on Python 2.7.3.
 
 ### Usage
 
-To use this client with the Keen IO API, you have to configure your Keen IO Project ID (if you need an account, [sign up here](https://keen.io/) - it's free).
+To use this client with the Keen IO API, you have to configure your Keen IO Project ID and its access keys (if you need an account, [sign up here](https://keen.io/) - it's free).
+
+##### Send Events to Keen IO
 
 Once you have your Project ID, use the client like so:
 
-   from keen.client import KeenClient
+    from keen.client import KeenClient
    
-    project_id = "<YOUR_PROJECT_ID">
-    client = KeenClient(project_id)
+    project_id = "<YOUR_PROJECT_ID>"
+    write_key  = "<YOUR_WRITE_KEY>"
+    client = KeenClient(
+        project_id, 
+        write_key=write_key
+    )
     client.add_event("sign_ups", {
         "username": "lloyd",
         "referred_by": "harry"
     }
+
+##### Do analysis with Keen IO
+
+    TODO
     
 That's it! After running your code, check your Keen IO Project to see the event has been added.
 
 ### Changelog
+
+##### 0.1.6
+
++ Changed project token -> project ID.
++ Added support for read and write scoped keys.
++ Added support for generating scoped keys yourself.
 
 ##### 0.1.5
 
