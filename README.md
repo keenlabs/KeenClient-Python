@@ -51,6 +51,7 @@ That's it! After running your code, check your Keen IO Project to see the event 
 + Changed project token -> project ID.
 + Added support for read and write scoped keys.
 + Added support for generating scoped keys yourself.
++ Added support for python 2.6, 3.2, and 3.3
 
 ##### 0.1.5
 
