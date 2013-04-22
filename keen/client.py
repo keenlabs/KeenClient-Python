@@ -63,7 +63,7 @@ class KeenClient(object):
         super(KeenClient, self).__init__()
 
         # do some validation
-        if not project_id or not isinstance(project_id, basestring):
+        if not project_id or not isinstance(project_id, str):
             raise exceptions.InvalidProjectIdError(project_id)
 
         if persistence_strategy:
