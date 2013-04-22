@@ -1,6 +1,9 @@
 Keen IO Official Python Client Library
 ======================================
 
+[![Build Status](https://secure.travis-ci.org/keenlabs/KeenClient-Python.png?branch=new-keys)](http://travis-ci
+.org/keenlabs/KeenClient-Python)
+
 This is the official Python Client for the [Keen IO](https://keen.io/) API. The
 Keen IO API lets developers build analytics features directly into their apps.
 
