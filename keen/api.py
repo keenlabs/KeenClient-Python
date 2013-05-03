@@ -56,5 +56,5 @@ class KeenApi(object):
         payload = event.to_json()
         response = requests.post(url, data=payload, headers=headers)
         if response.status_code != 201:
-            error = response.json
+            error = response.json()
             raise exceptions.KeenApiError(error)
