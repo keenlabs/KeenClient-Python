@@ -6,6 +6,7 @@ except:
     from django.utils import simplejson as json
 __author__ = 'dkador'
 
+
 class KeenApi(object):
     """
     Responsible for communicating with the Keen API. Used by multiple
@@ -17,30 +18,43 @@ class KeenApi(object):
     # the default version of the Keen API
     api_version = "3.0"
 
-    def __init__(self, project_token, base_url=None,
-                 api_version=None):
-        """ Initializes a KeenApi object
+    def __init__(self, project_id,
+                 write_key=None, read_key=None,
+                 base_url=None, api_version=None):
+        """
+        Initializes a KeenApi object
 
-        :param project_token: the Keen project token
+        :param project_id: the Keen project ID
+        :param write_key: a Keen IO Scoped Key for Writes
+        :param read_key: a Keen IO Scoped Key for Reads
         :param base_url: optional, set this to override where API requests
         are sent
         :param api_version: string, optional, set this to override what API
         version is used
         """
-        self.project_token = project_token
+        super(KeenApi, self).__init__()
+        self.project_id = project_id
+        self.write_key = write_key
+        self.read_key = read_key
         if base_url:
             self.base_url = base_url
         if api_version:
             self.api_version = api_version
 
     def post_event(self, event):
-        """ Posts a single event to the Keen API.
+        """
+        Posts a single event to the Keen IO API. The write key must be set first.
 
         :param event: an Event to upload
         """
-        url = "{}/{}/projects/{}/events/{}".format(self.base_url, self.api_version,
-                                            self.project_token,
-                                            event.collection_name)
+        if not self.write_key:
+            raise Exception("The Keen IO API requires a write key to send events. "
+                            "Please set a 'write_key' when initializing the "
+                            "KeenApi object.")
+
+        url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
+                                                       self.project_id,
+                                                       event.collection_name)
         headers = {"Content-Type": "application/json"}
         payload = event.to_json()
         fetch = urlfetch.fetch(url=url,
