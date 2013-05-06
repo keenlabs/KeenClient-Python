@@ -1,3 +1,6 @@
+A modified version of the official library to make it work easily with Google App Engine
+===================
+
 Keen IO Official Python Client Library
 ======================================
 
