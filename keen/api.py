@@ -55,7 +55,7 @@ class KeenApi(object):
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
                                                        self.project_id,
                                                        event.collection_name)
-        headers = {"Content-Type": "application/json"}
+        headers = {"Content-Type": "application/json", "Authorization": self.write_key}
         payload = event.to_json()
         fetch = urlfetch.fetch(url=url,
                                 payload=payload,
