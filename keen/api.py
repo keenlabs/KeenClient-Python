@@ -1,6 +1,9 @@
-import requests
+from google.appengine.api import urlfetch
 from keen import exceptions
-
+try:
+    import ujson as json
+except:
+    from django.utils import simplejson as json
 __author__ = 'dkador'
 
 class KeenApi(object):
@@ -24,7 +27,6 @@ class KeenApi(object):
         :param api_version: string, optional, set this to override what API
         version is used
         """
-        super(KeenApi, self).__init__()
         self.project_token = project_token
         if base_url:
             self.base_url = base_url
@@ -41,7 +43,10 @@ class KeenApi(object):
                                             event.collection_name)
         headers = {"Content-Type": "application/json"}
         payload = event.to_json()
-        response = requests.post(url, data=payload, headers=headers)
-        if response.status_code != 201:
-            error = response.json
-            raise exceptions.KeenApiError(error)
+        fetch = urlfetch.fetch(url=url,
+                                payload=payload,
+                                method=urlfetch.POST,
+                                headers=headers)
+        response = json.loads(fetch.content)
+        if fetch.status_code != 201:
+            raise exceptions.KeenApiError(response)
