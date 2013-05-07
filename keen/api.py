@@ -49,10 +49,11 @@ class KeenApi(object):
                             "Please set a 'write_key' when initializing the "
                             "KeenApi object.")
 
-        url = "{0}/{1}/projects/{2}/events/{3}?api_key={4}".format(
+        url = "{0}/{1}/projects/{2}/events/{3}".format(
             self.base_url, self.api_version, self.project_id,
-            event.collection_name, self.write_key)
-        headers = {"Content-Type": "application/json"}
+            event.collection_name)
+        headers = {"Content-Type": "application/json",
+                   "Authorization": self.write_key}
         payload = event.to_json()
         response = requests.post(url, data=payload, headers=headers)
         if response.status_code != 201:
