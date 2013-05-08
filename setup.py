@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name="keen",
-      version="0.1.6",
+      version="0.1.7",
       description="Python Client for Keen IO",
       author="Keen IO",
       author_email="team@keen.io",

@@ -46,6 +46,10 @@ That's it! After running your code, check your Keen IO Project to see the event 
 
 ### Changelog
 
+##### 0.1.7
+
++ Bugfix to use write key when sending events - do not use 0.1.6!
+
 ##### 0.1.6
 
 + Changed project token -> project ID.
