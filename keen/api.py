@@ -1,5 +1,6 @@
 import requests
 from keen import exceptions
+import json
 
 __author__ = 'dkador'
 
@@ -51,10 +52,32 @@ class KeenApi(object):
 
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
                                                        self.project_id,
-                                                       event.collection_name)
+                                                       event.event_collection)
         headers = {"Content-Type": "application/json", "Authorization": self.write_key}
         payload = event.to_json()
         response = requests.post(url, data=payload, headers=headers)
         if response.status_code != 201:
             error = response.json()
             raise exceptions.KeenApiError(error)
+
+    def query(self, analysis_type, params):
+        """
+        Performs a query using the Keen IO analysis API.  A read key must be set first.
+
+        """
+        if not self.read_key:
+            raise Exception("The Keen IO API requires a read key to perform queries. "
+                            "Please set a 'read_key' when initializing the "
+                            "KeenApi object.")
+
+        url = "{0}/{1}/projects/{2}/queries/{3}".format(self.base_url, self.api_version,
+            self.project_id, analysis_type)
+
+        headers = {"Authorization": self.read_key}
+        payload = params
+        response = requests.get(url, params=payload, headers=headers)
+        if response.status_code != 200:
+            error = response.json()
+            raise exceptions.KeenApiError(error)
+
+        return response.json()["result"]

@@ -38,13 +38,45 @@ Once you have your Project ID, use the client like so:
         "referred_by": "harry"
     }
 
-##### Do analysis with Keen IO
-
-    TODO
-    
 That's it! After running your code, check your Keen IO Project to see the event has been added.
 
+##### Do analysis with Keen IO
+
+If you want to do analysis, configure you client like this:
+
+    from keen.client import KeenClient
+
+    project_id = "<YOUR_PROJECT_ID>"
+    read_key = "<YOUR_READ_KEY>"
+    client = KeenClient(
+        project_id,
+        read_key=read_key
+    )
+
+Here are some examples of querying.  Let's assume you've added some events to the "purchases" collection.
+
+    client.count("purchases") # => 100
+    client.sum("purchases", target_property="price") # => 10000
+    client.minimum("purchases", target_property="price") # => 20
+    client.maximum("purchases", target_property="price") # => 100
+    client.average("purchases", target_property="price") # => 49.2
+
+    client.sum("purchases", target_property="price", group_by="item.id") # => [{ "item.id": 123, "result": 240 }, { ... }]
+
+    client.count_unique("purchases", target_property="user.id") # => 3
+    client.select_unique("purchases", target_property="user.email") # => ["bob@aol.com", "joe@yahoo.biz"]
+
+    client.extraction("purchases", timeframe="today") # => [{ "price" => 20, ... }, { ... }]
+
+    client.multi_analysis("purchases", analyses={"total":{"analysis_type":"sum", "target_property":"price"}, "average":{"analysis_type":"average", "target_property":"price"}) # => {"total":10329.03, "average":933.93}
+
+
+
 ### Changelog
+
+##### 0.1.8
+
++ Added querying support
 
 ##### 0.1.7
 
