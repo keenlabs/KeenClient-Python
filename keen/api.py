@@ -15,6 +15,8 @@ class KeenApi(object):
     # the default version of the Keen API
     api_version = "3.0"
 
+    # self says it belongs to KeenApi/andOr is the object passed into KeenApi
+    # __init__ create keenapi object whenever KeenApi class is invoked
     def __init__(self, project_id,
                  write_key=None, read_key=None,
                  base_url=None, api_version=None):
@@ -29,6 +31,7 @@ class KeenApi(object):
         :param api_version: string, optional, set this to override what API
         version is used
         """
+        # super? recreates the object with values passed into KeenApi
         super(KeenApi, self).__init__()
         self.project_id = project_id
         self.write_key = write_key
