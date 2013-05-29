@@ -71,7 +71,7 @@ class KeenApi(object):
                             "KeenApi object.")
 
         url = "{0}/{1}/projects/{2}/queries/{3}".format(self.base_url, self.api_version,
-            self.project_id, analysis_type)
+                                                        self.project_id, analysis_type)
 
         headers = {"Authorization": self.read_key}
         payload = params

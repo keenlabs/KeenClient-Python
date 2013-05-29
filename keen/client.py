@@ -116,10 +116,12 @@ class KeenClient(object):
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
         """
-        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone, interval=interval, filters=filters, group_by=group_by)
+        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
+                                 interval=interval, filters=filters, group_by=group_by)
         return self.api.query("count", params)
 
-    def sum(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None, group_by=None):
+    def sum(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
+            group_by=None):
         """ Performs a sum query
 
         Adds the values of a target property for events that meet the given criteria.
@@ -138,10 +140,12 @@ class KeenClient(object):
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
         """
-        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone, interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
+                                 interval=interval, filters=filters, group_by=group_by, target_property=target_property)
         return self.api.query("sum", params)
 
-    def minimum(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None, group_by=None):
+    def minimum(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
+                group_by=None):
         """ Performs a minimum query
 
         Finds the minimum value of a target property for events that meet the given criteria.
@@ -160,10 +164,12 @@ class KeenClient(object):
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
         """
-        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone, interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
+                                 interval=interval, filters=filters, group_by=group_by, target_property=target_property)
         return self.api.query("minimum", params)
 
-    def maximum(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None, group_by=None):
+    def maximum(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
+                group_by=None):
         """ Performs a maximum query
 
         Finds the maximum value of a target property for events that meet the given criteria.
@@ -182,10 +188,12 @@ class KeenClient(object):
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
         """
-        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone, interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
+                                 interval=interval, filters=filters, group_by=group_by, target_property=target_property)
         return self.api.query("maximum", params)
 
-    def average(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None, group_by=None):
+    def average(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
+                group_by=None):
         """ Performs a average query
 
         Finds the average of a target property for events that meet the given criteria.
@@ -204,10 +212,12 @@ class KeenClient(object):
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
         """
-        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone, interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
+                                 interval=interval, filters=filters, group_by=group_by, target_property=target_property)
         return self.api.query("average", params)
 
-    def count_unique(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None, group_by=None):
+    def count_unique(self, event_collection, target_property, timeframe=None, timezone=None, interval=None,
+                     filters=None, group_by=None):
         """ Performs a count unique query
 
         Counts the unique values of a target property for events that meet the given criteria.
@@ -226,10 +236,12 @@ class KeenClient(object):
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
         """
-        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone, interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
+                                 interval=interval, filters=filters, group_by=group_by, target_property=target_property)
         return self.api.query("count_unique", params)
 
-    def select_unique(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None, group_by=None):
+    def select_unique(self, event_collection, target_property, timeframe=None, timezone=None, interval=None,
+                      filters=None, group_by=None):
         """ Performs a select unique query
 
         Returns an array of the unique values of a target property for events that meet the given criteria.
@@ -248,7 +260,8 @@ class KeenClient(object):
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
         """
-        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone, interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
+                                 interval=interval, filters=filters, group_by=group_by, target_property=target_property)
         return self.api.query("select_unique", params)
 
     def extraction(self, event_collection, timeframe=None, timezone=None, filters=None, latest=None, email=None):
@@ -268,7 +281,8 @@ class KeenClient(object):
         :param email: string, optional string containing an email address to email results to
 
         """
-        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone, filters=filters, latest=latest, email=email)
+        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
+                                 filters=filters, latest=latest, email=email)
         return self.api.query("extraction", params)
 
     def funnel(self, steps, timeframe=None, timezone=None):
@@ -307,10 +321,12 @@ class KeenClient(object):
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
         """
-        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone, filters=filters, group_by=group_by, analyses=analyses)
+        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
+                                 filters=filters, group_by=group_by, analyses=analyses)
         return self.api.query("multi_analysis", params)
 
-    def get_params(self, event_collection=None, timeframe=None, timezone=None, interval=None, filters=None, group_by=None, target_property=None, latest=None, email=None, analyses=None, steps=None):
+    def get_params(self, event_collection=None, timeframe=None, timezone=None, interval=None, filters=None,
+                   group_by=None, target_property=None, latest=None, email=None, analyses=None, steps=None):
         params = {}
         if event_collection:
             params["event_collection"] = event_collection
