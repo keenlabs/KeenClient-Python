@@ -65,6 +65,7 @@ class QueryTests(BaseTestCase):
         read_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]})
         self.client = KeenClient(project_id, write_key=write_key, read_key=read_key)
         self.client.add_event("query test", {"number":5})
+        self.client.add_event("step2", {"number":5})
 
     def get_filter(self):
         return [{"property_name":"number","operator":"eq","property_value":5}]
@@ -105,6 +106,20 @@ class QueryTests(BaseTestCase):
         resp = self.client.multi_analysis("query test", analyses={"total":{"analysis_type":"sum", "target_property":"number"}}, timeframe="today")
         assert type(resp) is dict
         assert type(resp["total"]) is int
+
+    def test_funnel(self):
+        step1 = {
+            "event_collection": "query test",
+            "actor_property": "number",
+            "timeframe": "today"
+        }
+        step2 = {
+            "event_collection": "step2",
+            "actor_property": "number",
+            "timeframe": "today"
+        }
+        resp = self.client.funnel([step1, step2])
+        assert type(resp) is list, resp
 
     def test_group_by(self):
         resp = self.client.count("query test", timeframe="today", group_by="number")

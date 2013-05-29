@@ -70,7 +70,15 @@ Here are some examples of querying.  Let's assume you've added some events to th
 
     client.multi_analysis("purchases", analyses={"total":{"analysis_type":"sum", "target_property":"price"}, "average":{"analysis_type":"average", "target_property":"price"}) # => {"total":10329.03, "average":933.93}
 
-
+    step1 = {
+        "event_collection": "signup",
+        "actor_property": "user.email"
+    }
+    step2 = {
+        "event_collection": "purchase",
+        "actor_property": "user.email"
+    }
+    client.funnel([step1, step2], timeframe="today") # => [2039, 201]
 
 ### Changelog
 
