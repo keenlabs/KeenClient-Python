@@ -96,8 +96,12 @@ class KeenClient(object):
         self.persistence_strategy.persist(event)
 
     def add_events(self, events):
-        """ 
-        events is a dictionary
+        """ Adds a batch of events
 
+        Depending on the persistence strategy of the client,
+        this will either result in the event being uploaded to Keen
+        immediately or will result in saving the event to some local cache.
+
+        :param events: dictionary of events
         """
         self.persistence_strategy.batch_persist(events)
