@@ -94,3 +94,10 @@ class KeenClient(object):
         event = Event(self.project_id, collection_name, event_body,
                       timestamp=timestamp)
         self.persistence_strategy.persist(event)
+
+    def add_events(self, events):
+        """ 
+        events is a dictionary
+
+        """
+        self.persistence_strategy.batch_persist(events)

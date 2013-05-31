@@ -1,4 +1,5 @@
 import requests
+import json
 from keen import exceptions
 
 __author__ = 'dkador'
@@ -57,7 +58,24 @@ class KeenApi(object):
                                                        event.collection_name)
         headers = {"Content-Type": "application/json", "Authorization": self.write_key}
         payload = event.to_json()
+        print payload;
         response = requests.post(url, data=payload, headers=headers)
         if response.status_code != 201:
+            error = response.json()
+            raise exceptions.KeenApiError(error)
+
+    def post_events(self, events):
+        if not self.write_key:
+            raise Exception("The Keen IO API requires a write key to send events. "
+                            "Please set a 'write_key' when initializing the "
+                            "KeenApi object.")
+
+        url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version,
+                                                       self.project_id)
+        headers = {"Content-Type": "application/json", "Authorization": self.write_key}
+        payload = json.dumps(events)
+        response = requests.post(url, data=payload, headers=headers)
+        print response
+        if response.status_code != 200:
             error = response.json()
             raise exceptions.KeenApiError(error)
