@@ -2,12 +2,9 @@ import copy
 from keen import persistence_strategies, exceptions
 from keen.api import KeenApi
 from keen.persistence_strategies import BasePersistenceStrategy
+from etro.utils.miscutils import json_default
 # Try to load the faster json, for local dev and tests
-try:
-    import ujson as json
-except:
-    from django.utils import simplejson as json
-
+from django.utils import simplejson as json
 __author__ = 'dkador'
 
 
@@ -40,7 +37,7 @@ class Event(object):
         event_as_dict = copy.deepcopy(self.event_body)
         if self.timestamp:
             event_as_dict["keen"] = {"timestamp": self.timestamp.isoformat()}
-        return json.dumps(event_as_dict)
+        return json.dumps(event_as_dict, default=json_default)
 
 
 class KeenClient(object):
