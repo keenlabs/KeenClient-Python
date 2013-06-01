@@ -36,9 +36,25 @@ Once you have your Project ID, use the client like so:
     client.add_event("sign_ups", {
         "username": "lloyd",
         "referred_by": "harry"
-    }
+    })
 
-That's it! After running your code, check your Keen IO Project to see the event has been added.
+##### Send Batch Events to Keen IO
+
+You can upload Events in a batch, like so:
+
+    client.add_events({
+        "sign_ups": [
+            { "username": "nameuser1" },
+            { "username": "nameuser2" } 
+        ],
+        "purchases": [
+            { "price": 5 },
+            { "price": 6 }
+        ]
+    })
+
+
+That's it! After running your code, check your Keen IO Project to see the event/events has been added.
 
 ##### Do analysis with Keen IO
 
@@ -81,6 +97,10 @@ Here are some examples of querying.  Let's assume you've added some events to th
     client.funnel([step1, step2], timeframe="today") # => [2039, 201]
 
 ### Changelog
+
+##### 0.1.9
+
++ Added support for publishing events in batches
 
 ##### 0.1.8
 

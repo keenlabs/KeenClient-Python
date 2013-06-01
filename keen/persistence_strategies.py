@@ -36,6 +36,12 @@ class DirectPersistenceStrategy(BasePersistenceStrategy):
         """
         self.api.post_event(event)
 
+    def batch_persist(self, events):
+        """ Posts the given events directly to the Keen API.
+
+        :param events: a batch of events to persist
+        """
+        self.api.post_events(events)
 
 class RedisPersistenceStrategy(BasePersistenceStrategy):
     """
