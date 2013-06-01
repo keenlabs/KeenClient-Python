@@ -103,7 +103,6 @@ class KeenApi(object):
         headers = {"Content-Type": "application/json", "Authorization": self.write_key}
         payload = json.dumps(events)
         response = requests.post(url, data=payload, headers=headers)
-        print payload
         if response.status_code != 200:
             error = response.json()
             raise exceptions.KeenApiError(error)
