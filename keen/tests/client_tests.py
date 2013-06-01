@@ -55,3 +55,16 @@ class ClientTests(BaseTestCase):
         write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
         client = KeenClient(project_id, write_key=write_key)
         client.add_event("python_test", {"hello": "goodbye"})
+        client.add_events(
+            {"sign_ups": [
+                    { 
+                      "username": "timmy",
+                      "referred_by": "steve",
+                      "son_of": "my_mom"
+                    },
+            ],
+            "purchases": [
+                { "price": 5 },
+                { "price": 6 },
+                { "price": 7 }
+            ]})
