@@ -59,7 +59,6 @@ class KeenApi(object):
                                                        event.event_collection)
         headers = {"Content-Type": "application/json", "Authorization": self.write_key}
         payload = event.to_json()
-        print payload
         response = requests.post(url, data=payload, headers=headers)
         if response.status_code != 201:
             error = response.json()

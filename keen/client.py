@@ -369,4 +369,3 @@ class KeenClient(object):
             params["steps"] = json.dumps(steps)
 
         return params
-
