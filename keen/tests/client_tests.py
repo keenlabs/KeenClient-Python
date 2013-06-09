@@ -1,4 +1,6 @@
+import os
 from keen import exceptions, persistence_strategies, scoped_keys
+import keen
 from keen.client import KeenClient
 from keen.tests.base_test_case import BaseTestCase
 
@@ -58,66 +60,108 @@ class ClientTests(BaseTestCase):
         client.add_event("python_test", {"hello": "goodbye"})
         client.add_event("python_test", {"hello": "goodbye"})
         client.add_events(
-            {"sign_ups": [
-                    { 
-                      "username": "timmy",
-                      "referred_by": "steve",
-                      "son_of": "my_mom"
-                    },
-            ],
-            "purchases": [
-                { "price": 5 },
-                { "price": 6 },
-                { "price": 7 }
-            ]})
+            {
+                "sign_ups": [{
+                    "username": "timmy",
+                    "referred_by": "steve",
+                    "son_of": "my_mom"
+                }],
+                "purchases": [
+                    {"price": 5},
+                    {"price": 6},
+                    {"price": 7}
+                ]}
+        )
+
+    def test_environment_variables(self):
+        # try addEvent w/out having environment variables
+        keen._client = None
+        keen.project_id = None
+        keen.write_key = None
+        keen.read_key = None
+        self.assert_raises(exceptions.InvalidEnvironmentError,
+                           keen.add_event, "python_test", {"hello": "goodbye"})
+
+        os.environ["KEEN_PROJECT_ID"] = "12345"
+
+        self.assert_raises(exceptions.InvalidEnvironmentError,
+                           keen.add_event, "python_test", {"hello": "goodbye"})
+
+        # force client to reinitialize
+        keen._client = None
+        os.environ["KEEN_WRITE_KEY"] = "abcde"
+        self.assert_raises(exceptions.KeenApiError,
+                           keen.add_event, "python_test", {"hello": "goodbye"})
+
+    def test_configure_through_code(self):
+        keen.project_id = "123456"
+        self.assert_raises(exceptions.InvalidEnvironmentError,
+                           keen.add_event, "python_test", {"hello": "goodbye"})
+
+        # force client to reinitialize
+        keen._client = None
+        keen.write_key = "abcdef"
+        self.assert_raises(exceptions.KeenApiError,
+                           keen.add_event, "python_test", {"hello": "goodbye"})
+
 
 class QueryTests(BaseTestCase):
     def setUp(self):
-        project_id = "5004ded1163d66114f000000"
+        super(QueryTests, self).setUp()
+        keen._client = None
+        keen.project_id = "5004ded1163d66114f000000"
         api_key = "2e79c6ec1d0145be8891bf668599c79a"
-        write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
-        read_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]})
-        self.client = KeenClient(project_id, write_key=write_key, read_key=read_key)
-        self.client.add_event("query test", {"number":5})
-        self.client.add_event("step2", {"number":5})
+        keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
+        keen.read_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]})
+        keen.add_event("query test", {"number": 5})
+        keen.add_event("step2", {"number": 5})
+
+    def tearDown(self):
+        keen.project_id = None
+        keen.write_key = None
+        keen.read_key = None
+        keen._client = None
+        super(QueryTests, self).tearDown()
 
     def get_filter(self):
-        return [{"property_name":"number","operator":"eq","property_value":5}]
+        return [{"property_name": "number", "operator": "eq", "property_value": 5}]
 
     def test_count(self):
-        resp = self.client.count("query test", timeframe="today", filters=self.get_filter())
+        resp = keen.count("query test", timeframe="today", filters=self.get_filter())
         assert type(resp) is int
 
     def test_sum(self):
-        resp = self.client.sum("query test", target_property="number", timeframe="today")
+        resp = keen.sum("query test", target_property="number", timeframe="today")
         assert type(resp) is int
 
     def test_minimum(self):
-        resp = self.client.minimum("query test", target_property="number", timeframe="today")
+        resp = keen.minimum("query test", target_property="number", timeframe="today")
         assert type(resp) is int
 
     def test_maximum(self):
-        resp = self.client.maximum("query test", target_property="number", timeframe="today")
+        resp = keen.maximum("query test", target_property="number", timeframe="today")
         assert type(resp) is int
 
     def test_average(self):
-        resp = self.client.average("query test", target_property="number", timeframe="today")
+        resp = keen.average("query test", target_property="number", timeframe="today")
         assert type(resp) is float
 
     def test_count_unique(self):
-        resp = self.client.count_unique("query test", target_property="number", timeframe="today")
+        resp = keen.count_unique("query test", target_property="number", timeframe="today")
         assert type(resp) is int
 
     def test_select_unique(self):
-        resp = self.client.select_unique("query test", target_property="number", timeframe="today")
+        resp = keen.select_unique("query test", target_property="number", timeframe="today")
         assert type(resp) is list
 
     def test_extraction(self):
-        resp = self.client.extraction("query test", timeframe="today")
+        resp = keen.extraction("query test", timeframe="today")
         assert type(resp) is list
 
     def test_multi_analysis(self):
-        resp = self.client.multi_analysis("query test", analyses={"total":{"analysis_type":"sum", "target_property":"number"}}, timeframe="today")
+        resp = keen.multi_analysis("query test",
+                                   analyses={"total": {"analysis_type": "sum", "target_property": "number"}},
+                                   timeframe="today")
         assert type(resp) is dict
         assert type(resp["total"]) is int
 
@@ -132,13 +176,13 @@ class QueryTests(BaseTestCase):
             "actor_property": "number",
             "timeframe": "today"
         }
-        resp = self.client.funnel([step1, step2])
+        resp = keen.funnel([step1, step2])
         assert type(resp) is list, resp
 
     def test_group_by(self):
-        resp = self.client.count("query test", timeframe="today", group_by="number")
+        resp = keen.count("query test", timeframe="today", group_by="number")
         assert type(resp) is list
 
     def test_interval(self):
-        resp = self.client.count("query test", timeframe="this_2_days", interval="daily")
+        resp = keen.count("query test", timeframe="this_2_days", interval="daily")
         assert type(resp) is list

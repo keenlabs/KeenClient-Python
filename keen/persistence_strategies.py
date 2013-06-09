@@ -43,6 +43,7 @@ class DirectPersistenceStrategy(BasePersistenceStrategy):
         """
         self.api.post_events(events)
 
+
 class RedisPersistenceStrategy(BasePersistenceStrategy):
     """
     A persistence strategy that persists events to Redis for later processing.

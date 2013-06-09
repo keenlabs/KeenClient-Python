@@ -1,7 +1,9 @@
+import json
+
 import requests
-import json
+
 from keen import exceptions
-import json
+
 
 __author__ = 'dkador'
 
@@ -50,9 +52,11 @@ class KeenApi(object):
         :param event: an Event to upload
         """
         if not self.write_key:
-            raise Exception("The Keen IO API requires a write key to send events. "
-                            "Please set a 'write_key' when initializing the "
-                            "KeenApi object.")
+            raise exceptions.InvalidEnvironmentError(
+                "The Keen IO API requires a write key to send events. "
+                "Please set a 'write_key' when initializing the "
+                "KeenApi object."
+            )
 
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
                                                        self.project_id,
@@ -64,15 +68,40 @@ class KeenApi(object):
             error = response.json()
             raise exceptions.KeenApiError(error)
 
+    def post_events(self, events):
+
+        """
+        Posts a single event to the Keen IO API. The write key must be set first.
+
+        :param events: an Event to upload
+        """
+        if not self.write_key:
+            raise exceptions.InvalidEnvironmentError(
+                "The Keen IO API requires a write key to send events. "
+                "Please set a 'write_key' when initializing the "
+                "KeenApi object."
+            )
+
+        url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version,
+                                                   self.project_id)
+        headers = {"Content-Type": "application/json", "Authorization": self.write_key}
+        payload = json.dumps(events)
+        response = requests.post(url, data=payload, headers=headers)
+        if response.status_code != 200:
+            error = response.json()
+            raise exceptions.KeenApiError(error)
+
     def query(self, analysis_type, params):
         """
         Performs a query using the Keen IO analysis API.  A read key must be set first.
 
         """
         if not self.read_key:
-            raise Exception("The Keen IO API requires a read key to perform queries. "
-                            "Please set a 'read_key' when initializing the "
-                            "KeenApi object.")
+            raise exceptions.InvalidEnvironmentError(
+                "The Keen IO API requires a read key to perform queries. "
+                "Please set a 'read_key' when initializing the "
+                "KeenApi object."
+            )
 
         url = "{0}/{1}/projects/{2}/queries/{3}".format(self.base_url, self.api_version,
                                                         self.project_id, analysis_type)
@@ -85,24 +114,3 @@ class KeenApi(object):
             raise exceptions.KeenApiError(error)
 
         return response.json()["result"]
-
-    def post_events(self, events):
-
-        """
-        Posts a single event to the Keen IO API. The write key must be set first.
-
-        :param event: an Event to upload
-        """
-        if not self.write_key:
-            raise Exception("The Keen IO API requires a write key to send events. "
-                            "Please set a 'write_key' when initializing the "
-                            "KeenApi object.")
-
-        url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version,
-                                                       self.project_id)
-        headers = {"Content-Type": "application/json", "Authorization": self.write_key}
-        payload = json.dumps(events)
-        response = requests.post(url, data=payload, headers=headers)
-        if response.status_code != 200:
-            error = response.json()
-            raise exceptions.KeenApiError(error)

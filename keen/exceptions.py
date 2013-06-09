@@ -30,6 +30,10 @@ class KeenApiError(BaseKeenClientError):
         super(KeenApiError, self).__init__(api_error)
         self.api_error = api_error
         self._message = "Error from Keen API. Details:\n Message: {0}\nCode: " \
-                        "{1}".format(
-            api_error["message"], api_error["error_code"]
-        )
+                        "{1}".format(api_error["message"], api_error["error_code"])
+
+
+class InvalidEnvironmentError(BaseKeenClientError):
+    def __init__(self, message):
+        super(InvalidEnvironmentError, self).__init__(message)
+        self._message = message
