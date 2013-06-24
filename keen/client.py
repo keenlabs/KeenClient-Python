@@ -2,11 +2,14 @@ import copy
 from keen import persistence_strategies, exceptions
 from keen.api import KeenApi
 from keen.persistence_strategies import BasePersistenceStrategy
-from etro.utils.miscutils import json_default
 # Try to load the faster json, for local dev and tests
 from django.utils import simplejson as json
 __author__ = 'dkador'
 
+def json_default(m):
+  if hasattr(m, "to_dict"):
+    return m.to_dict()
+  return str(m)
 
 class Event(object):
     """
