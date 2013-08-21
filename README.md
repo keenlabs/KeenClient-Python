@@ -95,6 +95,11 @@ Here are some examples of querying.  Let's assume you've added some events to th
 
 ### Changelog
 
+##### 0.2.0
+
++ Added add_events method to keen/__init__.py so it can be used at a module level.
++ Added method to generate image beacon URLs.
+
 ##### 0.1.9
 
 + Added support for publishing events in batches
