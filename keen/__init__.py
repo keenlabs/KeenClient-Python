@@ -32,6 +32,11 @@ def add_event(event_collection, body, timestamp=None):
     _client.add_event(event_collection, body, timestamp=timestamp)
 
 
+def add_events(events):
+    _initialize_client_from_environment()
+    _client.add_events(events)
+
+
 def count(event_collection, timeframe=None, timezone=None, interval=None, filters=None, group_by=None):
     """ Performs a count query
 

@@ -8,6 +8,13 @@ __author__ = 'dkador'
 
 
 class ClientTests(BaseTestCase):
+    def setUp(self):
+        super(ClientTests, self).setUp()
+        keen._client = None
+        keen.project_id = None
+        keen.write_key = None
+        keen.read_key = None
+
     def test_init(self):
         def positive_helper(project_id, **kwargs):
             client = KeenClient(project_id, **kwargs)
@@ -72,6 +79,20 @@ class ClientTests(BaseTestCase):
                     {"price": 7}
                 ]}
         )
+
+    def test_module_level_add_event(self):
+        keen.project_id = "5004ded1163d66114f000000"
+        api_key = "2e79c6ec1d0145be8891bf668599c79a"
+        keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
+        # client = KeenClient(project_id, write_key=write_key, read_key=read_key)
+        keen.add_event("python_test", {"hello": "goodbye"})
+
+    def test_module_level_add_events(self):
+        keen.project_id = "5004ded1163d66114f000000"
+        api_key = "2e79c6ec1d0145be8891bf668599c79a"
+        keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
+        # client = KeenClient(project_id, write_key=write_key, read_key=read_key)
+        keen.add_events({"python_test": [{"hello": "goodbye"}]})
 
     def test_environment_variables(self):
         # try addEvent w/out having environment variables

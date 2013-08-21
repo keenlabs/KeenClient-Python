@@ -99,7 +99,7 @@ class KeenClient(object):
         self.persistence_strategy.persist(event)
 
     def add_events(self, events):
-        """ Adds a batch of events
+        """ Adds a batch of events.
 
         Depending on the persistence strategy of the client,
         this will either result in the event being uploaded to Keen
