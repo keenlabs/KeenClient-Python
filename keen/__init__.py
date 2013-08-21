@@ -37,6 +37,11 @@ def add_events(events):
     _client.add_events(events)
 
 
+def generate_image_beacon(event_collection, body, timestamp=None):
+    _initialize_client_from_environment()
+    return _client.generate_image_beacon(event_collection, body, timestamp=timestamp)
+
+
 def count(event_collection, timeframe=None, timezone=None, interval=None, filters=None, group_by=None):
     """ Performs a count query
 

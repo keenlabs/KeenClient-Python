@@ -1,5 +1,7 @@
+import base64
 import copy
 import json
+import urllib
 from keen import persistence_strategies, exceptions
 from keen.api import KeenApi
 from keen.persistence_strategies import BasePersistenceStrategy
@@ -108,6 +110,25 @@ class KeenClient(object):
         :param events: dictionary of events
         """
         self.persistence_strategy.batch_persist(events)
+
+    def generate_image_beacon(self, event_collection, event_body, timestamp=None):
+        """ Generates an image beacon URL.
+
+        :param event_collection: the name of the collection to insert the
+        event to
+        :param event_body: dict, the body of the event to insert the event to
+        :param timestamp: datetime, optional, the timestamp of the event
+        """
+        event = Event(self.project_id, event_collection, event_body,
+                      timestamp=timestamp)
+        event_json = event.to_json()
+        return "{base_url}/{api_version}/projects/{project_id}/events/{event_collection}" \
+               "?api_key={api_key}&data={data}".format(base_url=self.api.base_url,
+                                                       api_version=self.api.api_version,
+                                                       project_id=self.project_id,
+                                                       event_collection=urllib.quote(event_collection),
+                                                       api_key=self.api.write_key,
+                                                       data=base64.b64encode(event_json))
 
     def count(self, event_collection, timeframe=None, timezone=None, interval=None, filters=None, group_by=None):
         """ Performs a count query
