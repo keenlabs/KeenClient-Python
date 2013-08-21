@@ -1,9 +1,9 @@
 import base64
 import json
 import os
-import urllib
 import datetime
 import requests
+import sys
 from keen import exceptions, persistence_strategies, scoped_keys
 import keen
 from keen.client import KeenClient
@@ -135,14 +135,14 @@ class ClientTests(BaseTestCase):
         api_key = "2e79c6ec1d0145be8891bf668599c79a"
         keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
 
-        event_collection = "python_test"
+        event_collection = "python_test hello!?"
         event_data = {"a": "b"}
-        data = base64.b64encode(json.dumps(event_data))
+        data = self.base64_encode(json.dumps(event_data))
 
         # module level should work
         url = keen.generate_image_beacon(event_collection, event_data)
-        expected = "https://api.keen.io/3.0/projects/{}/events/{}?api_key={}&data={}".format(
-            keen.project_id, urllib.quote(event_collection), keen.write_key, data
+        expected = "https://api.keen.io/3.0/projects/{0}/events/{1}?api_key={2}&data={3}".format(
+            keen.project_id, self.url_escape(event_collection), keen.write_key.decode(sys.getdefaultencoding()), data
         )
         self.assert_equal(expected, url)
 
@@ -154,7 +154,7 @@ class ClientTests(BaseTestCase):
         # make sure URL works
         response = requests.get(url)
         self.assert_equal(200, response.status_code)
-        self.assert_equal("GIF89a\x01\x00\x01\x00\x80\x01\x00\xff\xff\xff\x00\x00\x00!\xf9\x04\x01\n\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;",
+        self.assert_equal(b"GIF89a\x01\x00\x01\x00\x80\x01\x00\xff\xff\xff\x00\x00\x00!\xf9\x04\x01\n\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;",
                           response.content)
 
     def test_generate_image_beacon_timestamp(self):
@@ -167,13 +167,33 @@ class ClientTests(BaseTestCase):
         event_collection = "python_test"
         event_data = {"a": "b"}
         timestamp = datetime.datetime.utcnow()
-        data = base64.b64encode(json.dumps({"a": "b", "keen": {"timestamp": timestamp.isoformat()}}))
+        data = self.base64_encode(json.dumps({"a": "b", "keen": {"timestamp": timestamp.isoformat()}}))
 
         url = keen.generate_image_beacon(event_collection, event_data, timestamp=timestamp)
-        expected = "https://api.keen.io/3.0/projects/{}/events/{}?api_key={}&data={}".format(
-            keen.project_id, urllib.quote(event_collection), keen.write_key, data
+        expected = "https://api.keen.io/3.0/projects/{0}/events/{1}?api_key={2}&data={3}".format(
+            keen.project_id, self.url_escape(event_collection), keen.write_key.decode(sys.getdefaultencoding()), data
         )
         self.assert_equal(expected, url)
+
+    def base64_encode(self, string_to_encode):
+        try:
+            # python 2
+            return base64.b64encode(string_to_encode)
+        except TypeError:
+            # python 3
+            import sys
+            encoding = sys.getdefaultencoding()
+            base64_bytes = base64.b64encode(bytes(string_to_encode, encoding))
+            return base64_bytes.decode(encoding)
+
+    def url_escape(self, url):
+        try:
+            import urllib
+            return urllib.quote(url)
+        except AttributeError:
+            import urllib.parse
+            return urllib.parse.quote(url)
+
 
 
 class QueryTests(BaseTestCase):

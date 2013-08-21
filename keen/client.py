@@ -1,7 +1,7 @@
 import base64
 import copy
 import json
-import urllib
+import sys
 from keen import persistence_strategies, exceptions
 from keen.api import KeenApi
 from keen.persistence_strategies import BasePersistenceStrategy
@@ -122,13 +122,32 @@ class KeenClient(object):
         event = Event(self.project_id, event_collection, event_body,
                       timestamp=timestamp)
         event_json = event.to_json()
-        return "{base_url}/{api_version}/projects/{project_id}/events/{event_collection}" \
-               "?api_key={api_key}&data={data}".format(base_url=self.api.base_url,
-                                                       api_version=self.api.api_version,
-                                                       project_id=self.project_id,
-                                                       event_collection=urllib.quote(event_collection),
-                                                       api_key=self.api.write_key,
-                                                       data=base64.b64encode(event_json))
+        return "{0}/{1}/projects/{2}/events/{3}?api_key={4}&data={5}".format(
+            self.api.base_url, self.api.api_version, self.project_id, self._url_escape(event_collection),
+            self.api.write_key.decode(sys.getdefaultencoding()), self._base64_encode(event_json)
+        )
+
+    def _base64_encode(self, string_to_encode):
+        """ Base64 encodes a string, with either Python 2 or 3.
+
+        :param string_to_encode: the string to encode
+        """
+        try:
+            # python 2
+            return base64.b64encode(string_to_encode)
+        except TypeError:
+            # python 3
+            encoding = sys.getdefaultencoding()
+            base64_bytes = base64.b64encode(bytes(string_to_encode, encoding))
+            return base64_bytes.decode(encoding)
+
+    def _url_escape(self, url):
+        try:
+            import urllib
+            return urllib.quote(url)
+        except AttributeError:
+            import urllib.parse
+            return urllib.parse.quote(url)
 
     def count(self, event_collection, timeframe=None, timezone=None, interval=None, filters=None, group_by=None):
         """ Performs a count query
