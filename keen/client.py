@@ -353,7 +353,7 @@ class KeenClient(object):
         params = self.get_params(steps=steps, timeframe=timeframe, timezone=timezone)
         return self.api.query("funnel", params)
 
-    def multi_analysis(self, event_collection, analyses, timeframe=None, timezone=None, filters=None, group_by=None):
+    def multi_analysis(self, event_collection, analyses, timeframe=None, interval=None, timezone=None, filters=None, group_by=None):
         """ Performs a multi-analysis query
 
         Returns a dictionary of analysis results.
@@ -364,6 +364,8 @@ class KeenClient(object):
         "average price":{"analysis_type":"average","target_property":"purchase.price"}
         :param timeframe: string or dict, the timeframe in which the events
         happened example: "previous_7_days"
+        :param interval: string, the time interval used for measuring data over
+        time example: "daily"
         :param timezone: int, the timezone you'd like to use for the timeframe
         and interval in seconds
         :param filters: array of dict, contains the filters you'd like to apply to the data
@@ -372,8 +374,15 @@ class KeenClient(object):
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
         """
-        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                 filters=filters, group_by=group_by, analyses=analyses)
+        params = self.get_params(
+            event_collection=event_collection,
+            timeframe=timeframe,
+            interval=interval,
+            timezone=timezone,
+            filters=filters,
+            group_by=group_by,
+            analyses=analyses)
+
         return self.api.query("multi_analysis", params)
 
     def get_params(self, event_collection=None, timeframe=None, timezone=None, interval=None, filters=None,
@@ -393,7 +402,7 @@ class KeenClient(object):
         if filters:
             params["filters"] = json.dumps(filters)
         if group_by:
-            if type(group_by) is dict:
+            if type(group_by) is list:
                 params["group_by"] = json.dumps(group_by)
             else:
                 params["group_by"] = group_by

@@ -204,8 +204,8 @@ class QueryTests(BaseTestCase):
         api_key = "2e79c6ec1d0145be8891bf668599c79a"
         keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
         keen.read_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]})
-        keen.add_event("query test", {"number": 5})
-        keen.add_event("step2", {"number": 5})
+        keen.add_event("query test", {"number": 5, "string": "foo"})
+        keen.add_event("step2", {"number": 5, "string": "foo"})
 
     def tearDown(self):
         keen.project_id = None
@@ -273,6 +273,11 @@ class QueryTests(BaseTestCase):
     def test_group_by(self):
         resp = keen.count("query test", timeframe="today", group_by="number")
         assert type(resp) is list
+
+    def test_multi_group_by(self):
+        resp = keen.count("query test", timeframe="today", group_by=["number", "string"])
+        assert type(resp) is list
+        assert len(resp) == 1
 
     def test_interval(self):
         resp = keen.count("query test", timeframe="this_2_days", interval="daily")

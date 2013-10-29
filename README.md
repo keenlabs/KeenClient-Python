@@ -95,6 +95,10 @@ Here are some examples of querying.  Let's assume you've added some events to th
 
 ### Changelog
 
+##### 0.2.2
+
++ Added interval to multi_analysis.
+
 ##### 0.2.1
 
 + Added stacktrace_id and unique_id to Keen API errors.
