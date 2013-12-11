@@ -235,7 +235,7 @@ class QueryTests(BaseTestCase):
 
     def test_average(self):
         resp = keen.average("query test", target_property="number", timeframe="today")
-        assert type(resp) is float
+        assert type(resp) in (float, int)
 
     def test_count_unique(self):
         resp = keen.count_unique("query test", target_property="number", timeframe="today")
