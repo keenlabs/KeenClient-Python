@@ -282,3 +282,23 @@ class QueryTests(BaseTestCase):
     def test_interval(self):
         resp = keen.count("query test", timeframe="this_2_days", interval="daily")
         assert type(resp) is list
+
+
+
+class UnicodeTests(BaseTestCase):
+    def setUp(self):
+        super(UnicodeTests, self).setUp()
+        keen._client = None
+        keen.project_id = unicode("5004ded1163d66114f000000")
+        api_key = unicode("2e79c6ec1d0145be8891bf668599c79a")
+        keen.write_key = unicode(api_key)
+
+    def test_unicode(self):
+        keen.add_event(unicode("unicode test"), {unicode("number"): 5, "string": unicode("foo")})
+
+    def tearDown(self):
+        keen.project_id = None
+        keen.write_key = None
+        keen.read_key = None
+        keen._client = None
+        super(UnicodeTests, self).tearDown()
