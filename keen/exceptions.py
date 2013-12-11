@@ -31,6 +31,10 @@ class KeenApiError(BaseKeenClientError):
         self.api_error = api_error
         self._message = "Error from Keen API. Details:\n Message: {0}\nCode: " \
                         "{1}".format(api_error["message"], api_error["error_code"])
+        if "stacktrace_id" in api_error:
+            self._message = "{0}\nStacktrace ID: {1}".format(self._message, api_error["stacktrace_id"])
+        if "unique_id" in api_error:
+            self._message = "{0}\nUnique ID: {1}".format(self._message, api_error["unique_id"])
 
 
 class InvalidEnvironmentError(BaseKeenClientError):
