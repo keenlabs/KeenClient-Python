@@ -65,8 +65,12 @@ class KeenClient(object):
         super(KeenClient, self).__init__()
 
         # do some validation
-        if not project_id or not isinstance(project_id, basestring):
-            raise exceptions.InvalidProjectIdError(project_id)
+        if sys.version_info.major < 3:
+            if not project_id or not isinstance(project_id, basestring):
+                raise exceptions.InvalidProjectIdError(project_id)
+        else:
+            if not project_id or not isinstance(project_id, str):
+                raise exceptions.InvalidProjectIdError(project_id)
 
         # Set up an api client to be used for querying and optionally passed
         # into a default persistence strategy.

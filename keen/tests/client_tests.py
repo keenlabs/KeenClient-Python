@@ -8,6 +8,7 @@ from keen import exceptions, persistence_strategies, scoped_keys
 import keen
 from keen.client import KeenClient
 from keen.tests.base_test_case import BaseTestCase
+import sys
 
 __author__ = 'dkador'
 
@@ -284,21 +285,23 @@ class QueryTests(BaseTestCase):
         assert type(resp) is list
 
 
+# only need to test unicode separately in python2
+if sys.version_info.major > 3:
 
-class UnicodeTests(BaseTestCase):
-    def setUp(self):
-        super(UnicodeTests, self).setUp()
-        keen._client = None
-        keen.project_id = unicode("5004ded1163d66114f000000")
-        api_key = unicode("2e79c6ec1d0145be8891bf668599c79a")
-        keen.write_key = unicode(api_key)
+    class UnicodeTests(BaseTestCase):
+        def setUp(self):
+            super(UnicodeTests, self).setUp()
+            keen._client = None
+            keen.project_id = unicode("5004ded1163d66114f000000")
+            api_key = unicode("2e79c6ec1d0145be8891bf668599c79a")
+            keen.write_key = unicode(api_key)
 
-    def test_unicode(self):
-        keen.add_event(unicode("unicode test"), {unicode("number"): 5, "string": unicode("foo")})
+        def test_unicode(self):
+            keen.add_event(unicode("unicode test"), {unicode("number"): 5, "string": unicode("foo")})
 
-    def tearDown(self):
-        keen.project_id = None
-        keen.write_key = None
-        keen.read_key = None
-        keen._client = None
-        super(UnicodeTests, self).tearDown()
+        def tearDown(self):
+            keen.project_id = None
+            keen.write_key = None
+            keen.read_key = None
+            keen._client = None
+            super(UnicodeTests, self).tearDown()
