@@ -65,12 +65,7 @@ class KeenClient(object):
         super(KeenClient, self).__init__()
 
         # do some validation
-        if sys.version_info.major < 3:
-            if not project_id or not isinstance(project_id, basestring):
-                raise exceptions.InvalidProjectIdError(project_id)
-        else:
-            if not project_id or not isinstance(project_id, str):
-                raise exceptions.InvalidProjectIdError(project_id)
+        self.check_project_id(project_id)
 
         # Set up an api client to be used for querying and optionally passed
         # into a default persistence strategy.
@@ -87,6 +82,24 @@ class KeenClient(object):
 
         self.project_id = project_id
         self.persistence_strategy = persistence_strategy
+
+    if sys.version_info[0] < 3:
+        @staticmethod
+        def check_project_id(project_id):
+
+            ''' Python 2.x-compatible string typecheck. '''
+
+            if not project_id or not isinstance(project_id, basestring):
+                raise exceptions.InvalidProjectIdError(project_id)
+    else:
+        @staticmethod
+        def check_project_id(project_id):
+
+            ''' Python 3.x-compatible string typecheck. '''
+
+            if not project_id or not isinstance(project_id, str):
+                raise exceptions.InvalidProjectIdError(project_id)
+
 
     def add_event(self, event_collection, event_body, timestamp=None):
         """ Adds an event.

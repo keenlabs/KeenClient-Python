@@ -286,7 +286,7 @@ class QueryTests(BaseTestCase):
 
 
 # only need to test unicode separately in python2
-if sys.version_info.major > 3:
+if sys.version_info[0] > 3:
 
     class UnicodeTests(BaseTestCase):
         def setUp(self):
