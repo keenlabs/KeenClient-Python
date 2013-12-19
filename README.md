@@ -24,31 +24,38 @@ Setting a write key is required for publishing events. Setting a read key is req
 
 If you don't want to use environment variables for some reason, you can directly set values as follows:
 
+```python
     keen.project_id = "xxxx"
     keen.write_key = "yyyy"
     keen.read_key = "zzzz"
+```
 
 You can also configure unique client instances as follows:
 
+```python
     client = KeenClient(
         project_id="xxxx",
         write_key="yyyy",
         read_key="zzzz"
     )
+```
 
 ##### Send Events to Keen IO
 
 Once you've set `KEEN_PROJECT_ID` and `KEEN_WRITE_KEY`, sending events is simple:
 
+```python
     keen.add_event("sign_ups", {
         "username": "lloyd",
         "referred_by": "harry"
     })
+```
 
 ##### Send Batch Events to Keen IO
 
 You can upload Events in a batch, like so:
-
+    
+```python
     # uploads 4 events total - 2 to the "sign_ups" collection and 2 to the "purchases" collection
     keen.add_events({
         "sign_ups": [
@@ -60,6 +67,7 @@ You can upload Events in a batch, like so:
             { "price": 6 }
         ]
     })
+```
 
 
 That's it! After running your code, check your Keen IO Project to see the event/events has been added.
@@ -68,6 +76,7 @@ That's it! After running your code, check your Keen IO Project to see the event/
 
 Here are some examples of querying.  Let's assume you've added some events to the "purchases" collection.
 
+```python
     keen.count("purchases") # => 100
     keen.sum("purchases", target_property="price") # => 10000
     keen.minimum("purchases", target_property="price") # => 20
@@ -92,6 +101,7 @@ Here are some examples of querying.  Let's assume you've added some events to th
         "actor_property": "user.email"
     }
     keen.funnel([step1, step2], timeframe="today") # => [2039, 201]
+```
 
 ### Changelog
 
