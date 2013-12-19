@@ -24,11 +24,11 @@ Setting a write key is required for publishing events. Setting a read key is req
 
 If you don't want to use environment variables for some reason, you can directly set values as follows:
 
-    ```python
+```python
     keen.project_id = "xxxx"
     keen.write_key = "yyyy"
     keen.read_key = "zzzz"
-    ```
+```
 
 You can also configure unique client instances as follows:
 
