@@ -145,7 +145,6 @@ Here are some examples of querying.  Let's assume you've added some events to th
 
 ### To Do
 
-* Bulk event insert
 * Asynchronous insert
 * Scoped keys
 
