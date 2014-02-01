@@ -8,7 +8,6 @@ from keen import exceptions, persistence_strategies, scoped_keys
 import keen
 from keen.client import KeenClient
 from keen.tests.base_test_case import BaseTestCase
-import sys
 
 __author__ = 'dkador'
 
