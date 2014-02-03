@@ -1,14 +1,23 @@
-import base64
-import json
+# -*- coding: utf-8 -*-
+
 import os
-import datetime
-import requests
 import sys
-from keen import exceptions, persistence_strategies, scoped_keys
+import base64
+
+import datetime
+import decimal
+import requests
+
 import keen
 from keen.client import KeenClient
 from keen.tests.base_test_case import BaseTestCase
-import sys
+from keen import exceptions, persistence_strategies, scoped_keys
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
+
 
 __author__ = 'dkador'
 
@@ -284,6 +293,95 @@ class QueryTests(BaseTestCase):
         resp = keen.count("query test", timeframe="this_2_days", interval="daily")
         assert type(resp) is list
 
+class DefaultJSONEncoderTests(BaseTestCase):
+    def setUp(self):
+        super(DefaultJSONEncoderTests, self).setUp()
+        api_key = "2e79c6ec1d0145be8891bf668599c79a"
+        self.client = KeenClient(project_id='5004ded1163d66114f000000',
+                                 write_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]}),
+                                 read_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]}))
+
+    def tearDown(self):
+        self.client = None
+        super(DefaultJSONEncoderTests, self).tearDown()
+
+    def test_default_encoder_with_datetime_type(self):
+        self.assert_raises(TypeError,
+                           self.client.add_event,
+                           "sign_ups",
+                           {
+                               "username": "lloyd",
+                               "referred_by": "harry",
+                               "confirmed_at": datetime.datetime.utcnow()
+                           })
+
+
+class CustomEncoder(json.JSONEncoder):
+
+    """JSON Encoder class that handles conversion for a number of types not
+    supported by the default json library
+
+
+    - datetime.* objects will be converted with their isoformat() function.
+    - Decimal will be converted to a unicode string
+
+    :returns: object that can be converted to json
+    """
+
+    def td_format(self, td_object):
+        seconds = int(td_object.total_seconds())
+        periods = [
+            ('year', 60 * 60 * 24 * 365),
+            ('month', 60 * 60 * 24 * 30),
+            ('day', 60 * 60 * 24),
+            ('hour', 60 * 60),
+            ('minute', 60),
+            ('second', 1)
+        ]
+
+        strings = []
+        for period_name, period_seconds in periods:
+            if seconds > period_seconds:
+                period_value, seconds = divmod(seconds, period_seconds)
+                if period_value == 1:
+                    strings.append("%s %s" % (period_value, period_name))
+                else:
+                    strings.append("%s %ss" % (period_value, period_name))
+
+        return ", ".join(strings)
+
+    def default(self, obj):
+        if isinstance(obj, (datetime.datetime, datetime.date, datetime.time)):
+            return obj.isoformat()
+        elif isinstance(obj, (datetime.timedelta)):
+            return self.td_format(obj)
+        elif isinstance(obj, (decimal.Decimal)):
+            return unicode(obj)
+        else:
+            return json.JSONEncoder.default(self, obj)
+
+
+class CustomJSONEncoderTests(BaseTestCase):
+    
+    def setUp(self):
+        super(CustomJSONEncoderTests, self).setUp()
+        api_key = "2e79c6ec1d0145be8891bf668599c79a"
+        self.client = KeenClient(project_id='5004ded1163d66114f000000',
+                                 write_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]}),
+                                 read_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]}),
+                                 json_encoder=CustomEncoder)
+
+    def tearDown(self):
+        self.client = None
+        super(CustomJSONEncoderTests, self).tearDown()
+
+    def test_custom_encoder_with_datetime_type(self):
+        self.client.add_event("sign_ups", {
+            "username": "lloyd",
+            "referred_by": "harry",
+            "confirmed_at": datetime.datetime.utcnow()
+        })
+	
 
 # only need to test unicode separately in python2
 if sys.version_info[0] > 3:

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Padding methods for password based encryption
 # Author: Peio Popov <peio@peio.org>
 # License: Public Domain

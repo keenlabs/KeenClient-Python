@@ -1,5 +1,6 @@
-__author__ = 'dkador'
+# -*- coding: utf-8 -*-
 
+__author__ = 'dkador'
 
 class BaseKeenClientError(Exception):
     """

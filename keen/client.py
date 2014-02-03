@@ -1,10 +1,17 @@
+# -*- coding: utf-8 -*-
+
 import base64
 import copy
-import json
 import sys
 from keen import persistence_strategies, exceptions
 from keen.api import KeenApi
 from keen.persistence_strategies import BasePersistenceStrategy
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
+
 
 __author__ = 'dkador'
 
@@ -30,15 +37,16 @@ class Event(object):
         self.event_body = event_body
         self.timestamp = timestamp
 
-    def to_json(self):
+    def to_json(self, json_encoder):
         """ Serializes the event to JSON.
-
+        :param json_encoder: optional, class for custom encoding, inherited 
+        from json.JSONEncoder 
         :returns: a string
         """
         event_as_dict = copy.deepcopy(self.event_body)
         if self.timestamp:
             event_as_dict["keen"] = {"timestamp": self.timestamp.isoformat()}
-        return json.dumps(event_as_dict)
+        return json.dumps(event_as_dict, cls=json_encoder)
 
 
 class KeenClient(object):
@@ -53,7 +61,7 @@ class KeenClient(object):
     """
 
     def __init__(self, project_id, write_key=None, read_key=None,
-                 persistence_strategy=None):
+                 persistence_strategy=None, json_encoder=None):
         """ Initializes a KeenClient object.
 
         :param project_id: the Keen IO project ID
@@ -61,6 +69,8 @@ class KeenClient(object):
         :param read_key: a Keen IO Scoped Key for Reads
         :param persistence_strategy: optional, the strategy to use to persist
         the event
+        :param json_encoder: optional, class for custom encoding, inherited 
+        from json.JSONEncoder 
         """
         super(KeenClient, self).__init__()
 
@@ -69,7 +79,7 @@ class KeenClient(object):
 
         # Set up an api client to be used for querying and optionally passed
         # into a default persistence strategy.
-        self.api = KeenApi(project_id, write_key=write_key, read_key=read_key)
+        self.api = KeenApi(project_id, write_key=write_key, read_key=read_key, json_encoder=json_encoder)
 
         if persistence_strategy:
             # validate the given persistence strategy
@@ -138,7 +148,7 @@ class KeenClient(object):
         """
         event = Event(self.project_id, event_collection, event_body,
                       timestamp=timestamp)
-        event_json = event.to_json()
+        event_json = event.to_json(json_encoder=self.api.json_encoder)
         return "{0}/{1}/projects/{2}/events/{3}?api_key={4}&data={5}".format(
             self.api.base_url, self.api.api_version, self.project_id, self._url_escape(event_collection),
             self.api.write_key.decode(sys.getdefaultencoding()), self._base64_encode(event_json)

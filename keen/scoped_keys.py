@@ -1,9 +1,14 @@
-import binascii
-import json
-import os
-from Crypto.Cipher import AES
+# -*- coding: utf-8 -*-
 
+import os
+import binascii
+from Crypto.Cipher import AES
 from keen import Padding
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 __author__ = 'dkador'
 

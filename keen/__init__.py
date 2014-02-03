@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 from keen.client import KeenClient
 from keen.exceptions import InvalidEnvironmentError
