@@ -9,10 +9,8 @@ except ImportError:
     import json
 
 
-__author__ = 'dkador'
-
-
 class KeenApi(object):
+
     """
     Responsible for communicating with the Keen API. Used by multiple
     persistence strategies or async processing.
@@ -24,7 +22,6 @@ class KeenApi(object):
     api_version = "3.0"
     # the default JSON encoder class
     json_encoder = json.JSONEncoder
-
 
     # self says it belongs to KeenApi/andOr is the object passed into KeenApi
     # __init__ create keenapi object whenever KeenApi class is invoked
@@ -41,7 +38,7 @@ class KeenApi(object):
         are sent
         :param api_version: string, optional, set this to override what API
         version is used
-        :param json_encoder: optional, class for custom encoding, inherited 
+        :param json_encoder: optional, class for custom encoding, inherited
         from json.JSONEncoder
         """
         # super? recreates the object with values passed into KeenApi
@@ -80,7 +77,6 @@ class KeenApi(object):
             raise exceptions.KeenApiError(error)
 
     def post_events(self, events):
-
         """
         Posts a single event to the Keen IO API. The write key must be set first.
 

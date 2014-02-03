@@ -1,0 +1,4 @@
+include LICENSE
+include README.md
+recursive-include keen/tests *
+recursive-exclude keen *.pyc

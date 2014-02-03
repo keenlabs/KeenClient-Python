@@ -4,8 +4,6 @@ import os
 from keen.client import KeenClient
 from keen.exceptions import InvalidEnvironmentError
 
-__author__ = 'dkador'
-
 _client = None
 project_id = None
 write_key = None

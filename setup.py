@@ -2,18 +2,22 @@
 import os
 from setuptools import setup, find_packages
 
+
 def fpath(name):
     return os.path.join(os.path.dirname(__file__), name)
+
 
 def read(fname):
     return open(fpath(fname)).read()
 
+
 def desc():
-    info = ''
+    info = read('README.md')
     try:
-        return read('README.md')
+        return info + '\n\n' + read('CHANGES.md')
     except IOError:
         return info
+
 
 setup(
     name="keen",

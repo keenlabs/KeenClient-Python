@@ -10,8 +10,6 @@ try:
 except ImportError:
     import json
 
-__author__ = 'dkador'
-
 # the block size for the cipher object; must be 16, 24, or 32 for AES
 BLOCK_SIZE = 32
 
