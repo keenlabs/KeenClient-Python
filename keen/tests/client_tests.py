@@ -18,7 +18,6 @@ try:
 except ImportError:
     import json
 
-
 __author__ = 'dkador'
 
 
