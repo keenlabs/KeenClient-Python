@@ -33,6 +33,8 @@ If you don't want to use environment variables for some reason, you can directly
 You can also configure unique client instances as follows:
 
 ```python
+    from keen.client import KeenClient
+
     client = KeenClient(
         project_id="xxxx",
         write_key="yyyy",
