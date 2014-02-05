@@ -1,7 +1,8 @@
-__author__ = 'dkador'
+# -*- coding: utf-8 -*-
 
 
 class BaseKeenClientError(Exception):
+
     """
     Base class for all Keen Client errors.
     """
@@ -12,6 +13,7 @@ class BaseKeenClientError(Exception):
 
 
 class InvalidProjectIdError(BaseKeenClientError):
+
     def __init__(self, project_id):
         super(InvalidProjectIdError, self).__init__(project_id)
         self.project_id = project_id
@@ -19,6 +21,7 @@ class InvalidProjectIdError(BaseKeenClientError):
 
 
 class InvalidPersistenceStrategyError(BaseKeenClientError):
+
     def __init__(self):
         super(InvalidPersistenceStrategyError, self).__init__()
         self._message = "Invalid persistence strategy. A persistence strategy" \
@@ -26,6 +29,7 @@ class InvalidPersistenceStrategyError(BaseKeenClientError):
 
 
 class KeenApiError(BaseKeenClientError):
+
     def __init__(self, api_error):
         super(KeenApiError, self).__init__(api_error)
         self.api_error = api_error
@@ -38,6 +42,7 @@ class KeenApiError(BaseKeenClientError):
 
 
 class InvalidEnvironmentError(BaseKeenClientError):
+
     def __init__(self, message):
         super(InvalidEnvironmentError, self).__init__(message)
         self._message = message

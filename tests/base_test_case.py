@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
+
 import string
 import unittest
 
-__author__ = 'dkador'
 
 class BaseTestCase(unittest.TestCase):
     # --------------------
@@ -9,6 +10,7 @@ class BaseTestCase(unittest.TestCase):
     # --------------------
 
     class __metaclass__(type):
+
         def __getattr__(cls, name):
             """
 
@@ -22,7 +24,6 @@ class BaseTestCase(unittest.TestCase):
 
             name = BaseTestCase.to_mixed(name)
             return type.__getattribute__(cls, name)
-
 
     def __getattr__(self, name):
         """

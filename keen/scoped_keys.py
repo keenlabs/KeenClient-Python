@@ -1,11 +1,14 @@
-import binascii
-import json
-import os
-from Crypto.Cipher import AES
+# -*- coding: utf-8 -*-
 
+import os
+import binascii
+from Crypto.Cipher import AES
 from keen import Padding
 
-__author__ = 'dkador'
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 # the block size for the cipher object; must be 16, 24, or 32 for AES
 BLOCK_SIZE = 32

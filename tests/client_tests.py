@@ -1,19 +1,26 @@
-import base64
-import json
+# -*- coding: utf-8 -*-
 import os
-import datetime
-import requests
 import sys
-from keen import exceptions, persistence_strategies, scoped_keys
-import keen
-from keen.client import KeenClient
-from keen.tests.base_test_case import BaseTestCase
-import sys
+import base64
 
-__author__ = 'dkador'
+import datetime
+import decimal
+import requests
+
+import keen
+from keen import exceptions, persistence_strategies, scoped_keys
+from keen.client import KeenClient
+
+from .base_test_case import BaseTestCase
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 
 class ClientTests(BaseTestCase):
+
     def setUp(self):
         super(ClientTests, self).setUp()
         keen._client = None
@@ -155,8 +162,9 @@ class ClientTests(BaseTestCase):
         # make sure URL works
         response = requests.get(url)
         self.assert_equal(200, response.status_code)
-        self.assert_equal(b"GIF89a\x01\x00\x01\x00\x80\x01\x00\xff\xff\xff\x00\x00\x00!\xf9\x04\x01\n\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;",
-                          response.content)
+        self.assert_equal(
+            b"GIF89a\x01\x00\x01\x00\x80\x01\x00\xff\xff\xff\x00\x00\x00!\xf9\x04\x01\n\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;",
+            response.content)
 
     def test_generate_image_beacon_timestamp(self):
         # make sure using a timestamp works
@@ -196,8 +204,8 @@ class ClientTests(BaseTestCase):
             return urllib.parse.quote(url)
 
 
-
 class QueryTests(BaseTestCase):
+
     def setUp(self):
         super(QueryTests, self).setUp()
         keen._client = None
@@ -220,19 +228,19 @@ class QueryTests(BaseTestCase):
 
     def test_count(self):
         resp = keen.count("query test", timeframe="today", filters=self.get_filter())
-        assert type(resp) is int
+        assert isinstance(resp, int)
 
     def test_sum(self):
         resp = keen.sum("query test", target_property="number", timeframe="today")
-        assert type(resp) is int
+        assert isinstance(resp, int)
 
     def test_minimum(self):
         resp = keen.minimum("query test", target_property="number", timeframe="today")
-        assert type(resp) is int
+        assert isinstance(resp, int)
 
     def test_maximum(self):
         resp = keen.maximum("query test", target_property="number", timeframe="today")
-        assert type(resp) is int
+        assert isinstance(resp, int)
 
     def test_average(self):
         resp = keen.average("query test", target_property="number", timeframe="today")
@@ -240,22 +248,22 @@ class QueryTests(BaseTestCase):
 
     def test_count_unique(self):
         resp = keen.count_unique("query test", target_property="number", timeframe="today")
-        assert type(resp) is int
+        assert isinstance(resp, int)
 
     def test_select_unique(self):
         resp = keen.select_unique("query test", target_property="number", timeframe="today")
-        assert type(resp) is list
+        assert isinstance(resp, list)
 
     def test_extraction(self):
         resp = keen.extraction("query test", timeframe="today")
-        assert type(resp) is list
+        assert isinstance(resp, list)
 
     def test_multi_analysis(self):
         resp = keen.multi_analysis("query test",
                                    analyses={"total": {"analysis_type": "sum", "target_property": "number"}},
                                    timeframe="today")
-        assert type(resp) is dict
-        assert type(resp["total"]) is int
+        assert isinstance(resp, dict)
+        assert isinstance(resp["total"], int)
 
     def test_funnel(self):
         step1 = {
@@ -269,26 +277,118 @@ class QueryTests(BaseTestCase):
             "timeframe": "today"
         }
         resp = keen.funnel([step1, step2])
-        assert type(resp) is list, resp
+        assert isinstance(resp, list), resp
 
     def test_group_by(self):
         resp = keen.count("query test", timeframe="today", group_by="number")
-        assert type(resp) is list
+        assert isinstance(resp, list)
 
     def test_multi_group_by(self):
         resp = keen.count("query test", timeframe="today", group_by=["number", "string"])
-        assert type(resp) is list
+        assert isinstance(resp, list)
         assert len(resp) == 1
 
     def test_interval(self):
         resp = keen.count("query test", timeframe="this_2_days", interval="daily")
-        assert type(resp) is list
+        assert isinstance(resp, list)
+
+
+class DefaultJSONEncoderTests(BaseTestCase):
+
+    def setUp(self):
+        super(DefaultJSONEncoderTests, self).setUp()
+        api_key = "2e79c6ec1d0145be8891bf668599c79a"
+        self.client = KeenClient(project_id='5004ded1163d66114f000000',
+                                 write_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]}),
+                                 read_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]}))
+
+    def tearDown(self):
+        self.client = None
+        super(DefaultJSONEncoderTests, self).tearDown()
+
+    def test_default_encoder_with_datetime_type(self):
+        self.assert_raises(TypeError,
+                           self.client.add_event,
+                           "sign_ups",
+                           {
+                               "username": "lloyd",
+                               "referred_by": "harry",
+                               "confirmed_at": datetime.datetime.utcnow()
+                           })
+
+
+class CustomEncoder(json.JSONEncoder):
+
+    """JSON Encoder class that handles conversion for a number of types not
+    supported by the default json library
+
+
+    - datetime.* objects will be converted with their isoformat() function.
+    - Decimal will be converted to a unicode string
+
+    :returns: object that can be converted to json
+    """
+
+    def td_format(self, td_object):
+        seconds = int(td_object.total_seconds())
+        periods = [
+            ('year', 60 * 60 * 24 * 365),
+            ('month', 60 * 60 * 24 * 30),
+            ('day', 60 * 60 * 24),
+            ('hour', 60 * 60),
+            ('minute', 60),
+            ('second', 1)
+        ]
+
+        strings = []
+        for period_name, period_seconds in periods:
+            if seconds > period_seconds:
+                period_value, seconds = divmod(seconds, period_seconds)
+                if period_value == 1:
+                    strings.append("%s %s" % (period_value, period_name))
+                else:
+                    strings.append("%s %ss" % (period_value, period_name))
+
+        return ", ".join(strings)
+
+    def default(self, obj):
+        if isinstance(obj, (datetime.datetime, datetime.date, datetime.time)):
+            return obj.isoformat()
+        elif isinstance(obj, (datetime.timedelta)):
+            return self.td_format(obj)
+        elif isinstance(obj, (decimal.Decimal)):
+            return unicode(obj)
+        else:
+            return json.JSONEncoder.default(self, obj)
+
+
+class CustomJSONEncoderTests(BaseTestCase):
+
+    def setUp(self):
+        super(CustomJSONEncoderTests, self).setUp()
+        api_key = "2e79c6ec1d0145be8891bf668599c79a"
+        self.client = KeenClient(project_id='5004ded1163d66114f000000',
+                                 write_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]}),
+                                 read_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]}),
+                                 json_encoder=CustomEncoder)
+
+    def tearDown(self):
+        self.client = None
+        super(CustomJSONEncoderTests, self).tearDown()
+
+    def test_custom_encoder_with_datetime_type(self):
+        self.client.add_event("sign_ups", {
+            "username": "lloyd",
+            "referred_by": "harry",
+            "confirmed_at": datetime.datetime.utcnow()
+        })
 
 
 # only need to test unicode separately in python2
 if sys.version_info[0] > 3:
 
     class UnicodeTests(BaseTestCase):
+
         def setUp(self):
             super(UnicodeTests, self).setUp()
             keen._client = None
