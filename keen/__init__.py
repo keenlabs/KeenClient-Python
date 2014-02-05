@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+__version__ = '0.2.3'
+__author__ = 'dkador'
+__license__ = 'MIT'
+
 import os
 from keen.client import KeenClient
 from keen.exceptions import InvalidEnvironmentError
