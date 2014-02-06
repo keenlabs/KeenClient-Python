@@ -6,6 +6,11 @@ try:
 except ImportError:
     import ssl
 
+try:
+    import __builtin__
+except ImportError:
+    pass  # Py3 doesn't have `__builtin__`
+
 # requests
 import requests
 from requests.adapters import HTTPAdapter
@@ -88,7 +93,14 @@ class KeenApi(object):
         if api_version: self.api_version = api_version
 
     # py3-compatible range operation
-    range = range if sys.version_info[0] > 3 else xrange
+    @staticmethod
+    def range(*args, **kwargs):
+
+        '''  '''
+
+        if int(sys.version[0]) >= 3:
+            return range(*args, **kwargs)
+        return __builtin__.xrange(*args, **kwargs)
 
     @property
     def _apisession(self):
