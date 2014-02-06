@@ -1,11 +1,48 @@
+# stdlib
 import json
+import ssl
 
+# requests
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.poolmanager import PoolManager
 
+# keen exceptions
 from keen import exceptions
 
 
 __author__ = 'dkador'
+
+
+class HTTPMethods(object):
+
+    ''' HTTP methods that can be used with Keen's API. '''
+
+    GET = 'get'
+    POST = 'post'
+
+
+class KeenAdapter(HTTPAdapter):
+
+    ''' Adapt :py:mod:`requests` to Keen IO. '''
+
+    def init_poolmanager(self, connections, maxsize, block=False):
+
+        ''' Initialize pool manager with forced TLSv1 support. '''
+
+        self.poolmanager = PoolManager(num_pools=connections,
+                                       maxsize=maxsize,
+                                       block=block,
+                                       ssl_version=ssl.PROTOCOL_TLSv1)
+
+
+def fulfill(method, *args, **kwargs):
+
+    ''' Fulfill an HTTP request to Keen's API. '''
+
+    s = requests.Session()
+    s.mount('https://', KeenAdapter())
+    return getattr(s, method)(*args, **kwargs)
 
 
 class KeenApi(object):
@@ -63,7 +100,7 @@ class KeenApi(object):
                                                        event.event_collection)
         headers = {"Content-Type": "application/json", "Authorization": self.write_key}
         payload = event.to_json()
-        response = requests.post(url, data=payload, headers=headers)
+        response = fulfill(HTTPMethods.POST, url, data=payload, headers=headers)
         if response.status_code != 201:
             error = response.json()
             raise exceptions.KeenApiError(error)
@@ -86,7 +123,7 @@ class KeenApi(object):
                                                    self.project_id)
         headers = {"Content-Type": "application/json", "Authorization": self.write_key}
         payload = json.dumps(events)
-        response = requests.post(url, data=payload, headers=headers)
+        response = fulfill(HTTPMethods.POST, url, data=payload, headers=headers)
         if response.status_code != 200:
             error = response.json()
             raise exceptions.KeenApiError(error)
@@ -108,7 +145,7 @@ class KeenApi(object):
 
         headers = {"Authorization": self.read_key}
         payload = params
-        response = requests.get(url, params=payload, headers=headers)
+        response = fulfill(HTTPMethods.GET, url, params=payload, headers=headers)
         if response.status_code != 200:
             error = response.json()
             raise exceptions.KeenApiError(error)
