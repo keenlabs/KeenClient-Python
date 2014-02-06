@@ -1,6 +1,10 @@
 # stdlib
-import json
-import ssl
+import json, sys
+
+try:
+    import _ssl as ssl
+except ImportError:
+    import ssl
 
 # requests
 import requests
@@ -82,6 +86,9 @@ class KeenApi(object):
         # copy in base URL and API version
         if base_url: self.base_url = base_url
         if api_version: self.api_version = api_version
+
+    # py3-compatible range operation
+    range = range if sys.version_info[0] > 3 else xrange
 
     @property
     def _apisession(self):
@@ -205,7 +212,7 @@ class KeenApi(object):
 
         ''' Fulfill an HTTP request to Keen's API. '''
 
-        for attempt in xrange(1, (retries or 1) + 1):
+        for attempt in self.range(1, (retries or 1) + 1):
 
             # defaults
             result, response = None, None
