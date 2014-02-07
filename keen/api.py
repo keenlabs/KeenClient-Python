@@ -213,7 +213,7 @@ class KeenApi(object):
                     "Authorization": self.read_key
                 },
                 'retries': retries or self.default_retries,  # retry count
-                'expected': 200,  # expected return code
+                'expected': (200, 304),  # expected return code
                 'return_key': 'result',  # result location in response
                 'default_value': {},  # default value if no `return_key`
                 '_strict': strict  # whether to raise exceptions immediately
@@ -223,6 +223,10 @@ class KeenApi(object):
     def fulfill(self, method, url, retries=None, expected=200, return_key=None, default_value={}, _retry_count=0, _strict=False, *args, **kwargs):
 
         ''' Fulfill an HTTP request to Keen's API. '''
+
+        # allow multiple success codes
+        if not isinstance(expected, tuple):
+            expected = (expected,)
 
         for attempt in self.range(1, (retries or 1) + 1):
 
@@ -240,7 +244,7 @@ class KeenApi(object):
 
             else:
                 # check for unexpected responses
-                if expected and result.status_code != expected:
+                if expected and result.status_code not in expected:
                     raise exceptions.KeenApiError(response)  # raise immediately, it worked and failed
 
                 break  # things worked, stop trying
