@@ -78,6 +78,8 @@ That's it! After running your code, check your Keen IO Project to see the event/
 
 Here are some examples of querying.  Let's assume you've added some events to the "purchases" collection.
 
+Note: Once the API acknowledges that your event has been stored, it may take up to 10 seconds before it will appear in query results.
+
 ```python
     keen.count("purchases") # => 100
     keen.sum("purchases", target_property="price") # => 10000
