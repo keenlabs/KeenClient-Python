@@ -53,7 +53,7 @@ class KeenClient(object):
     """
 
     def __init__(self, project_id, write_key=None, read_key=None,
-                 persistence_strategy=None):
+                 persistence_strategy=None, api_class=KeenApi):
         """ Initializes a KeenClient object.
 
         :param project_id: the Keen IO project ID
@@ -69,7 +69,7 @@ class KeenClient(object):
 
         # Set up an api client to be used for querying and optionally passed
         # into a default persistence strategy.
-        self.api = KeenApi(project_id, write_key=write_key, read_key=read_key)
+        self.api = api_class(project_id, write_key=write_key, read_key=read_key)
 
         if persistence_strategy:
             # validate the given persistence strategy
