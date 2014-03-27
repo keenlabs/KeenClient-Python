@@ -284,6 +284,26 @@ class QueryTests(BaseTestCase):
         resp = keen.count("query test", timeframe="this_2_days", interval="daily")
         assert type(resp) is list
 
+    def test_passing_custom_api_client(self):
+        class CustomApiClient(object):
+            def __init__(self, project_id,
+                 write_key=None, read_key=None,
+                 base_url=None, api_version=None):
+                super(CustomApiClient, self).__init__()
+                self.project_id = project_id
+                self.write_key = write_key
+                self.read_key = read_key
+                if base_url:
+                    self.base_url = base_url
+                if api_version:
+                    self.api_version = api_version
+
+        api_key = "2e79c6ec1d0145be8891bf668599c79a"
+        client = KeenClient("5004ded1163d66114f000000", write_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]}), read_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]}), api_class=CustomApiClient)
+
+        # Should raise an error, we never added this method on our class
+        # But it shows it is actually using our class
+        self.assertRaises(TypeError, client.add_event)
 
 # only need to test unicode separately in python2
 if sys.version_info[0] > 3:
