@@ -303,7 +303,7 @@ class QueryTests(BaseTestCase):
 
         # Should raise an error, we never added this method on our class
         # But it shows it is actually using our class
-        self.assertRaises(StandardError, client.add_event)
+        self.assertRaises(TypeError, client.add_event)
 
 # only need to test unicode separately in python2
 if sys.version_info[0] > 3:
