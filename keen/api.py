@@ -58,7 +58,7 @@ class KeenApi(object):
 
     # self says it belongs to KeenApi/andOr is the object passed into KeenApi
     # __init__ create keenapi object whenever KeenApi class is invoked
-    def __init__(self, project_id,
+    def __init__(self, project_id, post_timeout=None,
                  write_key=None, read_key=None,
                  base_url=None, api_version=None):
         """
@@ -81,6 +81,7 @@ class KeenApi(object):
             self.base_url = base_url
         if api_version:
             self.api_version = api_version
+        self.post_timeout = post_timeout
 
     def post_event(self, event):
         """
@@ -100,7 +101,7 @@ class KeenApi(object):
                                                        event.event_collection)
         headers = {"Content-Type": "application/json", "Authorization": self.write_key}
         payload = event.to_json()
-        response = fulfill(HTTPMethods.POST, url, data=payload, headers=headers)
+        response = fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         if response.status_code != 201:
             error = response.json()
             raise exceptions.KeenApiError(error)
@@ -123,7 +124,7 @@ class KeenApi(object):
                                                    self.project_id)
         headers = {"Content-Type": "application/json", "Authorization": self.write_key}
         payload = json.dumps(events)
-        response = fulfill(HTTPMethods.POST, url, data=payload, headers=headers)
+        response = fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         if response.status_code != 200:
             error = response.json()
             raise exceptions.KeenApiError(error)
