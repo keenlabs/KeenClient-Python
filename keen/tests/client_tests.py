@@ -2,8 +2,8 @@ import base64
 import json
 import os
 import datetime
+from nose.tools import raises
 import requests
-import sys
 from keen import exceptions, persistence_strategies, scoped_keys
 import keen
 from keen.client import KeenClient
@@ -99,6 +99,24 @@ class ClientTests(BaseTestCase):
         keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
         # client = KeenClient(project_id, write_key=write_key, read_key=read_key)
         keen.add_events({"python_test": [{"hello": "goodbye"}]})
+
+    @raises(requests.Timeout)
+    def test_post_timeout_single(self):
+        keen.project_id = "5004ded1163d66114f000000"
+        api_key = "2e79c6ec1d0145be8891bf668599c79a"
+        keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
+        client = KeenClient(keen.project_id, write_key=keen.write_key, read_key=None,
+                            post_timeout=0.0001)
+        client.add_event("python_test", {"hello": "goodbye"})
+
+    @raises(requests.Timeout)
+    def test_post_timeout_batch(self):
+        keen.project_id = "5004ded1163d66114f000000"
+        api_key = "2e79c6ec1d0145be8891bf668599c79a"
+        keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
+        client = KeenClient(keen.project_id, write_key=keen.write_key, read_key=None,
+                            post_timeout=0.0001)
+        client.add_events({"python_test": [{"hello": "goodbye"}]})
 
     def test_environment_variables(self):
         # try addEvent w/out having environment variables
@@ -288,7 +306,7 @@ class QueryTests(BaseTestCase):
         class CustomApiClient(object):
             def __init__(self, project_id,
                  write_key=None, read_key=None,
-                 base_url=None, api_version=None):
+                 base_url=None, api_version=None, **kwargs):
                 super(CustomApiClient, self).__init__()
                 self.project_id = project_id
                 self.write_key = write_key

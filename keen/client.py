@@ -50,10 +50,12 @@ class KeenClient(object):
     the event directly to Keen, in-line. This may not always be the best
     idea, though, so we support other strategies (such as persisting
     to a local Redis queue for later processing).
+
+    POST requests will timeout after 305 seconds by default.
     """
 
     def __init__(self, project_id, write_key=None, read_key=None,
-                 persistence_strategy=None, api_class=KeenApi):
+                 persistence_strategy=None, api_class=KeenApi, post_timeout=305):
         """ Initializes a KeenClient object.
 
         :param project_id: the Keen IO project ID
@@ -61,6 +63,7 @@ class KeenClient(object):
         :param read_key: a Keen IO Scoped Key for Reads
         :param persistence_strategy: optional, the strategy to use to persist
         the event
+        :param post_timeout: optional, the timeout on POST requests
         """
         super(KeenClient, self).__init__()
 
@@ -69,7 +72,7 @@ class KeenClient(object):
 
         # Set up an api client to be used for querying and optionally passed
         # into a default persistence strategy.
-        self.api = api_class(project_id, write_key=write_key, read_key=read_key)
+        self.api = api_class(project_id, write_key=write_key, read_key=read_key, post_timeout=post_timeout)
 
         if persistence_strategy:
             # validate the given persistence strategy
@@ -82,6 +85,7 @@ class KeenClient(object):
 
         self.project_id = project_id
         self.persistence_strategy = persistence_strategy
+        self.post_timeout = post_timeout
 
     if sys.version_info[0] < 3:
         @staticmethod

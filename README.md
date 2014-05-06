@@ -105,7 +105,39 @@ Here are some examples of querying.  Let's assume you've added some events to th
     keen.funnel([step1, step2], timeframe="today") # => [2039, 201]
 ```
 
+#### Advanced Usage
+
+See below for more options.
+
+##### Send to Keen IO with a Timeout
+
+By default, POST requests will timeout after 305 seconds. If you want to manually override this, you can create a KeenClient with the "post_timeout" parameter. This client will fail POSTs if no bytes have been returned by the server in the specified time. For example:
+
+```python
+    from keen.client import KeenClient
+
+    client = KeenClient(
+        project_id="xxxx",
+        write_key="yyyy",
+        read_key="zzzz",
+        post_timeout=100
+
+    )
+```
+
+This will cause both add_event() and add_events() to timeout after 100 seconds. If this timeout limit is hit, a requests.Timeout will be raised. Due to a bug in the requests library, you might also see an SSLError (https://github.com/kennethreitz/requests/issues/1294)
+
+
 ### Changelog
+
+##### 0.3.0
+
++ Added client configurable timeout to posts
++ Upgraded to requests==2.2.1
+
+##### 0.2.3
+
++ Fixed sys.version_info issue with Python 2.6
 
 ##### 0.2.2
 
