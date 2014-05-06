@@ -58,9 +58,8 @@ class KeenApi(object):
 
     # self says it belongs to KeenApi/andOr is the object passed into KeenApi
     # __init__ create keenapi object whenever KeenApi class is invoked
-    def __init__(self, project_id, post_timeout=None,
-                 write_key=None, read_key=None,
-                 base_url=None, api_version=None):
+    def __init__(self, project_id, write_key=None, read_key=None,
+                 base_url=None, api_version=None, post_timeout=None):
         """
         Initializes a KeenApi object
 
