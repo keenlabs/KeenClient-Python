@@ -183,7 +183,7 @@ class KeenClient(object):
         :param interval: string, the time interval used for measuring data over
         time example: "daily"
         :param filters: array of dict, contains the filters you'd like to apply to the data
-        example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+        example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
@@ -207,7 +207,7 @@ class KeenClient(object):
         :param interval: string, the time interval used for measuring data over
         time example: "daily"
         :param filters: array of dict, contains the filters you'd like to apply to the data
-        example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+        example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
@@ -231,7 +231,7 @@ class KeenClient(object):
         :param interval: string, the time interval used for measuring data over
         time example: "daily"
         :param filters: array of dict, contains the filters you'd like to apply to the data
-        example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+        example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
@@ -255,7 +255,7 @@ class KeenClient(object):
         :param interval: string, the time interval used for measuring data over
         time example: "daily"
         :param filters: array of dict, contains the filters you'd like to apply to the data
-        example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+        example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
@@ -279,7 +279,7 @@ class KeenClient(object):
         :param interval: string, the time interval used for measuring data over
         time example: "daily"
         :param filters: array of dict, contains the filters you'd like to apply to the data
-        example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+        example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
@@ -303,7 +303,7 @@ class KeenClient(object):
         :param interval: string, the time interval used for measuring data over
         time example: "daily"
         :param filters: array of dict, contains the filters you'd like to apply to the data
-        example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+        example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
@@ -327,7 +327,7 @@ class KeenClient(object):
         :param interval: string, the time interval used for measuring data over
         time example: "daily"
         :param filters: array of dict, contains the filters you'd like to apply to the data
-        example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+        example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
@@ -348,7 +348,7 @@ class KeenClient(object):
         :param timezone: int, the timezone you'd like to use for the timeframe
         and interval in seconds
         :param filters: array of dict, contains the filters you'd like to apply to the data
-        example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+        example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param latest: int, the number of most recent records you'd like to return
         :param email: string, optional string containing an email address to email results to
 
@@ -390,7 +390,7 @@ class KeenClient(object):
         :param timezone: int, the timezone you'd like to use for the timeframe
         and interval in seconds
         :param filters: array of dict, contains the filters you'd like to apply to the data
-        example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+        example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
 
