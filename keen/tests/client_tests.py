@@ -238,42 +238,42 @@ class QueryTests(BaseTestCase):
 
     def test_count(self):
         resp = keen.count("query test", timeframe="today", filters=self.get_filter())
-        assert type(resp) is int
+        self.assertIsInstance(resp, int)
 
     def test_sum(self):
         resp = keen.sum("query test", target_property="number", timeframe="today")
-        assert type(resp) is int
+        self.assertIsInstance(resp, int)
 
     def test_minimum(self):
         resp = keen.minimum("query test", target_property="number", timeframe="today")
-        assert type(resp) is int
+        self.assertIsInstance(resp, int)
 
     def test_maximum(self):
         resp = keen.maximum("query test", target_property="number", timeframe="today")
-        assert type(resp) is int
+        self.assertIsInstance(resp, int)
 
     def test_average(self):
         resp = keen.average("query test", target_property="number", timeframe="today")
-        assert type(resp) in (float, int)
+        self.assertIsInstance(resp, int)
 
     def test_count_unique(self):
         resp = keen.count_unique("query test", target_property="number", timeframe="today")
-        assert type(resp) is int
+        self.assertIsInstance(resp, int)
 
     def test_select_unique(self):
         resp = keen.select_unique("query test", target_property="number", timeframe="today")
-        assert type(resp) is list
+        self.assertIsInstance(resp, list)
 
     def test_extraction(self):
         resp = keen.extraction("query test", timeframe="today")
-        assert type(resp) is list
+        self.assertIsInstance(resp, list)
 
     def test_multi_analysis(self):
         resp = keen.multi_analysis("query test",
                                    analyses={"total": {"analysis_type": "sum", "target_property": "number"}},
                                    timeframe="today")
-        assert type(resp) is dict
-        assert type(resp["total"]) is int
+        self.assertIsInstance(resp, dict)
+        self.assertIsInstance(resp["total"], int)
 
     def test_funnel(self):
         step1 = {
@@ -287,20 +287,20 @@ class QueryTests(BaseTestCase):
             "timeframe": "today"
         }
         resp = keen.funnel([step1, step2])
-        assert type(resp) is list, resp
+        self.assertIsInstance(resp, list)
 
     def test_group_by(self):
         resp = keen.count("query test", timeframe="today", group_by="number")
-        assert type(resp) is list
+        self.assertIsInstance(resp, list)
 
     def test_multi_group_by(self):
         resp = keen.count("query test", timeframe="today", group_by=["number", "string"])
-        assert type(resp) is list
-        assert len(resp) == 1
+        self.assertIsInstance(resp, list)
+        self.assertEqual(1, len(resp))
 
     def test_interval(self):
         resp = keen.count("query test", timeframe="this_2_days", interval="daily")
-        assert type(resp) is list
+        self.assertIsInstance(resp, list)
 
     def test_passing_custom_api_client(self):
         class CustomApiClient(object):
