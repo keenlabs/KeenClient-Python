@@ -295,7 +295,6 @@ class QueryTests(BaseTestCase):
 
     def test_multi_group_by(self):
         resp = keen.count("query test", timeframe="today", group_by=["number", "string"])
-        self.assertIsInstance(resp, list)
         self.assertEqual(type(resp), list)
 
     def test_interval(self):
