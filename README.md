@@ -127,6 +127,21 @@ By default, POST requests will timeout after 305 seconds. If you want to manuall
 
 This will cause both add_event() and add_events() to timeout after 100 seconds. If this timeout limit is hit, a requests.Timeout will be raised. Due to a bug in the requests library, you might also see an SSLError (https://github.com/kennethreitz/requests/issues/1294)
 
+##### Create Scoped Keys
+
+The Python client enables you to create [Scoped Keys](https://keen.io/docs/security/#scoped-key) easily. For example:
+
+```python
+    from keen.client import KeenClient
+    from keen import scoped_keys
+
+    api_key = KEEN_MASTER_KEY
+
+    write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
+    read_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]})
+```
+
+`write_key` and `read_key` now contain scoped keys based on your master API key.
 
 ### Changelog
 
