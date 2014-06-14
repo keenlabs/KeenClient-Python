@@ -54,13 +54,14 @@ class KeenClient(object):
     POST requests will timeout after 305 seconds by default.
     """
 
-    def __init__(self, project_id, write_key=None, read_key=None,
+    def __init__(self, project_id, write_key=None, read_key=None, master_key=None,
                  persistence_strategy=None, api_class=KeenApi, post_timeout=305):
         """ Initializes a KeenClient object.
 
         :param project_id: the Keen IO project ID
         :param write_key: a Keen IO Scoped Key for Writes
         :param read_key: a Keen IO Scoped Key for Reads
+        :param master_key: a Keen IO Master Key
         :param persistence_strategy: optional, the strategy to use to persist
         the event
         :param post_timeout: optional, the timeout on POST requests
@@ -72,7 +73,8 @@ class KeenClient(object):
 
         # Set up an api client to be used for querying and optionally passed
         # into a default persistence strategy.
-        self.api = api_class(project_id, write_key=write_key, read_key=read_key, post_timeout=post_timeout)
+        self.api = api_class(project_id, write_key=write_key, read_key=read_key, master_key=master_key,
+                             post_timeout=post_timeout)
 
         if persistence_strategy:
             # validate the given persistence strategy
@@ -405,6 +407,23 @@ class KeenClient(object):
             analyses=analyses)
 
         return self.api.query("multi_analysis", params)
+
+    def delete_events(self, event_collection, timeframe=None, timezone=None, filters=None):
+        """ Deletes events matching a query
+
+        Deletes the number of events that meet the given criteria.
+
+        :param event_collection: string, the name of the collection to query
+        :param timeframe: string or dict, the timeframe in which the events
+        happened example: "previous_7_days"
+        :param timezone: int, the timezone you'd like to use for the timeframe
+        and interval in seconds
+        :param filters: array of dict, contains the filters you'd like to apply to the data
+        example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+
+        """
+        params = self.get_params(timeframe=timeframe, timezone=timezone, filters=filters)
+        return self.api.delete_event(event_collection, params)
 
     def get_params(self, event_collection=None, timeframe=None, timezone=None, interval=None, filters=None,
                    group_by=None, target_property=None, latest=None, email=None, analyses=None, steps=None):

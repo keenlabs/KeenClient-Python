@@ -20,6 +20,7 @@ class HTTPMethods(object):
 
     GET = 'get'
     POST = 'post'
+    DELETE = 'delete'
 
 
 class KeenAdapter(HTTPAdapter):
@@ -58,7 +59,7 @@ class KeenApi(object):
 
     # self says it belongs to KeenApi/andOr is the object passed into KeenApi
     # __init__ create keenapi object whenever KeenApi class is invoked
-    def __init__(self, project_id, write_key=None, read_key=None,
+    def __init__(self, project_id, write_key=None, read_key=None, master_key=None,
                  base_url=None, api_version=None, post_timeout=None):
         """
         Initializes a KeenApi object
@@ -66,6 +67,7 @@ class KeenApi(object):
         :param project_id: the Keen project ID
         :param write_key: a Keen IO Scoped Key for Writes
         :param read_key: a Keen IO Scoped Key for Reads
+        :param master_key: a Keen IO Master Key (needed for deletes)
         :param base_url: optional, set this to override where API requests
         are sent
         :param api_version: string, optional, set this to override what API
@@ -76,6 +78,7 @@ class KeenApi(object):
         self.project_id = project_id
         self.write_key = write_key
         self.read_key = read_key
+        self.master_key = master_key
         if base_url:
             self.base_url = base_url
         if api_version:
@@ -125,6 +128,29 @@ class KeenApi(object):
         payload = json.dumps(events)
         response = fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         if response.status_code != 200:
+            error = response.json()
+            raise exceptions.KeenApiError(error)
+
+    def delete_event(self, event_collection, params):
+        """
+        Deletes events from the Keen IO API.  The write key must be set first.
+
+        :param event: an Event to upload
+        """
+        if not self.master_key:
+            raise exceptions.InvalidEnvironmentError(
+                "The Keen IO API requires a master key to delete events. "
+                "Please set a 'master_key' when initializing the "
+                "KeenApi object."
+            )
+
+        url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
+                                                       self.project_id,
+                                                       event_collection)
+        headers = {"Content-Type": "application/json", "Authorization": self.master_key}
+        payload = params
+        response = fulfill(HTTPMethods.DELETE, url, params=payload, headers=headers, timeout=self.post_timeout)
+        if response.status_code != 204:
             error = response.json()
             raise exceptions.KeenApiError(error)
 
