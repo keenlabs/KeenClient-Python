@@ -136,6 +136,7 @@ By default, POST requests will timeout after 305 seconds. If you want to manuall
         project_id="xxxx",
         write_key="yyyy",
         read_key="zzzz",
+	delete_key="qqqq", # Only if event_delete is required
         post_timeout=100
 
     )
@@ -160,6 +161,10 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 `write_key` and `read_key` now contain scoped keys based on your master API key.
 
 ### Changelog
+
+##### 0.3.1
+
++ Add event_delete
 
 ##### 0.3.0
 
