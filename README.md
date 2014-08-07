@@ -109,6 +109,22 @@ Here are some examples of querying.  Let's assume you've added some events to th
 
 See below for more options.
 
+##### Overwriting event timestamps
+
+Two time-related properties are included in your event automatically. The properties “keen.timestamp” and “keen.created_at” are set at the time your event is recorded. You have the ability to overwrite the keen.timestamp property. This could be useful, for example, if you are backfilling historical data. Be sure to use [ISO-8601 Format](https://keen.io/docs/event-data-modeling/event-data-intro/#iso-8601-format).
+
+Keen stores all date and time information in UTC!
+
+```python
+    keen.add_event("sign_ups", {
+        "keen": {
+            "timestamp": "2012-07-06T02:09:10.141Z"
+        },
+        "username": "lloyd",
+        "referred_by": "harry"
+    })
+```
+
 ##### Send to Keen IO with a Timeout
 
 By default, POST requests will timeout after 305 seconds. If you want to manually override this, you can create a KeenClient with the "post_timeout" parameter. This client will fail POSTs if no bytes have been returned by the server in the specified time. For example:
