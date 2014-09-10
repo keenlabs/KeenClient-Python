@@ -407,7 +407,8 @@ class KeenClient(object):
         return self.api.query("multi_analysis", params)
 
     def get_params(self, event_collection=None, timeframe=None, timezone=None, interval=None, filters=None,
-                   group_by=None, target_property=None, latest=None, email=None, analyses=None, steps=None):
+                   group_by=None, target_property=None, latest=None, email=None, analyses=None, steps=None, 
+                   property_names=None):
         params = {}
         if event_collection:
             params["event_collection"] = event_collection
@@ -437,5 +438,7 @@ class KeenClient(object):
             params["analyses"] = json.dumps(analyses)
         if steps:
             params["steps"] = json.dumps(steps)
+        if property_names:
+            params["property_names"] = json.dumps(property_names)
 
         return params
