@@ -215,7 +215,8 @@ def select_unique(event_collection, target_property, timeframe=None, timezone=No
                                  interval=interval, filters=filters, group_by=group_by, target_property=target_property)
 
 
-def extraction(event_collection, timeframe=None, timezone=None, filters=None, latest=None, email=None):
+def extraction(event_collection, timeframe=None, timezone=None, filters=None, latest=None, email=None, 
+			   property_names=None):
     """ Performs a data extraction
 
     Returns either a JSON object of events or a response
@@ -234,7 +235,7 @@ def extraction(event_collection, timeframe=None, timezone=None, filters=None, la
     """
     _initialize_client_from_environment()
     return _client.extraction(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                              filters=filters, latest=latest, email=email)
+                              filters=filters, latest=latest, email=email, property_names=property_names)
 
 
 def funnel(steps, timeframe=None, timezone=None):
