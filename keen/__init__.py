@@ -231,6 +231,7 @@ def extraction(event_collection, timeframe=None, timezone=None, filters=None, la
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param latest: int, the number of most recent records you'd like to return
     :param email: string, optional string containing an email address to email results to
+    :param property_names: string or list of strings, used to limit the properties returned
 
     """
     _initialize_client_from_environment()

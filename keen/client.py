@@ -351,7 +351,7 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param latest: int, the number of most recent records you'd like to return
         :param email: string, optional string containing an email address to email results to
-        :param property_names: array of strings, specify what properties you want returned
+        :param property_names: string or list of strings, used to limit the properties returned
         """
         params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
                                  filters=filters, latest=latest, email=email, property_names=property_names)
