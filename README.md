@@ -161,14 +161,18 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 
 ### Changelog
 
+##### 0.3.1
+
++ Support ```property_names``` parameter for extractions.
+
 ##### 0.3.0
 
-+ Added client configurable timeout to posts
-+ Upgraded to requests==2.2.1
++ Added client configurable timeout to posts.
++ Upgraded to requests==2.2.1.
 
 ##### 0.2.3
 
-+ Fixed sys.version_info issue with Python 2.6
++ Fixed sys.version_info issue with Python 2.6.
 
 ##### 0.2.2
 
