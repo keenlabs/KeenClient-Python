@@ -273,9 +273,10 @@ class QueryTests(BaseTestCase):
     def test_multi_analysis(self):
         resp = keen.multi_analysis("query test",
                                    analyses={"total": {"analysis_type": "sum", "target_property": "number"}},
-                                   timeframe="today")
-        self.assertEqual(type(resp), dict)
-        self.assertEqual(type(resp["total"]), int)
+                                   timeframe="today", interval="hourly")
+        self.assertEqual(type(resp), list)
+        for result in resp:
+        	self.assertEqual(type(result["value"]["total"]), int)
 
     def test_funnel(self):
         step1 = {
