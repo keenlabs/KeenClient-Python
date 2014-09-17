@@ -265,8 +265,10 @@ class QueryTests(BaseTestCase):
         self.assertEqual(type(resp), list)
 
     def test_extraction(self):
-        resp = keen.extraction("query test", timeframe="today")
+        resp = keen.extraction("query test", timeframe="today",  property_names=["number"])
         self.assertEqual(type(resp), list)
+        for event in resp:
+            self.assertTrue("string" not in event)
 
     def test_multi_analysis(self):
         resp = keen.multi_analysis("query test",

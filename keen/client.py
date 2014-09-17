@@ -336,7 +336,7 @@ class KeenClient(object):
                                  interval=interval, filters=filters, group_by=group_by, target_property=target_property)
         return self.api.query("select_unique", params)
 
-    def extraction(self, event_collection, timeframe=None, timezone=None, filters=None, latest=None, email=None):
+    def extraction(self, event_collection, timeframe=None, timezone=None, filters=None, latest=None, email=None, property_names=None):
         """ Performs a data extraction
 
         Returns either a JSON object of events or a response
@@ -351,10 +351,10 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param latest: int, the number of most recent records you'd like to return
         :param email: string, optional string containing an email address to email results to
-
+        :param property_names: string or list of strings, used to limit the properties returned
         """
         params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                 filters=filters, latest=latest, email=email)
+                                 filters=filters, latest=latest, email=email, property_names=property_names)
         return self.api.query("extraction", params)
 
     def funnel(self, steps, timeframe=None, timezone=None):
@@ -407,7 +407,7 @@ class KeenClient(object):
         return self.api.query("multi_analysis", params)
 
     def get_params(self, event_collection=None, timeframe=None, timezone=None, interval=None, filters=None,
-                   group_by=None, target_property=None, latest=None, email=None, analyses=None, steps=None, 
+                   group_by=None, target_property=None, latest=None, email=None, analyses=None, steps=None,
                    property_names=None):
         params = {}
         if event_collection:
@@ -439,6 +439,6 @@ class KeenClient(object):
         if steps:
             params["steps"] = json.dumps(steps)
         if property_names:
-            params["property_names"] = json.dumps(property_names)
+        	params["property_names"] = json.dumps(property_names)
 
         return params
