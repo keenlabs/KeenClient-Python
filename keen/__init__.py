@@ -257,7 +257,8 @@ def funnel(steps, timeframe=None, timezone=None):
     return _client.funnel(steps=steps, timeframe=timeframe, timezone=timezone)
 
 
-def multi_analysis(event_collection, analyses, timeframe=None, timezone=None, filters=None, group_by=None):
+def multi_analysis(event_collection, analyses, timeframe=None, interval=None, 
+				   timezone=None, filters=None, group_by=None):
     """ Performs a multi-analysis query
 
     Returns a dictionary of analysis results.
@@ -268,6 +269,8 @@ def multi_analysis(event_collection, analyses, timeframe=None, timezone=None, fi
     "average price":{"analysis_type":"average","target_property":"purchase.price"}
     :param timeframe: string or dict, the timeframe in which the events
     happened example: "previous_7_days"
+    :param interval: string, the time interval used for measuring data over
+    time example: "daily"
     :param timezone: int, the timezone you'd like to use for the timeframe
     and interval in seconds
     :param filters: array of dict, contains the filters you'd like to apply to the data
@@ -277,5 +280,6 @@ def multi_analysis(event_collection, analyses, timeframe=None, timezone=None, fi
 
     """
     _initialize_client_from_environment()
-    return _client.multi_analysis(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                  filters=filters, group_by=group_by, analyses=analyses)
+    return _client.multi_analysis(event_collection=event_collection, timeframe=timeframe,
+    							  interval=interval, timezone=timezone, filters=filters, 
+    							  group_by=group_by, analyses=analyses)
