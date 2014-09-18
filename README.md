@@ -161,6 +161,10 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 
 ### Changelog
 
+##### 0.3.3
+
++ Support ```interval``` parameter for multi analyses on the keen module.
+
 ##### 0.3.2
 
 + Reuse internal requests' session inside an instance of KeenApi.
