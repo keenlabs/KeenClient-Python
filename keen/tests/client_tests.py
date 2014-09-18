@@ -276,7 +276,7 @@ class QueryTests(BaseTestCase):
                                    timeframe="today", interval="hourly")
         self.assertEqual(type(resp), list)
         for result in resp:
-        	self.assertEqual(type(result["value"]["total"]), int)
+            self.assertEqual(type(result["value"]["total"]), int)
 
     def test_funnel(self):
         step1 = {

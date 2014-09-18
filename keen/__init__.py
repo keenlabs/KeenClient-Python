@@ -215,8 +215,8 @@ def select_unique(event_collection, target_property, timeframe=None, timezone=No
                                  interval=interval, filters=filters, group_by=group_by, target_property=target_property)
 
 
-def extraction(event_collection, timeframe=None, timezone=None, filters=None, latest=None, email=None, 
-			   property_names=None):
+def extraction(event_collection, timeframe=None, timezone=None, filters=None, latest=None, email=None,
+               property_names=None):
     """ Performs a data extraction
 
     Returns either a JSON object of events or a response
@@ -257,8 +257,8 @@ def funnel(steps, timeframe=None, timezone=None):
     return _client.funnel(steps=steps, timeframe=timeframe, timezone=timezone)
 
 
-def multi_analysis(event_collection, analyses, timeframe=None, interval=None, 
-				   timezone=None, filters=None, group_by=None):
+def multi_analysis(event_collection, analyses, timeframe=None, interval=None,
+                   timezone=None, filters=None, group_by=None):
     """ Performs a multi-analysis query
 
     Returns a dictionary of analysis results.
@@ -281,5 +281,5 @@ def multi_analysis(event_collection, analyses, timeframe=None, interval=None,
     """
     _initialize_client_from_environment()
     return _client.multi_analysis(event_collection=event_collection, timeframe=timeframe,
-    							  interval=interval, timezone=timezone, filters=filters, 
-    							  group_by=group_by, analyses=analyses)
+                                  interval=interval, timezone=timezone, filters=filters,
+                                  group_by=group_by, analyses=analyses)

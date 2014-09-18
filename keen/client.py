@@ -336,7 +336,8 @@ class KeenClient(object):
                                  interval=interval, filters=filters, group_by=group_by, target_property=target_property)
         return self.api.query("select_unique", params)
 
-    def extraction(self, event_collection, timeframe=None, timezone=None, filters=None, latest=None, email=None, property_names=None):
+    def extraction(self, event_collection, timeframe=None, timezone=None, filters=None, latest=None, email=None,
+                   property_names=None):
         """ Performs a data extraction
 
         Returns either a JSON object of events or a response
@@ -374,7 +375,8 @@ class KeenClient(object):
         params = self.get_params(steps=steps, timeframe=timeframe, timezone=timezone)
         return self.api.query("funnel", params)
 
-    def multi_analysis(self, event_collection, analyses, timeframe=None, interval=None, timezone=None, filters=None, group_by=None):
+    def multi_analysis(self, event_collection, analyses, timeframe=None, interval=None, timezone=None, filters=None,
+                       group_by=None):
         """ Performs a multi-analysis query
 
         Returns a dictionary of analysis results.
@@ -439,6 +441,6 @@ class KeenClient(object):
         if steps:
             params["steps"] = json.dumps(steps)
         if property_names:
-        	params["property_names"] = json.dumps(property_names)
+            params["property_names"] = json.dumps(property_names)
 
         return params
