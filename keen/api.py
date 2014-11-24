@@ -50,7 +50,7 @@ class KeenApi(object):
     # self says it belongs to KeenApi/andOr is the object passed into KeenApi
     # __init__ create keenapi object whenever KeenApi class is invoked
     def __init__(self, project_id, write_key=None, read_key=None,
-                 base_url=None, api_version=None, post_timeout=None):
+                 base_url=None, api_version=None, get_timeout=None, post_timeout=None):
         """
         Initializes a KeenApi object
 
@@ -71,6 +71,7 @@ class KeenApi(object):
             self.base_url = base_url
         if api_version:
             self.api_version = api_version
+        self.get_timeout = get_timeout
         self.post_timeout = post_timeout
         self.session = self._create_session()
 
@@ -151,7 +152,7 @@ class KeenApi(object):
 
         headers = {"Authorization": self.read_key}
         payload = params
-        response = self.fulfill(HTTPMethods.GET, url, params=payload, headers=headers)
+        response = self.fulfill(HTTPMethods.GET, url, params=payload, headers=headers, timeout=self.get_timeout)
         if response.status_code != 200:
             error = response.json()
             raise exceptions.KeenApiError(error)
