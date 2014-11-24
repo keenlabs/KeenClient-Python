@@ -14,7 +14,7 @@ Use pip to install!
 
     pip install keen
 
-This client is known to work on Python 2.6, 2.7, 3.2, and 3.3
+This client is known to work on Python 2.6, 2.7, 3.2 and 3.3
 
 ### Usage
 
@@ -160,6 +160,10 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 `write_key` and `read_key` now contain scoped keys based on your master API key.
 
 ### Changelog
+
+
+##### 0.3.4
++ Added ```percentile``` query method.
 
 ##### 0.3.3
 
