@@ -256,6 +256,10 @@ class QueryTests(BaseTestCase):
         resp = keen.average("query test", target_property="number", timeframe="today")
         self.assertTrue(type(resp) in (int, float), type(resp))
 
+    def test_percentile(self):
+        resp = keen.percentile("query test", target_property="number", percentile=80, timeframe="today")
+        self.assertTrue(type(resp) in (int, float), type(resp))
+
     def test_count_unique(self):
         resp = keen.count_unique("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), int)
