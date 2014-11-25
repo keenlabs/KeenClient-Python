@@ -329,6 +329,14 @@ class QueryTests(BaseTestCase):
         # But it shows it is actually using our class
         self.assertRaises(TypeError, client.add_event)
 
+    @raises(requests.Timeout)
+    def test_timeout_count(self):
+        keen.project_id = "5004ded1163d66114f000000"
+        api_key = "2e79c6ec1d0145be8891bf668599c79a"
+        keen.read_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]})
+        client = KeenClient(keen.project_id, write_key=None, read_key=keen.read_key, get_timeout=0.0001)
+        resp = client.count("query test", timeframe="today", filters=self.get_filter())
+
 # only need to test unicode separately in python2
 if sys.version_info[0] > 3:
 
