@@ -125,6 +125,24 @@ Keen stores all date and time information in UTC!
     })
 ```
 
+##### Get from Keen IO with a Timeout
+
+By default, GET requests will timeout after 305 seconds. If you want to manually override this, you can create a KeenClient with the "get_timeout" parameter. This client will fail GETs if no bytes have been returned by the server in the specified time. For example:
+
+```python
+    from keen.client import KeenClient
+
+    client = KeenClient(
+        project_id="xxxx",
+        write_key="yyyy",
+        read_key="zzzz",
+        get_timeout=100
+
+    )
+```
+
+This will cause queries such as count(), sum(), and average() to timeout after 100 seconds. If this timeout limit is hit, a requests.Timeout will be raised. Due to a bug in the requests library, you might also see an SSLError (https://github.com/kennethreitz/requests/issues/1294)
+
 ##### Send to Keen IO with a Timeout
 
 By default, POST requests will timeout after 305 seconds. If you want to manually override this, you can create a KeenClient with the "post_timeout" parameter. This client will fail POSTs if no bytes have been returned by the server in the specified time. For example:
@@ -161,6 +179,9 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 
 ### Changelog
 
+
+##### 0.3.5
++ Added client configurable timeout to gets.
 
 ##### 0.3.4
 + Added ```percentile``` query method.
