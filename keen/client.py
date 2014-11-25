@@ -51,7 +51,7 @@ class KeenClient(object):
     idea, though, so we support other strategies (such as persisting
     to a local Redis queue for later processing).
 
-    GET requests will timeout after 30 seconds by default.
+    GET requests will timeout after 305 seconds by default.
 
     POST requests will timeout after 305 seconds by default.
     """
