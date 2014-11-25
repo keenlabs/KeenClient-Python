@@ -57,7 +57,7 @@ class KeenClient(object):
     """
 
     def __init__(self, project_id, write_key=None, read_key=None,
-                 persistence_strategy=None, api_class=KeenApi, get_timeout=30, post_timeout=305):
+                 persistence_strategy=None, api_class=KeenApi, get_timeout=305, post_timeout=305):
         """ Initializes a KeenClient object.
 
         :param project_id: the Keen IO project ID
