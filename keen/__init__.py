@@ -58,7 +58,7 @@ def count(event_collection, timeframe=None, timezone=None, interval=None, filter
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
     willing to trade for increased query performance, in seconds
 
     """
@@ -85,7 +85,7 @@ def sum(event_collection, target_property, timeframe=None, timezone=None, interv
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
     willing to trade for increased query performance, in seconds
 
     """
@@ -113,7 +113,7 @@ def minimum(event_collection, target_property, timeframe=None, timezone=None, in
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
     willing to trade for increased query performance, in seconds
 
     """
@@ -141,7 +141,7 @@ def maximum(event_collection, target_property, timeframe=None, timezone=None, in
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
     willing to trade for increased query performance, in seconds
 
     """
@@ -169,7 +169,7 @@ def average(event_collection, target_property, timeframe=None, timezone=None, in
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
     willing to trade for increased query performance, in seconds
 
     """
@@ -199,7 +199,7 @@ def percentile(event_collection, target_property, percentile, timeframe=None, ti
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
     willing to trade for increased query performance, in seconds
 
     """
@@ -235,7 +235,7 @@ def count_unique(event_collection, target_property, timeframe=None, timezone=Non
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
     willing to trade for increased query performance, in seconds
 
     """
@@ -263,7 +263,7 @@ def select_unique(event_collection, target_property, timeframe=None, timezone=No
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
     willing to trade for increased query performance, in seconds
 
     """
@@ -309,7 +309,7 @@ def funnel(steps, timeframe=None, timezone=None, max_age=None):
     happened example: "previous_7_days"
     :param timezone: int, the timezone you'd like to use for the timeframe
     and interval in seconds
-    :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
     willing to trade for increased query performance, in seconds
 
     """
@@ -337,7 +337,7 @@ def multi_analysis(event_collection, analyses, timeframe=None, interval=None,
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
     willing to trade for increased query performance, in seconds
 
     """

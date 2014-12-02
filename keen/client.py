@@ -191,7 +191,7 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-        :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
         willing to trade for increased query performance, in seconds
 
         """
@@ -217,7 +217,7 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-        :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
         willing to trade for increased query performance, in seconds
 
         """
@@ -244,7 +244,7 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-        :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
         willing to trade for increased query performance, in seconds
 
         """
@@ -271,7 +271,7 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-        :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
         willing to trade for increased query performance, in seconds
 
         """
@@ -298,7 +298,7 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-        :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
         willing to trade for increased query performance, in seconds
 
         """
@@ -327,7 +327,7 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-        :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
         willing to trade for increased query performance, in seconds
 
         """
@@ -362,7 +362,7 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-        :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
         willing to trade for increased query performance, in seconds
 
         """
@@ -389,7 +389,7 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-        :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
         willing to trade for increased query performance, in seconds
 
         """
@@ -433,7 +433,7 @@ class KeenClient(object):
         happened example: "previous_7_days"
         :param timezone: int, the timezone you'd like to use for the timeframe
         and interval in seconds
-        :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
         willing to trade for increased query performance, in seconds
 
         """
@@ -460,7 +460,7 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-        :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you’re
         willing to trade for increased query performance, in seconds
 
         """
