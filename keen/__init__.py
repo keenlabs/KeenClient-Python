@@ -274,7 +274,7 @@ def select_unique(event_collection, target_property, timeframe=None, timezone=No
 
 
 def extraction(event_collection, timeframe=None, timezone=None, filters=None, latest=None, email=None,
-               property_names=None, max_age=None):
+               property_names=None):
     """ Performs a data extraction
 
     Returns either a JSON object of events or a response
@@ -290,14 +290,11 @@ def extraction(event_collection, timeframe=None, timezone=None, filters=None, la
     :param latest: int, the number of most recent records you'd like to return
     :param email: string, optional string containing an email address to email results to
     :param property_names: string or list of strings, used to limit the properties returned
-    :param max_age: an integer, greater than 30 seconds, the maximum ‘staleness’ you’re
-    willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.extraction(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                              filters=filters, latest=latest, email=email, property_names=property_names,
-                              max_age=max_age)
+                              filters=filters, latest=latest, email=email, property_names=property_names)
 
 
 def funnel(steps, timeframe=None, timezone=None, max_age=None):
