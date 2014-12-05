@@ -179,6 +179,8 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 
 ### Changelog
 
+##### 0.3.6
++ Added ```max_age``` parameter for caching.
 
 ##### 0.3.5
 + Added client configurable timeout to gets.

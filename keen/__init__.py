@@ -42,7 +42,7 @@ def generate_image_beacon(event_collection, body, timestamp=None):
     return _client.generate_image_beacon(event_collection, body, timestamp=timestamp)
 
 
-def count(event_collection, timeframe=None, timezone=None, interval=None, filters=None, group_by=None):
+def count(event_collection, timeframe=None, timezone=None, interval=None, filters=None, group_by=None, max_age=None):
     """ Performs a count query
 
     Counts the number of events that meet the given criteria.
@@ -58,15 +58,17 @@ def count(event_collection, timeframe=None, timezone=None, interval=None, filter
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+    willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.count(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                         interval=interval, filters=filters, group_by=group_by)
+                         interval=interval, filters=filters, group_by=group_by, max_age=max_age)
 
 
 def sum(event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-        group_by=None):
+        group_by=None, max_age=None):
     """ Performs a sum query
 
     Adds the values of a target property for events that meet the given criteria.
@@ -83,15 +85,18 @@ def sum(event_collection, target_property, timeframe=None, timezone=None, interv
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+    willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.sum(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                       interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+                       interval=interval, filters=filters, group_by=group_by,
+                       target_property=target_property, max_age=max_age)
 
 
 def minimum(event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-            group_by=None):
+            group_by=None, max_age=None):
     """ Performs a minimum query
 
     Finds the minimum value of a target property for events that meet the given criteria.
@@ -108,15 +113,18 @@ def minimum(event_collection, target_property, timeframe=None, timezone=None, in
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+    willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.minimum(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                           interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+                           interval=interval, filters=filters, group_by=group_by,
+                           target_property=target_property, max_age=max_age)
 
 
 def maximum(event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-            group_by=None):
+            group_by=None, max_age=None):
     """ Performs a maximum query
 
     Finds the maximum value of a target property for events that meet the given criteria.
@@ -133,15 +141,18 @@ def maximum(event_collection, target_property, timeframe=None, timezone=None, in
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+    willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.maximum(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                           interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+                           interval=interval, filters=filters, group_by=group_by,
+                           target_property=target_property, max_age=max_age)
 
 
 def average(event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-            group_by=None):
+            group_by=None, max_age=None):
     """ Performs a average query
 
     Finds the average of a target property for events that meet the given criteria.
@@ -158,15 +169,18 @@ def average(event_collection, target_property, timeframe=None, timezone=None, in
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+    willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.average(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                           interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+                           interval=interval, filters=filters, group_by=group_by,
+                           target_property=target_property, max_age=max_age)
 
 
-def percentile(event_collection, target_property, percentile, timeframe=None, timezone=None, interval=None, filters=None,
-               group_by=None):
+def percentile(event_collection, target_property, percentile, timeframe=None, timezone=None, interval=None,
+               filters=None, group_by=None, max_age=None):
     """ Performs a percentile query
 
     Finds the percentile of a target property for events that meet the given criteria.
@@ -185,6 +199,8 @@ def percentile(event_collection, target_property, percentile, timeframe=None, ti
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+    willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
@@ -196,12 +212,13 @@ def percentile(event_collection, target_property, percentile, timeframe=None, ti
         interval=interval,
         filters=filters,
         group_by=group_by,
-        target_property=target_property
+        target_property=target_property,
+        max_age=max_age,
     )
 
 
 def count_unique(event_collection, target_property, timeframe=None, timezone=None, interval=None,
-                 filters=None, group_by=None):
+                 filters=None, group_by=None, max_age=None):
     """ Performs a count unique query
 
     Counts the unique values of a target property for events that meet the given criteria.
@@ -218,15 +235,18 @@ def count_unique(event_collection, target_property, timeframe=None, timezone=Non
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+    willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.count_unique(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+                                interval=interval, filters=filters, group_by=group_by,
+                                target_property=target_property, max_age=max_age)
 
 
 def select_unique(event_collection, target_property, timeframe=None, timezone=None, interval=None,
-                  filters=None, group_by=None):
+                  filters=None, group_by=None, max_age=None):
     """ Performs a select unique query
 
     Returns an array of the unique values of a target property for events that meet the given criteria.
@@ -243,11 +263,14 @@ def select_unique(event_collection, target_property, timeframe=None, timezone=No
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+    willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.select_unique(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                 interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+                                 interval=interval, filters=filters, group_by=group_by,
+                                 target_property=target_property, max_age=max_age)
 
 
 def extraction(event_collection, timeframe=None, timezone=None, filters=None, latest=None, email=None,
@@ -274,7 +297,7 @@ def extraction(event_collection, timeframe=None, timezone=None, filters=None, la
                               filters=filters, latest=latest, email=email, property_names=property_names)
 
 
-def funnel(steps, timeframe=None, timezone=None):
+def funnel(steps, timeframe=None, timezone=None, max_age=None):
     """ Performs a Funnel query
 
     Returns an object containing the results for each step of the funnel.
@@ -286,14 +309,16 @@ def funnel(steps, timeframe=None, timezone=None):
     happened example: "previous_7_days"
     :param timezone: int, the timezone you'd like to use for the timeframe
     and interval in seconds
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+    willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
-    return _client.funnel(steps=steps, timeframe=timeframe, timezone=timezone)
+    return _client.funnel(steps=steps, timeframe=timeframe, timezone=timezone, max_age=max_age)
 
 
 def multi_analysis(event_collection, analyses, timeframe=None, interval=None,
-                   timezone=None, filters=None, group_by=None):
+                   timezone=None, filters=None, group_by=None, max_age=None):
     """ Performs a multi-analysis query
 
     Returns a dictionary of analysis results.
@@ -312,9 +337,11 @@ def multi_analysis(event_collection, analyses, timeframe=None, interval=None,
     example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+    willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.multi_analysis(event_collection=event_collection, timeframe=timeframe,
                                   interval=interval, timezone=timezone, filters=filters,
-                                  group_by=group_by, analyses=analyses)
+                                  group_by=group_by, analyses=analyses, max_age=max_age)

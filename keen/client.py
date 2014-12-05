@@ -109,7 +109,6 @@ class KeenClient(object):
             if not project_id or not isinstance(project_id, str):
                 raise exceptions.InvalidProjectIdError(project_id)
 
-
     def add_event(self, event_collection, event_body, timestamp=None):
         """ Adds an event.
 
@@ -175,7 +174,8 @@ class KeenClient(object):
             import urllib.parse
             return urllib.parse.quote(url)
 
-    def count(self, event_collection, timeframe=None, timezone=None, interval=None, filters=None, group_by=None):
+    def count(self, event_collection, timeframe=None, timezone=None, interval=None,
+              filters=None, group_by=None, max_age=None):
         """ Performs a count query
 
         Counts the number of events that meet the given criteria.
@@ -191,14 +191,16 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+        willing to trade for increased query performance, in seconds
 
         """
         params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                 interval=interval, filters=filters, group_by=group_by)
+                                 interval=interval, filters=filters, group_by=group_by, max_age=max_age)
         return self.api.query("count", params)
 
     def sum(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-            group_by=None):
+            group_by=None, max_age=None):
         """ Performs a sum query
 
         Adds the values of a target property for events that meet the given criteria.
@@ -215,14 +217,17 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+        willing to trade for increased query performance, in seconds
 
         """
         params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                 interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+                                 interval=interval, filters=filters, group_by=group_by,
+                                 target_property=target_property, max_age=max_age)
         return self.api.query("sum", params)
 
-    def minimum(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-                group_by=None):
+    def minimum(self, event_collection, target_property, timeframe=None, timezone=None, interval=None,
+                filters=None, group_by=None, max_age=None):
         """ Performs a minimum query
 
         Finds the minimum value of a target property for events that meet the given criteria.
@@ -239,14 +244,17 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+        willing to trade for increased query performance, in seconds
 
         """
         params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                 interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+                                 interval=interval, filters=filters, group_by=group_by,
+                                 target_property=target_property, max_age=max_age)
         return self.api.query("minimum", params)
 
-    def maximum(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-                group_by=None):
+    def maximum(self, event_collection, target_property, timeframe=None, timezone=None, interval=None,
+                filters=None, group_by=None, max_age=None):
         """ Performs a maximum query
 
         Finds the maximum value of a target property for events that meet the given criteria.
@@ -263,14 +271,17 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+        willing to trade for increased query performance, in seconds
 
         """
         params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                 interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+                                 interval=interval, filters=filters, group_by=group_by,
+                                 target_property=target_property, max_age=max_age)
         return self.api.query("maximum", params)
 
-    def average(self, event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-                group_by=None):
+    def average(self, event_collection, target_property, timeframe=None, timezone=None, interval=None,
+                filters=None, group_by=None, max_age=None):
         """ Performs a average query
 
         Finds the average of a target property for events that meet the given criteria.
@@ -287,14 +298,17 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+        willing to trade for increased query performance, in seconds
 
         """
         params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                 interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+                                 interval=interval, filters=filters, group_by=group_by,
+                                 target_property=target_property, max_age=max_age)
         return self.api.query("average", params)
 
-    def percentile(self, event_collection, target_property, percentile, timeframe=None, timezone=None, interval=None, filters=None,
-                   group_by=None):
+    def percentile(self, event_collection, target_property, percentile, timeframe=None, timezone=None,
+                   interval=None, filters=None, group_by=None, max_age=None):
         """ Performs a percentile query
 
         Finds the percentile of a target property for events that meet the given criteria.
@@ -313,6 +327,8 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+        willing to trade for increased query performance, in seconds
 
         """
         params = self.get_params(
@@ -323,12 +339,13 @@ class KeenClient(object):
             interval=interval,
             filters=filters,
             group_by=group_by,
-            target_property=target_property
+            target_property=target_property,
+            max_age=max_age,
         )
         return self.api.query("percentile", params)
 
     def count_unique(self, event_collection, target_property, timeframe=None, timezone=None, interval=None,
-                     filters=None, group_by=None):
+                     filters=None, group_by=None, max_age=None):
         """ Performs a count unique query
 
         Counts the unique values of a target property for events that meet the given criteria.
@@ -345,14 +362,17 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+        willing to trade for increased query performance, in seconds
 
         """
         params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                 interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+                                 interval=interval, filters=filters, group_by=group_by,
+                                 target_property=target_property, max_age=max_age)
         return self.api.query("count_unique", params)
 
     def select_unique(self, event_collection, target_property, timeframe=None, timezone=None, interval=None,
-                      filters=None, group_by=None):
+                      filters=None, group_by=None, max_age=None):
         """ Performs a select unique query
 
         Returns an array of the unique values of a target property for events that meet the given criteria.
@@ -369,14 +389,17 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+        willing to trade for increased query performance, in seconds
 
         """
         params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                 interval=interval, filters=filters, group_by=group_by, target_property=target_property)
+                                 interval=interval, filters=filters, group_by=group_by,
+                                 target_property=target_property, max_age=max_age)
         return self.api.query("select_unique", params)
 
-    def extraction(self, event_collection, timeframe=None, timezone=None, filters=None, latest=None, email=None,
-                   property_names=None):
+    def extraction(self, event_collection, timeframe=None, timezone=None, filters=None, latest=None,
+                   email=None, property_names=None):
         """ Performs a data extraction
 
         Returns either a JSON object of events or a response
@@ -392,12 +415,13 @@ class KeenClient(object):
         :param latest: int, the number of most recent records you'd like to return
         :param email: string, optional string containing an email address to email results to
         :param property_names: string or list of strings, used to limit the properties returned
+
         """
         params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
                                  filters=filters, latest=latest, email=email, property_names=property_names)
         return self.api.query("extraction", params)
 
-    def funnel(self, steps, timeframe=None, timezone=None):
+    def funnel(self, steps, timeframe=None, timezone=None, max_age=None):
         """ Performs a Funnel query
 
         Returns an object containing the results for each step of the funnel.
@@ -409,13 +433,15 @@ class KeenClient(object):
         happened example: "previous_7_days"
         :param timezone: int, the timezone you'd like to use for the timeframe
         and interval in seconds
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+        willing to trade for increased query performance, in seconds
 
         """
-        params = self.get_params(steps=steps, timeframe=timeframe, timezone=timezone)
+        params = self.get_params(steps=steps, timeframe=timeframe, timezone=timezone, max_age=max_age)
         return self.api.query("funnel", params)
 
     def multi_analysis(self, event_collection, analyses, timeframe=None, interval=None, timezone=None, filters=None,
-                       group_by=None):
+                       group_by=None, max_age=None):
         """ Performs a multi-analysis query
 
         Returns a dictionary of analysis results.
@@ -434,6 +460,8 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+        willing to trade for increased query performance, in seconds
 
         """
         params = self.get_params(
@@ -443,13 +471,15 @@ class KeenClient(object):
             timezone=timezone,
             filters=filters,
             group_by=group_by,
-            analyses=analyses)
+            analyses=analyses,
+            max_age=max_age,
+        )
 
         return self.api.query("multi_analysis", params)
 
     def get_params(self, event_collection=None, timeframe=None, timezone=None, interval=None, filters=None,
                    group_by=None, target_property=None, latest=None, email=None, analyses=None, steps=None,
-                   property_names=None, percentile=None):
+                   property_names=None, percentile=None, max_age=None):
         params = {}
         if event_collection:
             params["event_collection"] = event_collection
@@ -483,5 +513,7 @@ class KeenClient(object):
             params["property_names"] = json.dumps(property_names)
         if percentile:
             params["percentile"] = percentile
+        if max_age:
+            params["max_age"] = max_age
 
         return params
