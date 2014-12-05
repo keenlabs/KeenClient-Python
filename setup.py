@@ -11,4 +11,4 @@ setup(name="keen",
       packages=["keen"],
       install_requires=["requests", "pycrypto", "Padding"],
       tests_require=["nose"]
-)
+      )
