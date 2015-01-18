@@ -57,7 +57,8 @@ class KeenClient(object):
     """
 
     def __init__(self, project_id, write_key=None, read_key=None,
-                 persistence_strategy=None, api_class=KeenApi, get_timeout=305, post_timeout=305):
+                 persistence_strategy=None, api_class=KeenApi, get_timeout=305, post_timeout=305
+                 master_key=None):
         """ Initializes a KeenClient object.
 
         :param project_id: the Keen IO project ID
@@ -67,6 +68,7 @@ class KeenClient(object):
         the event
         :param get_timeout: optional, the timeout on GET requests
         :param post_timeout: optional, the timeout on POST requests
+        :param master_key: a Keen IO Master API Key
         """
         super(KeenClient, self).__init__()
 
@@ -76,7 +78,8 @@ class KeenClient(object):
         # Set up an api client to be used for querying and optionally passed
         # into a default persistence strategy.
         self.api = api_class(project_id, write_key=write_key, read_key=read_key,
-                             get_timeout=get_timeout, post_timeout=post_timeout)
+                             get_timeout=get_timeout, post_timeout=post_timeout,
+                             master_key=master_key)
 
         if persistence_strategy:
             # validate the given persistence strategy
