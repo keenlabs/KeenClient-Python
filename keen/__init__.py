@@ -26,7 +26,8 @@ def _initialize_client_from_environment():
 
         _client = KeenClient(project_id,
                              write_key=write_key,
-                             read_key=read_key)
+                             read_key=read_key,
+                             master_key=master_key)
 
 
 def add_event(event_collection, body, timestamp=None):
