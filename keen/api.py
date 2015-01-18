@@ -50,7 +50,8 @@ class KeenApi(object):
     # self says it belongs to KeenApi/andOr is the object passed into KeenApi
     # __init__ create keenapi object whenever KeenApi class is invoked
     def __init__(self, project_id, write_key=None, read_key=None,
-                 base_url=None, api_version=None, get_timeout=None, post_timeout=None):
+                 base_url=None, api_version=None, get_timeout=None, post_timeout=None,
+                 master_key=None):
         """
         Initializes a KeenApi object
 
@@ -60,6 +61,7 @@ class KeenApi(object):
         :param base_url: optional, set this to override where API requests
         are sent
         :param api_version: string, optional, set this to override what API
+        :param master_key: a Keen IO Master API Key
         version is used
         """
         # super? recreates the object with values passed into KeenApi
@@ -67,6 +69,7 @@ class KeenApi(object):
         self.project_id = project_id
         self.write_key = write_key
         self.read_key = read_key
+        self.master_key = master_key
         if base_url:
             self.base_url = base_url
         if api_version:
