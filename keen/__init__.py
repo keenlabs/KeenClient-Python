@@ -8,16 +8,18 @@ _client = None
 project_id = None
 write_key = None
 read_key = None
+master_key = None
 
 
 def _initialize_client_from_environment():
-    global _client, project_id, write_key, read_key
+    global _client, project_id, write_key, read_key, master_key
 
     if _client is None:
         # check environment for project ID and keys
         project_id = project_id or os.environ.get("KEEN_PROJECT_ID")
         write_key = write_key or os.environ.get("KEEN_WRITE_KEY")
         read_key = read_key or os.environ.get("KEEN_READ_KEY")
+        master_key = master_key or os.environ.get("KEEN_MASTER_KEY")
 
         if not project_id:
             raise InvalidEnvironmentError("Please set the KEEN_PROJECT_ID environment variable or set keen.project_id!")
