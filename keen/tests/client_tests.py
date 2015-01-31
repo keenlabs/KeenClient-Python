@@ -325,7 +325,7 @@ class QueryTests(BaseTestCase):
         resp = keen.count("query test", timeframe="this_2_days", interval="daily")
         self.assertEqual(type(resp), list)
 
-    def test_passing_custom_api_client(self):
+    def test_passing_invalid_custom_api_client(self):
         class CustomApiClient(object):
             def __init__(self, project_id, write_key=None, read_key=None,
                          base_url=None, api_version=None, **kwargs):
@@ -365,7 +365,7 @@ if sys.version_info[0] < 3:
             keen.write_key = unicode(api_key)
 
         @patch("requests.Session.post", MagicMock(return_value=MockedRequest(status_code=201, json_response=[0, 1, 2])))
-        def test_unicode(self):
+        def test_add_event_with_unicode(self):
             keen.add_event(unicode("unicode test"), {unicode("number"): 5, "string": unicode("foo")})
 
         def tearDown(self):
