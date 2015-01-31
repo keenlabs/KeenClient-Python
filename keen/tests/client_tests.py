@@ -114,13 +114,11 @@ class ClientTests(BaseTestCase):
 
     @patch("requests.Session.post", MagicMock(side_effect=requests.Timeout))
     def test_post_timeout_single(self):
-        with self.assert_raises(requests.Timeout):
-            keen.add_event("python_test", {"hello": "goodbye"})
+        self.assert_raises(requests.Timeout, keen.add_event, "python_test", {"hello": "goodbye"})
 
     @patch("requests.Session.post", MagicMock(side_effect=requests.Timeout))
     def test_post_timeout_batch(self):
-        with self.assert_raises(requests.Timeout):
-            keen.add_events({"python_test": [{"hello": "goodbye"}]})
+        self.assert_raises(requests.Timeout, keen.add_events, {"python_test": [{"hello": "goodbye"}]})
 
     @patch("requests.Session.post",
            MagicMock(return_value=MockedFailedRequest(status_code=401,
@@ -351,8 +349,7 @@ class QueryTests(BaseTestCase):
     def test_timeout_count(self, get):
         get.side_effect = requests.Timeout
         client = KeenClient(keen.project_id, write_key=None, read_key=keen.read_key, get_timeout=0.0001)
-        with self.assert_raises(requests.Timeout):
-            client.count("query test", timeframe="today", filters=self.get_filter())
+        self.assert_raises(requests.Timeout, client.count, "query test", timeframe="today", filters=self.get_filter())
         # Make sure the requests library was called with `timeout`.
         self.assert_equals(get.call_args[1]["timeout"], 0.0001)
 
