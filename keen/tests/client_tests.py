@@ -28,6 +28,7 @@ class MockedFailedRequest(MockedRequest):
         return self.json_response
 
 
+@patch("requests.Session.post")
 class ClientTests(BaseTestCase):
     def setUp(self):
         super(ClientTests, self).setUp()
@@ -37,7 +38,7 @@ class ClientTests(BaseTestCase):
         keen.write_key = scoped_keys.encrypt(self.api_key, {"allowed_operations": ["write"]})
         keen.read_key = scoped_keys.encrypt(self.api_key, {"allowed_operations": ["read"]})
 
-    def test_init(self):
+    def test_init(self, post):
         def positive_helper(project_id, **kwargs):
             client = KeenClient(project_id, **kwargs)
             self.assert_not_equal(client, None)
@@ -80,50 +81,45 @@ class ClientTests(BaseTestCase):
                         "project_id",
                         persistence_strategy=persistence_strategies.DirectPersistenceStrategy)
 
-    def test_direct_persistence_strategy(self):
-        with patch("requests.Session.post") as post:
-            post.return_value = MockedRequest(status_code=201, json_response={"hello": "goodbye"})
-            keen.add_event("python_test", {"hello": "goodbye"})
-            keen.add_event("python_test", {"hello": "goodbye"})
-
-        with patch("requests.Session.post") as post:
-            post.return_value = MockedRequest(status_code=200, json_response={"hello": "goodbye"})
-            keen.add_events(
-                {
-                    "sign_ups": [{
-                        "username": "timmy",
-                        "referred_by": "steve",
-                        "son_of": "my_mom"
-                    }],
-                    "purchases": [
-                        {"price": 5},
-                        {"price": 6},
-                        {"price": 7}
-                    ]}
-            )
-
-    @patch("requests.Session.post",
-           MagicMock(return_value=MockedRequest(status_code=201, json_response={"hello": "goodbye"})))
-    def test_module_level_add_event(self):
+    def test_direct_persistence_strategy(self, post):
+        post.return_value = MockedRequest(status_code=201, json_response={"hello": "goodbye"})
+        keen.add_event("python_test", {"hello": "goodbye"})
         keen.add_event("python_test", {"hello": "goodbye"})
 
-    @patch("requests.Session.post",
-           MagicMock(return_value=MockedRequest(status_code=200, json_response={"hello": "goodbye"})))
-    def test_module_level_add_events(self):
+        post.return_value = MockedRequest(status_code=200, json_response={"hello": "goodbye"})
+        keen.add_events(
+            {
+                "sign_ups": [{
+                    "username": "timmy",
+                    "referred_by": "steve",
+                    "son_of": "my_mom"
+                }],
+                "purchases": [
+                    {"price": 5},
+                    {"price": 6},
+                    {"price": 7}
+                ]}
+        )
+
+    def test_module_level_add_event(self, post):
+        post.return_value = MockedRequest(status_code=201, json_response={"hello": "goodbye"})
+        keen.add_event("python_test", {"hello": "goodbye"})
+
+    def test_module_level_add_events(self, post):
+        post.return_value = MockedRequest(status_code=200, json_response={"hello": "goodbye"})
         keen.add_events({"python_test": [{"hello": "goodbye"}]})
 
-    @patch("requests.Session.post", MagicMock(side_effect=requests.Timeout))
-    def test_post_timeout_single(self):
+    def test_post_timeout_single(self, post):
+        post.side_effect = requests.Timeout
         self.assert_raises(requests.Timeout, keen.add_event, "python_test", {"hello": "goodbye"})
 
-    @patch("requests.Session.post", MagicMock(side_effect=requests.Timeout))
-    def test_post_timeout_batch(self):
+    def test_post_timeout_batch(self, post):
+        post.side_effect = requests.Timeout
         self.assert_raises(requests.Timeout, keen.add_events, {"python_test": [{"hello": "goodbye"}]})
 
-    @patch("requests.Session.post",
-           MagicMock(return_value=MockedFailedRequest(status_code=401,
-                     json_response={"message": "authorization error", "error_code": 401})))
-    def test_environment_variables(self):
+    def test_environment_variables(self, post):
+        post.return_value = MockedFailedRequest(status_code=401,
+                     json_response={"message": "authorization error", "error_code": 401})
         # try addEvent w/out having environment variables
         keen._client = None
         keen.project_id = None
@@ -145,7 +141,7 @@ class ClientTests(BaseTestCase):
         self.assert_raises(exceptions.KeenApiError,
                            keen.add_event, "python_test", {"hello": "goodbye"})
 
-    def test_configure_through_code(self):
+    def test_configure_through_code(self, post):
         client = KeenClient(project_id="123456", read_key=None, write_key=None)
         self.assert_raises(exceptions.InvalidEnvironmentError,
                            client.add_event, "python_test", {"hello": "goodbye"})
@@ -159,7 +155,7 @@ class ClientTests(BaseTestCase):
             self.assert_raises(exceptions.KeenApiError,
                                client.add_event, "python_test", {"hello": "goodbye"})
 
-    def test_generate_image_beacon(self):
+    def test_generate_image_beacon(self, post):
         event_collection = "python_test hello!?"
         event_data = {"a": "b"}
         data = self.base64_encode(json.dumps(event_data))
@@ -176,7 +172,7 @@ class ClientTests(BaseTestCase):
         url = client.generate_image_beacon(event_collection, event_data)
         self.assert_equal(expected, url)
 
-    def test_generate_image_beacon_timestamp(self):
+    def test_generate_image_beacon_timestamp(self, post):
         # make sure using a timestamp works
 
         event_collection = "python_test"
@@ -210,7 +206,14 @@ class ClientTests(BaseTestCase):
             return urllib.parse.quote(url)
 
 
+@patch("requests.Session.get")
 class QueryTests(BaseTestCase):
+
+    int_response = MockedRequest(status_code=200, json_response=2)
+
+    list_response = MockedRequest(
+        status_code=200, json_response=[{"value": {"total": 1}}, {"value": {"total": 2}}])
+
     def setUp(self):
         super(QueryTests, self).setUp()
         keen._client = None
@@ -231,59 +234,55 @@ class QueryTests(BaseTestCase):
     def get_filter(self):
         return [{"property_name": "number", "operator": "eq", "property_value": 5}]
 
-    @patch("requests.Session.get", MagicMock(return_value=MockedRequest(status_code=200, json_response=2)))
-    def test_count(self):
+    def test_count(self, get):
+        get.return_value = self.int_response
         resp = keen.count("query test", timeframe="today", filters=self.get_filter())
         self.assertEqual(type(resp), int)
 
-    @patch("requests.Session.get", MagicMock(return_value=MockedRequest(status_code=200, json_response=2)))
-    def test_sum(self):
+    def test_sum(self, get):
+        get.return_value = self.int_response
         resp = keen.sum("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), int)
 
-    @patch("requests.Session.get", MagicMock(return_value=MockedRequest(status_code=200, json_response=2)))
-    def test_minimum(self):
+    def test_minimum(self, get):
+        get.return_value = self.int_response
         resp = keen.minimum("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), int)
 
-    @patch("requests.Session.get", MagicMock(return_value=MockedRequest(status_code=200, json_response=2)))
-    def test_maximum(self):
+    def test_maximum(self, get):
+        get.return_value = self.int_response
         resp = keen.maximum("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), int)
 
-    @patch("requests.Session.get", MagicMock(return_value=MockedRequest(status_code=200, json_response=2)))
-    def test_average(self):
+    def test_average(self, get):
+        get.return_value = self.int_response
         resp = keen.average("query test", target_property="number", timeframe="today")
         self.assertTrue(type(resp) in (int, float), type(resp))
 
-    @patch("requests.Session.get", MagicMock(return_value=MockedRequest(status_code=200, json_response=2)))
-    def test_percentile(self):
+    def test_percentile(self, get):
+        get.return_value = self.int_response
         resp = keen.percentile("query test", target_property="number", percentile=80, timeframe="today")
         self.assertTrue(type(resp) in (int, float), type(resp))
 
-    @patch("requests.Session.get", MagicMock(return_value=MockedRequest(status_code=200, json_response=2)))
-    def test_count_unique(self):
+    def test_count_unique(self, get):
+        get.return_value = self.int_response
         resp = keen.count_unique("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), int)
 
-    @patch("requests.Session.get",
-           MagicMock(return_value=MockedRequest(status_code=200, json_response=[0, 1, 2])))
-    def test_select_unique(self):
+    def test_select_unique(self, get):
+        get.return_value = self.list_response
         resp = keen.select_unique("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), list)
 
-    @patch("requests.Session.get",
-           MagicMock(return_value=MockedRequest(status_code=200, json_response=[{"result": 1}, {"result": 1}])))
-    def test_extraction(self):
+    def test_extraction(self, get):
+        get.return_value = self.list_response
         resp = keen.extraction("query test", timeframe="today", property_names=["number"])
         self.assertEqual(type(resp), list)
         for event in resp:
             self.assertTrue("string" not in event)
 
-    @patch("requests.Session.get", MagicMock(return_value=MockedRequest(
-           status_code=200, json_response=[{"value": {"total": 1}}, {"value": {"total": 2}}])
-    ))
-    def test_multi_analysis(self):
+    def test_multi_analysis(self, get):
+        get.return_value = self.list_response
         resp = keen.multi_analysis("query test",
                                    analyses={"total": {"analysis_type": "sum", "target_property": "number"}},
                                    timeframe="today", interval="hourly")
@@ -291,9 +290,8 @@ class QueryTests(BaseTestCase):
         for result in resp:
             self.assertEqual(type(result["value"]["total"]), int)
 
-    @patch("requests.Session.get",
-           MagicMock(return_value=MockedRequest(status_code=200, json_response=[{"result": 1}, {"result": 1}])))
-    def test_funnel(self):
+    def test_funnel(self, get):
+        get.return_value = self.list_response
         step1 = {
             "event_collection": "query test",
             "actor_property": "number",
@@ -307,25 +305,22 @@ class QueryTests(BaseTestCase):
         resp = keen.funnel([step1, step2])
         self.assertEqual(type(resp), list)
 
-    @patch("requests.Session.get",
-           MagicMock(return_value=MockedRequest(status_code=200, json_response=[0, 1, 2])))
-    def test_group_by(self):
+    def test_group_by(self, get):
+        get.return_value = self.list_response
         resp = keen.count("query test", timeframe="today", group_by="number")
         self.assertEqual(type(resp), list)
 
-    @patch("requests.Session.get",
-           MagicMock(return_value=MockedRequest(status_code=200, json_response=[0, 1, 2])))
-    def test_multi_group_by(self):
+    def test_multi_group_by(self, get):
+        get.return_value = self.list_response
         resp = keen.count("query test", timeframe="today", group_by=["number", "string"])
         self.assertEqual(type(resp), list)
 
-    @patch("requests.Session.get",
-           MagicMock(return_value=MockedRequest(status_code=200, json_response=[0, 1, 2])))
-    def test_interval(self):
+    def test_interval(self, get):
+        get.return_value = self.list_response
         resp = keen.count("query test", timeframe="this_2_days", interval="daily")
         self.assertEqual(type(resp), list)
 
-    def test_passing_invalid_custom_api_client(self):
+    def test_passing_invalid_custom_api_client(self, get):
         class CustomApiClient(object):
             def __init__(self, project_id, write_key=None, read_key=None,
                          base_url=None, api_version=None, **kwargs):
@@ -345,7 +340,6 @@ class QueryTests(BaseTestCase):
         # But it shows it is actually using our class
         self.assertRaises(TypeError, client.add_event)
 
-    @patch("requests.Session.get")
     def test_timeout_count(self, get):
         get.side_effect = requests.Timeout
         client = KeenClient(keen.project_id, write_key=None, read_key=keen.read_key, get_timeout=0.0001)
