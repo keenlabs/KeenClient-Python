@@ -20,6 +20,7 @@ class ClientTests(BaseTestCase):
         keen.project_id = None
         keen.write_key = None
         keen.read_key = None
+        keen.master_key = None
 
     def test_init(self):
         def positive_helper(project_id, **kwargs):
@@ -124,6 +125,7 @@ class ClientTests(BaseTestCase):
         keen.project_id = None
         keen.write_key = None
         keen.read_key = None
+        keen.master_key = None
         self.assert_raises(exceptions.InvalidEnvironmentError,
                            keen.add_event, "python_test", {"hello": "goodbye"})
 
@@ -137,6 +139,22 @@ class ClientTests(BaseTestCase):
         os.environ["KEEN_WRITE_KEY"] = "abcde"
         self.assert_raises(exceptions.KeenApiError,
                            keen.add_event, "python_test", {"hello": "goodbye"})
+
+    def test_set_master_key_env_var(self):
+        exp_master_key = os.environ["KEEN_MASTER_KEY"] = "abcd1234"
+        keen._initialize_client_from_environment()
+
+        self.assertEquals(exp_master_key, keen.master_key)
+        self.assertEquals(exp_master_key, keen._client.api.master_key)
+
+        del os.environ["KEEN_MASTER_KEY"]
+
+    def test_set_master_key_env_var(self):
+        exp_master_key = keen.master_key = "abcd4567"
+        keen._initialize_client_from_environment()
+
+        self.assertEquals(exp_master_key, keen.master_key)
+        self.assertEquals(exp_master_key, keen._client.api.master_key)
 
     def test_configure_through_code(self):
         keen.project_id = "123456"
@@ -230,6 +248,7 @@ class QueryTests(BaseTestCase):
         keen.project_id = None
         keen.write_key = None
         keen.read_key = None
+        keen.master_key = None
         keen._client = None
         super(QueryTests, self).tearDown()
 
@@ -355,5 +374,6 @@ if sys.version_info[0] > 3:
             keen.project_id = None
             keen.write_key = None
             keen.read_key = None
+            keen.master_key = None
             keen._client = None
             super(UnicodeTests, self).tearDown()
