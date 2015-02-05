@@ -30,13 +30,19 @@ class MockedFailedRequest(MockedRequest):
 
 @patch("requests.Session.post")
 class ClientTests(BaseTestCase):
+
+    SINGLE_ADD_RESPONSE = MockedRequest(status_code=201, json_response={"hello": "goodbye"})
+
+    MULTI_ADD_RESPONSE = MockedRequest(status_code=200, json_response={"hello": "goodbye"})
+
+
     def setUp(self):
         super(ClientTests, self).setUp()
-        self.api_key = "2e79c6ec1d0145be8891bf668599c79a"
+        api_key = "2e79c6ec1d0145be8891bf668599c79a"
         keen._client = None
         keen.project_id = "5004ded1163d66114f000000"
-        keen.write_key = scoped_keys.encrypt(self.api_key, {"allowed_operations": ["write"]})
-        keen.read_key = scoped_keys.encrypt(self.api_key, {"allowed_operations": ["read"]})
+        keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
+        keen.read_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]})
 
     def test_init(self, post):
         def positive_helper(project_id, **kwargs):
@@ -82,11 +88,11 @@ class ClientTests(BaseTestCase):
                         persistence_strategy=persistence_strategies.DirectPersistenceStrategy)
 
     def test_direct_persistence_strategy(self, post):
-        post.return_value = MockedRequest(status_code=201, json_response={"hello": "goodbye"})
+        post.return_value = self.SINGLE_ADD_RESPONSE
         keen.add_event("python_test", {"hello": "goodbye"})
         keen.add_event("python_test", {"hello": "goodbye"})
 
-        post.return_value = MockedRequest(status_code=200, json_response={"hello": "goodbye"})
+        post.return_value = self.MULTI_ADD_RESPONSE
         keen.add_events(
             {
                 "sign_ups": [{
@@ -102,11 +108,11 @@ class ClientTests(BaseTestCase):
         )
 
     def test_module_level_add_event(self, post):
-        post.return_value = MockedRequest(status_code=201, json_response={"hello": "goodbye"})
+        post.return_value = self.SINGLE_ADD_RESPONSE
         keen.add_event("python_test", {"hello": "goodbye"})
 
     def test_module_level_add_events(self, post):
-        post.return_value = MockedRequest(status_code=200, json_response={"hello": "goodbye"})
+        post.return_value = self.MULTI_ADD_RESPONSE
         keen.add_events({"python_test": [{"hello": "goodbye"}]})
 
     def test_post_timeout_single(self, post):
@@ -209,9 +215,9 @@ class ClientTests(BaseTestCase):
 @patch("requests.Session.get")
 class QueryTests(BaseTestCase):
 
-    int_response = MockedRequest(status_code=200, json_response=2)
+    INT_RESPONSE = MockedRequest(status_code=200, json_response=2)
 
-    list_response = MockedRequest(
+    LIST_RESPONSE = MockedRequest(
         status_code=200, json_response=[{"value": {"total": 1}}, {"value": {"total": 2}}])
 
     def setUp(self):
@@ -235,54 +241,54 @@ class QueryTests(BaseTestCase):
         return [{"property_name": "number", "operator": "eq", "property_value": 5}]
 
     def test_count(self, get):
-        get.return_value = self.int_response
+        get.return_value = self.INT_RESPONSE
         resp = keen.count("query test", timeframe="today", filters=self.get_filter())
         self.assertEqual(type(resp), int)
 
     def test_sum(self, get):
-        get.return_value = self.int_response
+        get.return_value = self.INT_RESPONSE
         resp = keen.sum("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), int)
 
     def test_minimum(self, get):
-        get.return_value = self.int_response
+        get.return_value = self.INT_RESPONSE
         resp = keen.minimum("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), int)
 
     def test_maximum(self, get):
-        get.return_value = self.int_response
+        get.return_value = self.INT_RESPONSE
         resp = keen.maximum("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), int)
 
     def test_average(self, get):
-        get.return_value = self.int_response
+        get.return_value = self.INT_RESPONSE
         resp = keen.average("query test", target_property="number", timeframe="today")
         self.assertTrue(type(resp) in (int, float), type(resp))
 
     def test_percentile(self, get):
-        get.return_value = self.int_response
+        get.return_value = self.INT_RESPONSE
         resp = keen.percentile("query test", target_property="number", percentile=80, timeframe="today")
         self.assertTrue(type(resp) in (int, float), type(resp))
 
     def test_count_unique(self, get):
-        get.return_value = self.int_response
+        get.return_value = self.INT_RESPONSE
         resp = keen.count_unique("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), int)
 
     def test_select_unique(self, get):
-        get.return_value = self.list_response
+        get.return_value = self.LIST_RESPONSE
         resp = keen.select_unique("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), list)
 
     def test_extraction(self, get):
-        get.return_value = self.list_response
+        get.return_value = self.LIST_RESPONSE
         resp = keen.extraction("query test", timeframe="today", property_names=["number"])
         self.assertEqual(type(resp), list)
         for event in resp:
             self.assertTrue("string" not in event)
 
     def test_multi_analysis(self, get):
-        get.return_value = self.list_response
+        get.return_value = self.LIST_RESPONSE
         resp = keen.multi_analysis("query test",
                                    analyses={"total": {"analysis_type": "sum", "target_property": "number"}},
                                    timeframe="today", interval="hourly")
@@ -291,7 +297,7 @@ class QueryTests(BaseTestCase):
             self.assertEqual(type(result["value"]["total"]), int)
 
     def test_funnel(self, get):
-        get.return_value = self.list_response
+        get.return_value = self.LIST_RESPONSE
         step1 = {
             "event_collection": "query test",
             "actor_property": "number",
@@ -306,17 +312,17 @@ class QueryTests(BaseTestCase):
         self.assertEqual(type(resp), list)
 
     def test_group_by(self, get):
-        get.return_value = self.list_response
+        get.return_value = self.LIST_RESPONSE
         resp = keen.count("query test", timeframe="today", group_by="number")
         self.assertEqual(type(resp), list)
 
     def test_multi_group_by(self, get):
-        get.return_value = self.list_response
+        get.return_value = self.LIST_RESPONSE
         resp = keen.count("query test", timeframe="today", group_by=["number", "string"])
         self.assertEqual(type(resp), list)
 
     def test_interval(self, get):
-        get.return_value = self.list_response
+        get.return_value = self.LIST_RESPONSE
         resp = keen.count("query test", timeframe="this_2_days", interval="daily")
         self.assertEqual(type(resp), list)
 
