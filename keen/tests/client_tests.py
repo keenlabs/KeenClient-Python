@@ -149,7 +149,7 @@ class ClientTests(BaseTestCase):
 
         del os.environ["KEEN_MASTER_KEY"]
 
-    def test_set_master_key_env_var(self):
+    def test_set_master_key_package_var(self):
         exp_master_key = keen.master_key = "abcd4567"
         keen._initialize_client_from_environment()
 
