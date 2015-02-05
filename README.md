@@ -20,7 +20,7 @@ This client is known to work on Python 2.6, 2.7, 3.2 and 3.3
 
 To use this client with the Keen IO API, you have to configure your Keen IO Project ID and its access keys (if you need an account, [sign up here](https://keen.io/) - it's free).
 
-Setting a write key is required for publishing events. Setting a read key is required for running queries. The recommended way to set this configuration information is via the environment. The keys you can set are `KEEN_PROJECT_ID`, `KEEN_WRITE_KEY`, and `KEEN_READ_KEY`.
+Setting a write key is required for publishing events. Setting a read key is required for running queries. The recommended way to set this configuration information is via the environment. The keys you can set are `KEEN_PROJECT_ID`, `KEEN_WRITE_KEY`, `KEEN_READ_KEY`, and `KEEN_MASTER_KEY`.
 
 If you don't want to use environment variables for some reason, you can directly set values as follows:
 
@@ -28,6 +28,7 @@ If you don't want to use environment variables for some reason, you can directly
     keen.project_id = "xxxx"
     keen.write_key = "yyyy"
     keen.read_key = "zzzz"
+    keen.master_key = "abcd"
 ```
 
 You can also configure unique client instances as follows:
@@ -38,7 +39,8 @@ You can also configure unique client instances as follows:
     client = KeenClient(
         project_id="xxxx",
         write_key="yyyy",
-        read_key="zzzz"
+        read_key="zzzz",
+        master_key="abcd"
     )
 ```
 
@@ -154,6 +156,7 @@ By default, POST requests will timeout after 305 seconds. If you want to manuall
         project_id="xxxx",
         write_key="yyyy",
         read_key="zzzz",
+        master_key="abcd",
         post_timeout=100
 
     )
