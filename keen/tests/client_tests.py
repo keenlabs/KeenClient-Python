@@ -265,6 +265,11 @@ class QueryTests(BaseTestCase):
         resp = keen.average("query test", target_property="number", timeframe="today")
         self.assertTrue(type(resp) in (int, float), type(resp))
 
+    def test_median(self, get):
+        get.return_value = self.INT_RESPONSE
+        resp = keen.median("query test", target_property="number", timeframe="today")
+        self.assertTrue(type(resp) in (int, float), type(resp))
+
     def test_percentile(self, get):
         get.return_value = self.INT_RESPONSE
         resp = keen.percentile("query test", target_property="number", percentile=80, timeframe="today")
