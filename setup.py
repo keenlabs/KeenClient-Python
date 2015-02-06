@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 import sys
 
 try:
-    import multiprocessing  # NOQA
+    import multiprocessing
 except ImportError:
     pass
 
