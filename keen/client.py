@@ -310,6 +310,33 @@ class KeenClient(object):
                                  target_property=target_property, max_age=max_age)
         return self.api.query("average", params)
 
+    def median(self, event_collection, target_property, timeframe=None, timezone=None, interval=None,
+                filters=None, group_by=None, max_age=None):
+        """ Performs a median query
+
+        Finds the median of a target property for events that meet the given criteria.
+
+        :param event_collection: string, the name of the collection to query
+        :param target_property: string, the name of the event property you would like use
+        :param timeframe: string or dict, the timeframe in which the events
+        happened example: "previous_7_days"
+        :param timezone: int, the timezone you'd like to use for the timeframe
+        and interval in seconds
+        :param interval: string, the time interval used for measuring data over
+        time example: "daily"
+        :param filters: array of dict, contains the filters you'd like to apply to the data
+        example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+        :param group_by: string or array of strings, the name(s) of the properties you would
+        like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
+        willing to trade for increased query performance, in seconds
+
+        """
+        params = self.get_params(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
+                                 interval=interval, filters=filters, group_by=group_by,
+                                 target_property=target_property, max_age=max_age)
+        return self.api.query("median", params)
+
     def percentile(self, event_collection, target_property, percentile, timeframe=None, timezone=None,
                    interval=None, filters=None, group_by=None, max_age=None):
         """ Performs a percentile query

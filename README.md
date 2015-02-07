@@ -182,6 +182,11 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 
 ### Changelog
 
+##### 0.3.8
++ Mocked tests.
++ Added ```median``` query method.
++ Added support for `$python setup.py test`.
+
 ##### 0.3.7
 + Upgraded to requests==2.5.1
 

@@ -8,21 +8,44 @@ from keen import exceptions, persistence_strategies, scoped_keys
 import keen
 from keen.client import KeenClient
 from keen.tests.base_test_case import BaseTestCase
+from mock import patch, MagicMock
 import sys
 
 __author__ = 'dkador'
 
 
+class MockedRequest(object):
+    def __init__(self, status_code, json_response):
+        self.status_code = status_code
+        self.json_response = json_response
+
+    def json(self):
+        return {"result": self.json_response}
+
+
+class MockedFailedRequest(MockedRequest):
+    def json(self):
+        return self.json_response
+
+
+@patch("requests.Session.post")
 class ClientTests(BaseTestCase):
+
+    SINGLE_ADD_RESPONSE = MockedRequest(status_code=201, json_response={"hello": "goodbye"})
+
+    MULTI_ADD_RESPONSE = MockedRequest(status_code=200, json_response={"hello": "goodbye"})
+
+
     def setUp(self):
         super(ClientTests, self).setUp()
+        api_key = "2e79c6ec1d0145be8891bf668599c79a"
         keen._client = None
-        keen.project_id = None
-        keen.write_key = None
-        keen.read_key = None
+        keen.project_id = "5004ded1163d66114f000000"
+        keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
+        keen.read_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]})
         keen.master_key = None
 
-    def test_init(self):
+    def test_init(self, post):
         def positive_helper(project_id, **kwargs):
             client = KeenClient(project_id, **kwargs)
             self.assert_not_equal(client, None)
@@ -65,15 +88,13 @@ class ClientTests(BaseTestCase):
                         "project_id",
                         persistence_strategy=persistence_strategies.DirectPersistenceStrategy)
 
-    def test_direct_persistence_strategy(self):
-        project_id = "5004ded1163d66114f000000"
-        api_key = "2e79c6ec1d0145be8891bf668599c79a"
-        write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
-        read_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]})
-        client = KeenClient(project_id, write_key=write_key, read_key=read_key)
-        client.add_event("python_test", {"hello": "goodbye"})
-        client.add_event("python_test", {"hello": "goodbye"})
-        client.add_events(
+    def test_direct_persistence_strategy(self, post):
+        post.return_value = self.SINGLE_ADD_RESPONSE
+        keen.add_event("python_test", {"hello": "goodbye"})
+        keen.add_event("python_test", {"hello": "goodbye"})
+
+        post.return_value = self.MULTI_ADD_RESPONSE
+        keen.add_events(
             {
                 "sign_ups": [{
                     "username": "timmy",
@@ -87,39 +108,25 @@ class ClientTests(BaseTestCase):
                 ]}
         )
 
-    def test_module_level_add_event(self):
-        keen.project_id = "5004ded1163d66114f000000"
-        api_key = "2e79c6ec1d0145be8891bf668599c79a"
-        keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
-        # client = KeenClient(project_id, write_key=write_key, read_key=read_key)
+    def test_module_level_add_event(self, post):
+        post.return_value = self.SINGLE_ADD_RESPONSE
         keen.add_event("python_test", {"hello": "goodbye"})
 
-    def test_module_level_add_events(self):
-        keen.project_id = "5004ded1163d66114f000000"
-        api_key = "2e79c6ec1d0145be8891bf668599c79a"
-        keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
-        # client = KeenClient(project_id, write_key=write_key, read_key=read_key)
+    def test_module_level_add_events(self, post):
+        post.return_value = self.MULTI_ADD_RESPONSE
         keen.add_events({"python_test": [{"hello": "goodbye"}]})
 
-    @raises(requests.Timeout)
-    def test_post_timeout_single(self):
-        keen.project_id = "5004ded1163d66114f000000"
-        api_key = "2e79c6ec1d0145be8891bf668599c79a"
-        keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
-        client = KeenClient(keen.project_id, write_key=keen.write_key, read_key=None,
-                            post_timeout=0.0001)
-        client.add_event("python_test", {"hello": "goodbye"})
+    def test_post_timeout_single(self, post):
+        post.side_effect = requests.Timeout
+        self.assert_raises(requests.Timeout, keen.add_event, "python_test", {"hello": "goodbye"})
 
-    @raises(requests.Timeout)
-    def test_post_timeout_batch(self):
-        keen.project_id = "5004ded1163d66114f000000"
-        api_key = "2e79c6ec1d0145be8891bf668599c79a"
-        keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
-        client = KeenClient(keen.project_id, write_key=keen.write_key, read_key=None,
-                            post_timeout=0.0001)
-        client.add_events({"python_test": [{"hello": "goodbye"}]})
+    def test_post_timeout_batch(self, post):
+        post.side_effect = requests.Timeout
+        self.assert_raises(requests.Timeout, keen.add_events, {"python_test": [{"hello": "goodbye"}]})
 
-    def test_environment_variables(self):
+    def test_environment_variables(self, post):
+        post.return_value = MockedFailedRequest(status_code=401,
+                     json_response={"message": "authorization error", "error_code": 401})
         # try addEvent w/out having environment variables
         keen._client = None
         keen.project_id = None
@@ -136,7 +143,9 @@ class ClientTests(BaseTestCase):
 
         # force client to reinitialize
         keen._client = None
+        os.environ["KEEN_PROJECT_ID"] = "12345"
         os.environ["KEEN_WRITE_KEY"] = "abcde"
+
         self.assert_raises(exceptions.KeenApiError,
                            keen.add_event, "python_test", {"hello": "goodbye"})
 
@@ -176,22 +185,21 @@ class ClientTests(BaseTestCase):
         self.assertEquals(exp_master_key, keen.master_key)
         self.assertEquals(exp_master_key, keen._client.api.master_key)
 
-    def test_configure_through_code(self):
-        keen.project_id = "123456"
+    def test_configure_through_code(self, post):
+        client = KeenClient(project_id="123456", read_key=None, write_key=None)
         self.assert_raises(exceptions.InvalidEnvironmentError,
-                           keen.add_event, "python_test", {"hello": "goodbye"})
+                           client.add_event, "python_test", {"hello": "goodbye"})
 
         # force client to reinitialize
-        keen._client = None
-        keen.write_key = "abcdef"
-        self.assert_raises(exceptions.KeenApiError,
-                           keen.add_event, "python_test", {"hello": "goodbye"})
+        client = KeenClient(project_id="123456", read_key=None, write_key="abcdef")
+        with patch("requests.Session.post") as post:
+            post.return_value = MockedFailedRequest(
+                status_code=401, json_response={"message": "authorization error", "error_code": 401}
+            )
+            self.assert_raises(exceptions.KeenApiError,
+                               client.add_event, "python_test", {"hello": "goodbye"})
 
-    def test_generate_image_beacon(self):
-        keen.project_id = "5004ded1163d66114f000000"
-        api_key = "2e79c6ec1d0145be8891bf668599c79a"
-        keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
-
+    def test_generate_image_beacon(self, post):
         event_collection = "python_test hello!?"
         event_data = {"a": "b"}
         data = self.base64_encode(json.dumps(event_data))
@@ -208,18 +216,8 @@ class ClientTests(BaseTestCase):
         url = client.generate_image_beacon(event_collection, event_data)
         self.assert_equal(expected, url)
 
-        # make sure URL works
-        response = requests.get(url)
-        self.assert_equal(200, response.status_code)
-        self.assert_equal(b"GIF89a\x01\x00\x01\x00\x80\x01\x00\xff\xff\xff\x00\x00\x00!\xf9\x04\x01\n\x00\x01\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02L\x01\x00;",
-                          response.content)
-
-    def test_generate_image_beacon_timestamp(self):
+    def test_generate_image_beacon_timestamp(self, post):
         # make sure using a timestamp works
-
-        keen.project_id = "5004ded1163d66114f000000"
-        api_key = "2e79c6ec1d0145be8891bf668599c79a"
-        keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
 
         event_collection = "python_test"
         event_data = {"a": "b"}
@@ -252,8 +250,14 @@ class ClientTests(BaseTestCase):
             return urllib.parse.quote(url)
 
 
-
+@patch("requests.Session.get")
 class QueryTests(BaseTestCase):
+
+    INT_RESPONSE = MockedRequest(status_code=200, json_response=2)
+
+    LIST_RESPONSE = MockedRequest(
+        status_code=200, json_response=[{"value": {"total": 1}}, {"value": {"total": 2}}])
+
     def setUp(self):
         super(QueryTests, self).setUp()
         keen._client = None
@@ -261,8 +265,8 @@ class QueryTests(BaseTestCase):
         api_key = "2e79c6ec1d0145be8891bf668599c79a"
         keen.write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
         keen.read_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]})
-        keen.add_event("query test", {"number": 5, "string": "foo"})
-        keen.add_event("step2", {"number": 5, "string": "foo"})
+        # keen.add_event("query test", {"number": 5, "string": "foo"})
+        # keen.add_event("step2", {"number": 5, "string": "foo"})
 
     def tearDown(self):
         keen.project_id = None
@@ -275,45 +279,60 @@ class QueryTests(BaseTestCase):
     def get_filter(self):
         return [{"property_name": "number", "operator": "eq", "property_value": 5}]
 
-    def test_count(self):
+    def test_count(self, get):
+        get.return_value = self.INT_RESPONSE
         resp = keen.count("query test", timeframe="today", filters=self.get_filter())
         self.assertEqual(type(resp), int)
 
-    def test_sum(self):
+    def test_sum(self, get):
+        get.return_value = self.INT_RESPONSE
         resp = keen.sum("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), int)
 
-    def test_minimum(self):
+    def test_minimum(self, get):
+        get.return_value = self.INT_RESPONSE
         resp = keen.minimum("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), int)
 
-    def test_maximum(self):
+    def test_maximum(self, get):
+        get.return_value = self.INT_RESPONSE
         resp = keen.maximum("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), int)
 
-    def test_average(self):
+    def test_average(self, get):
+        get.return_value = self.INT_RESPONSE
         resp = keen.average("query test", target_property="number", timeframe="today")
         self.assertTrue(type(resp) in (int, float), type(resp))
 
-    def test_percentile(self):
+    def test_median(self, get):
+        get.return_value = self.INT_RESPONSE
+        resp = keen.median("query test", target_property="number", timeframe="today")
+        self.assertTrue(type(resp) in (int, float), type(resp))
+
+    def test_percentile(self, get):
+        get.return_value = self.INT_RESPONSE
         resp = keen.percentile("query test", target_property="number", percentile=80, timeframe="today")
         self.assertTrue(type(resp) in (int, float), type(resp))
 
-    def test_count_unique(self):
+    def test_count_unique(self, get):
+        get.return_value = self.INT_RESPONSE
         resp = keen.count_unique("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), int)
 
-    def test_select_unique(self):
+    def test_select_unique(self, get):
+        get.return_value = self.LIST_RESPONSE
         resp = keen.select_unique("query test", target_property="number", timeframe="today")
         self.assertEqual(type(resp), list)
 
-    def test_extraction(self):
-        resp = keen.extraction("query test", timeframe="today",  property_names=["number"])
+    def test_extraction(self, get):
+        get.return_value = self.LIST_RESPONSE
+        resp = keen.extraction("query test", timeframe="today", property_names=["number"])
         self.assertEqual(type(resp), list)
         for event in resp:
             self.assertTrue("string" not in event)
 
-    def test_multi_analysis(self):
+    def test_multi_analysis(self, get):
+        get.return_value = self.LIST_RESPONSE
         resp = keen.multi_analysis("query test",
                                    analyses={"total": {"analysis_type": "sum", "target_property": "number"}},
                                    timeframe="today", interval="hourly")
@@ -321,7 +340,8 @@ class QueryTests(BaseTestCase):
         for result in resp:
             self.assertEqual(type(result["value"]["total"]), int)
 
-    def test_funnel(self):
+    def test_funnel(self, get):
+        get.return_value = self.LIST_RESPONSE
         step1 = {
             "event_collection": "query test",
             "actor_property": "number",
@@ -335,23 +355,25 @@ class QueryTests(BaseTestCase):
         resp = keen.funnel([step1, step2])
         self.assertEqual(type(resp), list)
 
-    def test_group_by(self):
+    def test_group_by(self, get):
+        get.return_value = self.LIST_RESPONSE
         resp = keen.count("query test", timeframe="today", group_by="number")
         self.assertEqual(type(resp), list)
 
-    def test_multi_group_by(self):
+    def test_multi_group_by(self, get):
+        get.return_value = self.LIST_RESPONSE
         resp = keen.count("query test", timeframe="today", group_by=["number", "string"])
         self.assertEqual(type(resp), list)
 
-    def test_interval(self):
+    def test_interval(self, get):
+        get.return_value = self.LIST_RESPONSE
         resp = keen.count("query test", timeframe="this_2_days", interval="daily")
         self.assertEqual(type(resp), list)
 
-    def test_passing_custom_api_client(self):
+    def test_passing_invalid_custom_api_client(self, get):
         class CustomApiClient(object):
-            def __init__(self, project_id,
-                 write_key=None, read_key=None,
-                 base_url=None, api_version=None, **kwargs):
+            def __init__(self, project_id, write_key=None, read_key=None,
+                         base_url=None, api_version=None, **kwargs):
                 super(CustomApiClient, self).__init__()
                 self.project_id = project_id
                 self.write_key = write_key
@@ -368,16 +390,15 @@ class QueryTests(BaseTestCase):
         # But it shows it is actually using our class
         self.assertRaises(TypeError, client.add_event)
 
-    @raises(requests.Timeout)
-    def test_timeout_count(self):
-        keen.project_id = "5004ded1163d66114f000000"
-        api_key = "2e79c6ec1d0145be8891bf668599c79a"
-        keen.read_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]})
+    def test_timeout_count(self, get):
+        get.side_effect = requests.Timeout
         client = KeenClient(keen.project_id, write_key=None, read_key=keen.read_key, get_timeout=0.0001)
-        resp = client.count("query test", timeframe="today", filters=self.get_filter())
+        self.assert_raises(requests.Timeout, client.count, "query test", timeframe="today", filters=self.get_filter())
+        # Make sure the requests library was called with `timeout`.
+        self.assert_equals(get.call_args[1]["timeout"], 0.0001)
 
 # only need to test unicode separately in python2
-if sys.version_info[0] > 3:
+if sys.version_info[0] < 3:
 
     class UnicodeTests(BaseTestCase):
         def setUp(self):
@@ -387,7 +408,8 @@ if sys.version_info[0] > 3:
             api_key = unicode("2e79c6ec1d0145be8891bf668599c79a")
             keen.write_key = unicode(api_key)
 
-        def test_unicode(self):
+        @patch("requests.Session.post", MagicMock(return_value=MockedRequest(status_code=201, json_response=[0, 1, 2])))
+        def test_add_event_with_unicode(self):
             keen.add_event(unicode("unicode test"), {unicode("number"): 5, "string": unicode("foo")})
 
         def tearDown(self):
