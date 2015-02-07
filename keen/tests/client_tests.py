@@ -149,7 +149,7 @@ class ClientTests(BaseTestCase):
         self.assert_raises(exceptions.KeenApiError,
                            keen.add_event, "python_test", {"hello": "goodbye"})
 
-    def test_new_client_instance(self):
+    def test_new_client_instance(self, post):
         exp_project_id = "xxxx1234"
         exp_write_key = "yyyy4567"
         exp_read_key = "zzzz8912"
@@ -169,7 +169,7 @@ class ClientTests(BaseTestCase):
         self.assertEquals(exp_read_key, client.api.read_key)
         self.assertEquals(exp_master_key, client.api.master_key)
 
-    def test_set_master_key_env_var(self):
+    def test_set_master_key_env_var(self, post):
         exp_master_key = os.environ["KEEN_MASTER_KEY"] = "abcd1234"
         keen._initialize_client_from_environment()
 
@@ -178,7 +178,7 @@ class ClientTests(BaseTestCase):
 
         del os.environ["KEEN_MASTER_KEY"]
 
-    def test_set_master_key_package_var(self):
+    def test_set_master_key_package_var(self, post):
         exp_master_key = keen.master_key = "abcd4567"
         keen._initialize_client_from_environment()
 
