@@ -182,6 +182,9 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 
 ### Changelog
 
+##### 0.3.9
++ Added ```master_key``` parameter.
+
 ##### 0.3.8
 + Mocked tests.
 + Added ```median``` query method.
@@ -266,8 +269,7 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 ### Questions & Support
 
 If you have any questions, bugs, or suggestions, please
-report them via Github Issues. Or, come chat with us anytime
-at [users.keen.io](http://users.keen.io). We'd love to hear your feedback and ideas!
+report them via Github Issues. We'd love to hear your feedback and ideas!
 
 ### Contributing
 This is an open source project and we love involvement from the community! Hit us up with pull requests and issues.
