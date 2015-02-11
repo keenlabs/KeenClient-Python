@@ -170,6 +170,14 @@ class ClientTests(BaseTestCase):
         self.assertEquals(exp_master_key, client.api.master_key)
 
     def test_set_keys_using_env_var(self, post):
+        # reset Client settings
+        keen._client = None
+        keen.project_id = None
+        keen.write_key = None
+        keen.read_key = None
+        keen.master_key = None
+
+        # set env vars
         exp_project_id = os.environ["KEEN_PROJECT_ID"] = "xxxx5678"
         exp_write_key = os.environ["KEEN_WRITE_KEY"] = "yyyy8901"
         exp_read_key = os.environ["KEEN_READ_KEY"] = "zzzz2345"
