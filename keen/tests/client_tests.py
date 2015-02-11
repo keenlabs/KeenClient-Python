@@ -169,20 +169,46 @@ class ClientTests(BaseTestCase):
         self.assertEquals(exp_read_key, client.api.read_key)
         self.assertEquals(exp_master_key, client.api.master_key)
 
-    def test_set_master_key_env_var(self, post):
+    def test_set_keys_using_env_var(self, post):
+        exp_project_id = os.environ["KEEN_PROJECT_ID"] = "xxxx5678"
+        exp_write_key = os.environ["KEEN_WRITE_KEY"] = "yyyy8901"
+        exp_read_key = os.environ["KEEN_READ_KEY"] = "zzzz2345"
         exp_master_key = os.environ["KEEN_MASTER_KEY"] = "abcd1234"
+        
         keen._initialize_client_from_environment()
 
+        # test values
+        self.assertEquals(exp_project_id, keen.project_id)
+        self.assertEquals(exp_write_key, keen.write_key)
+        self.assertEquals(exp_read_key, keen.read_key)
         self.assertEquals(exp_master_key, keen.master_key)
+        self.assertEquals(exp_project_id, keen._client.api.project_id)
+        self.assertEquals(exp_write_key, keen._client.api.write_key)
+        self.assertEquals(exp_read_key, keen._client.api.read_key)
         self.assertEquals(exp_master_key, keen._client.api.master_key)
 
+        # remove env vars
+        del os.environ["KEEN_PROJECT_ID"]
+        del os.environ["KEEN_WRITE_KEY"]
+        del os.environ["KEEN_READ_KEY"]
         del os.environ["KEEN_MASTER_KEY"]
 
-    def test_set_master_key_package_var(self, post):
+    def test_set_keys_using_package_var(self, post):
+        exp_project_id = keen.project_id = "uuuu5678"
+        exp_write_key = keen.write_key = "vvvv8901"
+        exp_read_key = keen.read_key = "wwwww2345"
         exp_master_key = keen.master_key = "abcd4567"
+        
         keen._initialize_client_from_environment()
 
+        # test values
+        self.assertEquals(exp_project_id, keen.project_id)
+        self.assertEquals(exp_write_key, keen.write_key)
+        self.assertEquals(exp_read_key, keen.read_key)
         self.assertEquals(exp_master_key, keen.master_key)
+        self.assertEquals(exp_project_id, keen._client.api.project_id)
+        self.assertEquals(exp_write_key, keen._client.api.write_key)
+        self.assertEquals(exp_read_key, keen._client.api.read_key)
         self.assertEquals(exp_master_key, keen._client.api.master_key)
 
     def test_configure_through_code(self, post):
