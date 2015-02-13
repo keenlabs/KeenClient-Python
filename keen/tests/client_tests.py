@@ -125,8 +125,11 @@ class ClientTests(BaseTestCase):
         self.assert_raises(requests.Timeout, keen.add_events, {"python_test": [{"hello": "goodbye"}]})
 
     def test_environment_variables(self, post):
-        post.return_value = MockedFailedRequest(status_code=401,
-                     json_response={"message": "authorization error", "error_code": 401})
+        post.return_value = MockedFailedRequest(
+            status_code=401,
+            # "message" is the description, "error_code" is the name of the class.
+            json_response={"message": "authorization error", "error_code": "AdminOnlyEndpointError"},
+        )
         # try addEvent w/out having environment variables
         keen._client = None
         keen.project_id = None
@@ -154,7 +157,7 @@ class ClientTests(BaseTestCase):
         exp_write_key = "yyyy4567"
         exp_read_key = "zzzz8912"
         exp_master_key = "abcd3456"
-        
+
         # create Client instance
         client = KeenClient(
             project_id=exp_project_id,
@@ -194,7 +197,8 @@ class ClientTests(BaseTestCase):
         client = KeenClient(project_id="123456", read_key=None, write_key="abcdef")
         with patch("requests.Session.post") as post:
             post.return_value = MockedFailedRequest(
-                status_code=401, json_response={"message": "authorization error", "error_code": 401}
+                status_code=401,
+                json_response={"message": "authorization error", "error_code": "AdminOnlyEndpointError"},
             )
             self.assert_raises(exceptions.KeenApiError,
                                client.add_event, "python_test", {"hello": "goodbye"})
