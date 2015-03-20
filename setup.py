@@ -27,7 +27,7 @@ if 'nosetests' in sys.argv[1:]:
 
 setup(
     name="keen",
-    version="0.3.9",
+    version="0.3.10",
     description="Python Client for Keen IO",
     author="Keen IO",
     author_email="team@keen.io",
