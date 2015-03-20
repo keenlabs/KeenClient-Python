@@ -61,8 +61,10 @@ class KeenApi(object):
         :param base_url: optional, set this to override where API requests
         are sent
         :param api_version: string, optional, set this to override what API
-        :param master_key: a Keen IO Master API Key
         version is used
+        :param get_timeout: optional, the timeout on GET requests
+        :param post_timeout: optional, the timeout on POST requests
+        :param master_key: a Keen IO Master API Key
         """
         # super? recreates the object with values passed into KeenApi
         super(KeenApi, self).__init__()

@@ -12,6 +12,7 @@ master_key = None
 
 
 def _initialize_client_from_environment():
+    ''' Initialize a KeenCLient instance using environment variables. '''
     global _client, project_id, write_key, read_key, master_key
 
     if _client is None:
@@ -31,16 +32,42 @@ def _initialize_client_from_environment():
 
 
 def add_event(event_collection, body, timestamp=None):
+    """ Adds an event.
+    
+    Depending on the persistence strategy of the client,
+    this will either result in the event being uploaded to Keen
+    immediately or will result in saving the event to some local cache.
+    
+    :param event_collection: the name of the collection to insert the
+    event to
+    :param body: dict, the body of the event to insert the event to
+    :param timestamp: datetime, optional, the timestamp of the event
+    """
     _initialize_client_from_environment()
     _client.add_event(event_collection, body, timestamp=timestamp)
 
 
 def add_events(events):
+    """ Adds a batch of events.
+    
+    Depending on the persistence strategy of the client,
+    this will either result in the event being uploaded to Keen
+    immediately or will result in saving the event to some local cache.
+    
+    :param events: dictionary of events
+    """
     _initialize_client_from_environment()
     _client.add_events(events)
 
 
 def generate_image_beacon(event_collection, body, timestamp=None):
+    """ Generates an image beacon URL.
+    
+    :param event_collection: the name of the collection to insert the
+    event to
+    :param body: dict, the body of the event to insert the event to
+    :param timestamp: datetime, optional, the timestamp of the event
+    """
     _initialize_client_from_environment()
     return _client.generate_image_beacon(event_collection, body, timestamp=timestamp)
 
