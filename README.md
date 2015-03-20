@@ -182,6 +182,10 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 
 ### Changelog
 
+##### 0.3.10
++ Fixed requirements in `setup.py`
++ Updated test inputs and documentation.
+
 ##### 0.3.9
 + Added ```master_key``` parameter.
 
