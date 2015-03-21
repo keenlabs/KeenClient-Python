@@ -3,6 +3,7 @@
 # from distutils.core import setup
 from setuptools import setup, find_packages
 from pip.req import parse_requirements
+import pip
 import sys
 
 try:
@@ -11,7 +12,7 @@ except ImportError:
     pass
 
 # parse_requirements() returns generator of pip.req.InstallRequirement objects
-install_reqs = parse_requirements("./requirements.txt")
+install_reqs = parse_requirements('requirements.txt', session=pip.download.PipSession())
 tests_require = ['nose']
 
 # reqs is a list of requirement
@@ -27,7 +28,7 @@ if 'nosetests' in sys.argv[1:]:
 
 setup(
     name="keen",
-    version="0.3.10",
+    version="0.3.11",
     description="Python Client for Keen IO",
     author="Keen IO",
     author_email="team@keen.io",
