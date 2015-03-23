@@ -13,7 +13,7 @@ except ImportError:
 
 # parse_requirements() returns generator of pip.req.InstallRequirement objects
 install_reqs = parse_requirements('requirements.txt', session=pip.download.PipSession())
-tests_require = ['nose']
+tests_require = ['nose', 'mock']
 
 # reqs is a list of requirement
 # e.g. ['django==1.5.1', 'mezzanine==1.4.6']
