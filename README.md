@@ -36,7 +36,7 @@ You can also configure unique client instances as follows:
 ```python
     from keen.client import KeenClient
 
-    client = KeenClient(
+    keen = KeenClient(
         project_id="xxxx",
         write_key="yyyy",
         read_key="zzzz",
