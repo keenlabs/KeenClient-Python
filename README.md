@@ -182,6 +182,9 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 
 ### Changelog
 
+##### 0.3.13
++ Added compatibility for pip < 1.5.6
+
 ##### 0.3.12
 + Made requirements more flexible.
 
