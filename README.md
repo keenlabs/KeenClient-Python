@@ -55,6 +55,12 @@ Once you've set `KEEN_PROJECT_ID` and `KEEN_WRITE_KEY`, sending events is simple
     })
 ```
 
+Or if using unique client instances:
+
+```python
+    client.add_event(...)
+```
+
 ##### Send Batch Events to Keen IO
 
 You can upload Events in a batch, like so:
