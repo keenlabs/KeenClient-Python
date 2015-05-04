@@ -11,8 +11,13 @@ try:
 except ImportError:
     pass
 
-# parse_requirements() returns generator of pip.req.InstallRequirement objects
-install_reqs = parse_requirements('requirements.txt', session=pip.download.PipSession())
+try:
+    # parse_requirements() returns generator of pip.req.InstallRequirement objects
+    install_reqs = parse_requirements('requirements.txt', session=pip.download.PipSession())
+except AttributeError:
+    # compatibility for pip < 1.5.6
+    install_reqs = parse_requirements('requirements.txt')
+
 tests_require = ['nose', 'mock']
 
 # reqs is a list of requirement
@@ -28,7 +33,7 @@ if 'nosetests' in sys.argv[1:]:
 
 setup(
     name="keen",
-    version="0.3.12",
+    version="0.3.13",
     description="Python Client for Keen IO",
     author="Keen IO",
     author_email="team@keen.io",
