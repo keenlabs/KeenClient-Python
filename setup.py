@@ -11,8 +11,13 @@ try:
 except ImportError:
     pass
 
-# parse_requirements() returns generator of pip.req.InstallRequirement objects
-install_reqs = parse_requirements('requirements.txt', session=pip.download.PipSession())
+try:
+    # parse_requirements() returns generator of pip.req.InstallRequirement objects
+    install_reqs = parse_requirements('requirements.txt', session=pip.download.PipSession())
+except AttributeError:
+    # compatibility for pip < 1.5.6
+    install_reqs = parse_requirements('requirements.txt')
+
 tests_require = ['nose', 'mock']
 
 # reqs is a list of requirement
