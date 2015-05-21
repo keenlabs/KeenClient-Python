@@ -113,9 +113,7 @@ class KeenApi(object):
         headers = {"Content-Type": "application/json", "Authorization": self.write_key}
         payload = event.to_json()
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
-        if response.status_code != 201:
-            error = response.json()
-            raise exceptions.KeenApiError(error)
+        self.error_handling(response)
 
     def post_events(self, events):
 
@@ -136,9 +134,7 @@ class KeenApi(object):
         headers = {"Content-Type": "application/json", "Authorization": self.write_key}
         payload = json.dumps(events)
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
-        if response.status_code != 200:
-            error = response.json()
-            raise exceptions.KeenApiError(error)
+        self.error_handling(response)
 
     def query(self, analysis_type, params):
         """
@@ -158,8 +154,17 @@ class KeenApi(object):
         headers = {"Authorization": self.read_key}
         payload = params
         response = self.fulfill(HTTPMethods.GET, url, params=payload, headers=headers, timeout=self.get_timeout)
-        if response.status_code != 200:
-            error = response.json()
-            raise exceptions.KeenApiError(error)
+        self.error_handling(response)
 
         return response.json()["result"]
+
+    def error_handling(self, res):
+        """
+        Helper function to do the error handling 
+
+        :params res: the response from a request
+        """
+        # making the error handling generic so if an error_code exists, we raise the error
+        if res.json().get("error_code"):
+            error = res.json()
+            raise exceptions.KeenApiError(error)
