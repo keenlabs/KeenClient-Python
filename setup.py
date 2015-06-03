@@ -3,6 +3,19 @@
 from setuptools import setup
 import os, sys
 
+try:
+    # nose uses multiprocessing if available.
+    # but setup.py atexit fails if it's loaded too late.
+    # Traceback (most recent call last):
+    #   File "...python2.6/atexit.py", line 24, in _run_exitfuncs
+    #     func(*targs, **kargs)
+    #   File "...python2.6/multiprocessing/util.py", line 258, in _exit_function
+    #     info('process shutting down')
+    # TypeError: 'NoneType' object is not callable
+    import multiprocessing # NOQA
+except ImportError:
+    pass
+
 setup_path = os.path.dirname(__file__)
 reqs_file = open(os.path.join(setup_path, 'requirements.txt'), 'r')
 reqs = reqs_file.readlines()
@@ -12,10 +25,6 @@ tests_require = ['nose', 'mock']
 
 if sys.version_info < (2, 7):
     tests_require.append('unittest2')
-
-setup_requires = []
-if 'nosetests' in sys.argv[1:]:
-    setup_requires.append('nose')
 
 setup(
     name="keen",
