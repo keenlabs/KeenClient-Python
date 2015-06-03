@@ -1,39 +1,34 @@
 #!/usr/bin/env python
 
-# from distutils.core import setup
-from setuptools import setup, find_packages
-from pip.req import parse_requirements
-import pip
-import sys
+from setuptools import setup
+import os, sys
 
 try:
-    import multiprocessing
+    # nose uses multiprocessing if available.
+    # but setup.py atexit fails if it's loaded too late.
+    # Traceback (most recent call last):
+    #   File "...python2.6/atexit.py", line 24, in _run_exitfuncs
+    #     func(*targs, **kargs)
+    #   File "...python2.6/multiprocessing/util.py", line 258, in _exit_function
+    #     info('process shutting down')
+    # TypeError: 'NoneType' object is not callable
+    import multiprocessing # NOQA
 except ImportError:
     pass
 
-try:
-    # parse_requirements() returns generator of pip.req.InstallRequirement objects
-    install_reqs = parse_requirements('requirements.txt', session=pip.download.PipSession())
-except AttributeError:
-    # compatibility for pip < 1.5.6
-    install_reqs = parse_requirements('requirements.txt')
+setup_path = os.path.dirname(__file__)
+reqs_file = open(os.path.join(setup_path, 'requirements.txt'), 'r')
+reqs = reqs_file.readlines()
+reqs_file.close()
 
 tests_require = ['nose', 'mock']
-
-# reqs is a list of requirement
-# e.g. ['django==1.5.1', 'mezzanine==1.4.6']
-reqs = [str(ir.req) for ir in install_reqs]
 
 if sys.version_info < (2, 7):
     tests_require.append('unittest2')
 
-setup_requires = []
-if 'nosetests' in sys.argv[1:]:
-    setup_requires.append('nose')
-
 setup(
     name="keen",
-    version="0.3.13",
+    version="0.3.14",
     description="Python Client for Keen IO",
     author="Keen IO",
     author_email="team@keen.io",
