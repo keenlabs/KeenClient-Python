@@ -165,6 +165,6 @@ class KeenApi(object):
         :params res: the response from a request
         """
         # making the error handling generic so if an error_code exists, we raise the error
-        if res.json().get("error_code"):
+        if res.status_code/100 != 2:
             error = res.json()
             raise exceptions.KeenApiError(error)
