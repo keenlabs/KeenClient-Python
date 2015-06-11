@@ -172,5 +172,5 @@ class KeenApi(object):
             try:
                 error = res.json()
             except json.JSONDecodeError:
-                error = {'message': 'The API did not respond with JSON, but: "{0}"'.format(res.text[:1000])', "error_code": "InvalidResponseFormat"}
+                error = {'message': 'The API did not respond with JSON, but: "{0}"'.format(res.text[:1000]), "error_code": "InvalidResponseFormat"}
             raise exceptions.KeenApiError(error)
