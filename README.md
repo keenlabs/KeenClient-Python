@@ -188,6 +188,9 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 
 ### Changelog
 
+##### 0.3.14
++ Added compatibility for pip 1.0
+
 ##### 0.3.13
 + Added better error handling to surface all errors from HTTP API calls 
 
