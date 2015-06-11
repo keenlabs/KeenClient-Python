@@ -10,6 +10,9 @@ from requests.packages.urllib3.poolmanager import PoolManager
 # keen exceptions
 from keen import exceptions
 
+# json
+from requests.compat import json
+
 
 __author__ = 'dkador'
 
@@ -166,5 +169,8 @@ class KeenApi(object):
         """
         # making the error handling generic so if an status_code starting with 2 doesn't exist, we raise the error
         if res.status_code // 100 != 2:
-            error = res.json()
+            try:
+                error = res.json()
+            except json.JSONDecodeError:
+                error = {'message': 'The API did not respond with JSON, but: "{0}"'.format(res.text[:1000])', "error_code": "InvalidResponseFormat"}
             raise exceptions.KeenApiError(error)
