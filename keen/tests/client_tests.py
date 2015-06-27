@@ -404,8 +404,8 @@ class QueryTests(BaseTestCase):
 
         resp = keen.funnel([1, 2], all_keys=True)
         self.assertEquals(type(resp), dict)
-        self.assertIn("actors", resp)
-        self.assertIn("random_key", resp)
+        self.assertTrue("actors" in resp)
+        self.assertTrue("random_key" in resp)
 
     def test_group_by(self, get):
         get.return_value = self.LIST_RESPONSE
