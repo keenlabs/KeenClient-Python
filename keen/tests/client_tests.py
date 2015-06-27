@@ -403,7 +403,7 @@ class QueryTests(BaseTestCase):
         })
 
         resp = keen.funnel([1, 2], all_keys=True)
-        self.assertIsInstance(resp, dict)
+        self.assertEquals(type(resp), dict)
         self.assertIn("actors", resp)
         self.assertIn("random_key", resp)
 
