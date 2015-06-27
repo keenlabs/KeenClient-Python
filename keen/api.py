@@ -140,7 +140,7 @@ class KeenApi(object):
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         self.error_handling(response)
 
-    def query(self, analysis_type, params):
+    def query(self, analysis_type, params, all_keys=False):
         """
         Performs a query using the Keen IO analysis API.  A read key must be set first.
 
@@ -160,7 +160,12 @@ class KeenApi(object):
         response = self.fulfill(HTTPMethods.GET, url, params=payload, headers=headers, timeout=self.get_timeout)
         self.error_handling(response)
 
-        return response.json()["result"]
+        response = response.json()
+
+        if not all_keys:
+            response = response["result"]
+
+        return response
 
     def delete_events(self, event_collection, params):
         """

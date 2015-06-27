@@ -466,7 +466,7 @@ class KeenClient(object):
                                  filters=filters, latest=latest, email=email, property_names=property_names)
         return self.api.query("extraction", params)
 
-    def funnel(self, steps, timeframe=None, timezone=None, max_age=None):
+    def funnel(self, steps, timeframe=None, timezone=None, max_age=None, all_keys=False):
         """ Performs a Funnel query
 
         Returns an object containing the results for each step of the funnel.
@@ -480,10 +480,17 @@ class KeenClient(object):
         and interval in seconds
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
+        :all_keys: set to true to return all keys on response (i.e. "result", "actors", "steps")
 
         """
-        params = self.get_params(steps=steps, timeframe=timeframe, timezone=timezone, max_age=max_age)
-        return self.api.query("funnel", params)
+        params = self.get_params(
+            steps=steps,
+            timeframe=timeframe,
+            timezone=timezone,
+            max_age=max_age,
+        )
+
+        return self.api.query("funnel", params, all_keys=all_keys)
 
     def multi_analysis(self, event_collection, analyses, timeframe=None, interval=None, timezone=None, filters=None,
                        group_by=None, max_age=None):
