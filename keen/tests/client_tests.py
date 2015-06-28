@@ -435,6 +435,31 @@ class QueryTests(BaseTestCase):
         # Make sure the requests library was called with `timeout`.
         self.assert_equals(get.call_args[1]["timeout"], 0.0001)
 
+
+@patch("requests.Session.delete")
+class DeleteTests(BaseTestCase):
+
+    def setUp(self):
+        super(DeleteTests, self).setUp()
+        keen._client = None
+        keen.project_id = "1k4jb23kjbkjkjsd"
+        keen.master_key = "sdofnasofagaergub"
+
+    def tearDown(self):
+        keen._client = None
+        keen.project_id = None
+        keen.master_key = None
+        super(DeleteTests, self).tearDown()
+
+    def test_delete_events(self, delete):
+        delete.return_value = MockedRequest(status_code=204, json_response=[])
+        # Assert that the mocked delete function is called the way we expect.
+        keen.delete_events("foo", filters=[{"property_name": 'username', "operator": 'eq', "property_value": 'Bob'}])
+        # Check that the URL is generated correctly.
+        self.assertEqual("https://api.keen.io/3.0/projects/1k4jb23kjbkjkjsd/events/foo", delete.call_args[0][0])
+        # Check that the master_key is in the Authorization header.
+        self.assertTrue(keen.master_key in delete.call_args[1]["headers"]["Authorization"])
+
 # only need to test unicode separately in python2
 if sys.version_info[0] < 3:
 

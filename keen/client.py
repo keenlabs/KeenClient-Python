@@ -155,6 +155,21 @@ class KeenClient(object):
             self.api.write_key.decode(sys.getdefaultencoding()), self._base64_encode(event_json)
         )
 
+    def delete_events(self, event_collection, timeframe=None, timezone=None, filters=None):
+        """ Deletes events.
+
+        :param event_collection: string, the event collection from which event are being deleted
+        :param timeframe: string or dict, the timeframe in which the events happened
+        example: "previous_7_days"
+        :param timezone: int, the timezone you'd like to use for the timeframe
+        and interval in seconds
+        :param filters: array of dict, contains the filters you'd like to apply to the data
+        example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+
+        """
+        params = self.get_params(timeframe=timeframe, timezone=timezone, filters=filters)
+        return self.api.delete_events(event_collection, params)
+
     def _base64_encode(self, string_to_encode):
         """ Base64 encodes a string, with either Python 2 or 3.
 
