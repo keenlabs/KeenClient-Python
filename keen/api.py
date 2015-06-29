@@ -118,9 +118,30 @@ class KeenApi(object):
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         self.error_handling(response)
 
+    def post_events(self, events):
+
+        """
+        Posts a single event to the Keen IO API. The write key must be set first.
+
+        :param events: an Event to upload
+        """
+        if not self.write_key:
+            raise exceptions.InvalidEnvironmentError(
+                "The Keen IO API requires a write key to send events. "
+                "Please set a 'write_key' when initializing the "
+                "KeenApi object."
+            )
+
+        url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version,
+                                                   self.project_id)
+        headers = {"Content-Type": "application/json", "Authorization": self.write_key}
+        payload = json.dumps(events)
+        response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
+        self.error_handling(response)
+
     def delete_event(self, event):
         """
-        Deletes a single event in the Keen IO API. The master key must be set first
+        Deletes a single event in the Keen IO API. The master key must be set first.
 
         :param event: an Event to delete
         """
@@ -139,23 +160,22 @@ class KeenApi(object):
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         self.error_handling(response)
 
-    def post_events(self, events):
-
+    def delete_events(self, events):
         """
-        Posts a single event to the Keen IO API. The write key must be set first.
+        Deletes multiple events in the Keen IO API. The master key must be set first.
 
-        :param events: an Event to upload
+        :param events: Events to delete
         """
         if not self.write_key:
             raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a write key to send events. "
-                "Please set a 'write_key' when initializing the "
+                "The Keen IO API requires a master key to delete events. "
+                "Please set a 'master_key' when initializing the "
                 "KeenApi object."
             )
 
         url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version,
                                                    self.project_id)
-        headers = {"Content-Type": "application/json", "Authorization": self.write_key}
+        headers = {"Content-Type": "application/json", "Authorization": self.master_key}
         payload = json.dumps(events)
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         self.error_handling(response)
