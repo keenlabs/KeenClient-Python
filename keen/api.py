@@ -118,6 +118,27 @@ class KeenApi(object):
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         self.error_handling(response)
 
+    def delete_event(self, event):
+        """
+        Deletes a single event in the Keen IO API. The master key must be set first
+
+        :param event: an Event to delete
+        """
+        if not self.master_key:
+            raise exceptions.InvalidEnvironmentError(
+                "The Keen IO API requires a master key to delete events. "
+                "Please set a 'master_key' when initializing the "
+                "KeenApi object."
+            )
+
+        url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
+                                                       self.project_id,
+                                                       event.event_collection)
+        headers = {"Content-Type": "application/json", "Authorization": self.master_key}
+        payload = event.to_json()
+        response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
+        self.error_handling(response)
+
     def post_events(self, events):
 
         """
@@ -163,7 +184,7 @@ class KeenApi(object):
 
     def error_handling(self, res):
         """
-        Helper function to do the error handling 
+        Helper function to do the error handling
 
         :params res: the response from a request
         """
