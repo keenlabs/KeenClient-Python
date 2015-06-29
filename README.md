@@ -113,6 +113,16 @@ Here are some examples of querying.  Let's assume you've added some events to th
     keen.funnel([step1, step2], timeframe="today") # => [2039, 201]
 ```
 
+##### Delete Events
+
+The Keen IO API allows you to [delete events](https://keen.io/docs/api/#delete-events) from event collections, optionally supplying filters, timeframe or timezone to narrow the scope of what you would like to delete.
+
+You'll need to set your master_key.
+
+```python
+    keen.delete_events("event_collection", filters=[{"property_name": 'username', "operator": 'eq', "property_value": 'Bob'}])
+```
+
 #### Advanced Usage
 
 See below for more options.
