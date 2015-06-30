@@ -403,3 +403,21 @@ def multi_analysis(event_collection, analyses, timeframe=None, interval=None,
     return _client.multi_analysis(event_collection=event_collection, timeframe=timeframe,
                                   interval=interval, timezone=timezone, filters=filters,
                                   group_by=group_by, analyses=analyses, max_age=max_age)
+
+
+def delete_events(*args, **kwargs):
+    """ Performs a delete for events.
+
+    Returns true upon success.
+
+    :param event_collection: string, the event collection from which event are being deleted
+    :param timeframe: string or dict, the timeframe in which the events
+    happened example: "previous_7_days"
+    :param timezone: int, the timezone you'd like to use for the timeframe
+    and interval in seconds
+    :param filters: array of dict, contains the filters you'd like to apply to the data
+    example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+
+    """
+    _initialize_client_from_environment()
+    return _client.delete_events(*args, **kwargs)

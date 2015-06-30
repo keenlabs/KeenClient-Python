@@ -23,6 +23,7 @@ class HTTPMethods(object):
 
     GET = 'get'
     POST = 'post'
+    DELETE = 'delete'
 
 
 class KeenAdapter(HTTPAdapter):
@@ -67,7 +68,7 @@ class KeenApi(object):
         version is used
         :param get_timeout: optional, the timeout on GET requests
         :param post_timeout: optional, the timeout on POST requests
-        :param master_key: a Keen IO Master API Key
+        :param master_key: a Keen IO Master API Key, needed for deletes
         """
         # super? recreates the object with values passed into KeenApi
         super(KeenApi, self).__init__()
@@ -161,9 +162,32 @@ class KeenApi(object):
 
         return response.json()["result"]
 
+    def delete_events(self, event_collection, params):
+        """
+        Deletes events via the Keen IO API. A master key must be set first.
+
+        :param event_collection: string, the event collection from which event are being deleted
+
+        """
+        if not self.master_key:
+            raise exceptions.InvalidEnvironmentError(
+                "The Keen IO API requires a master key to run deletes. "
+                "Please set a 'master_key' when initializing the KeenApi object."
+            )
+
+        url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url,
+                                                       self.api_version,
+                                                       self.project_id,
+                                                       event_collection)
+        headers = {"Content-Type": "application/json", "Authorization": self.master_key}
+        response = self.fulfill(HTTPMethods.DELETE, url, params=params, headers=headers, timeout=self.post_timeout)
+
+        self.error_handling(response)
+        return True
+
     def error_handling(self, res):
         """
-        Helper function to do the error handling 
+        Helper function to do the error handling
 
         :params res: the response from a request
         """
@@ -172,5 +196,8 @@ class KeenApi(object):
             try:
                 error = res.json()
             except json.JSONDecodeError:
-                error = {'message': 'The API did not respond with JSON, but: "{0}"'.format(res.text[:1000]), "error_code": "InvalidResponseFormat"}
+                error = {
+                    'message': 'The API did not respond with JSON, but: "{0}"'.format(res.text[:1000]),
+                    "error_code": "InvalidResponseFormat"
+                }
             raise exceptions.KeenApiError(error)
