@@ -14,16 +14,16 @@ import sys
 __author__ = 'dkador'
 
 
-class MockedRequest(object):
+class MockedResponse(object):
     def __init__(self, status_code, json_response):
         self.status_code = status_code
         self.json_response = json_response
 
     def json(self):
-        return {"result": self.json_response}
+        return self.json_response
 
 
-class MockedFailedRequest(MockedRequest):
+class MockedFailedResponse(MockedResponse):
     def json(self):
         return self.json_response
 
@@ -31,10 +31,9 @@ class MockedFailedRequest(MockedRequest):
 @patch("requests.Session.post")
 class ClientTests(BaseTestCase):
 
-    SINGLE_ADD_RESPONSE = MockedRequest(status_code=201, json_response={"hello": "goodbye"})
+    SINGLE_ADD_RESPONSE = MockedResponse(status_code=201, json_response={"result": {"hello": "goodbye"}})
 
-    MULTI_ADD_RESPONSE = MockedRequest(status_code=200, json_response={"hello": "goodbye"})
-
+    MULTI_ADD_RESPONSE = MockedResponse(status_code=200, json_response={"result": {"hello": "goodbye"}})
 
     def setUp(self):
         super(ClientTests, self).setUp()
@@ -125,7 +124,7 @@ class ClientTests(BaseTestCase):
         self.assert_raises(requests.Timeout, keen.add_events, {"python_test": [{"hello": "goodbye"}]})
 
     def test_environment_variables(self, post):
-        post.return_value = MockedFailedRequest(
+        post.return_value = MockedFailedResponse(
             status_code=401,
             # "message" is the description, "error_code" is the name of the class.
             json_response={"message": "authorization error", "error_code": "AdminOnlyEndpointError"},
@@ -185,7 +184,7 @@ class ClientTests(BaseTestCase):
         exp_write_key = os.environ["KEEN_WRITE_KEY"] = "yyyy8901"
         exp_read_key = os.environ["KEEN_READ_KEY"] = "zzzz2345"
         exp_master_key = os.environ["KEEN_MASTER_KEY"] = "abcd1234"
-        
+
         keen._initialize_client_from_environment()
 
         # test values
@@ -209,7 +208,7 @@ class ClientTests(BaseTestCase):
         exp_write_key = keen.write_key = "vvvv8901"
         exp_read_key = keen.read_key = "wwwww2345"
         exp_master_key = keen.master_key = "abcd4567"
-        
+
         keen._initialize_client_from_environment()
 
         # test values
@@ -230,7 +229,7 @@ class ClientTests(BaseTestCase):
         # force client to reinitialize
         client = KeenClient(project_id="123456", read_key=None, write_key="abcdef")
         with patch("requests.Session.post") as post:
-            post.return_value = MockedFailedRequest(
+            post.return_value = MockedFailedResponse(
                 status_code=401,
                 json_response={"message": "authorization error", "error_code": "AdminOnlyEndpointError"},
             )
@@ -291,10 +290,10 @@ class ClientTests(BaseTestCase):
 @patch("requests.Session.get")
 class QueryTests(BaseTestCase):
 
-    INT_RESPONSE = MockedRequest(status_code=200, json_response=2)
+    INT_RESPONSE = MockedResponse(status_code=200, json_response={"result": 2})
 
-    LIST_RESPONSE = MockedRequest(
-        status_code=200, json_response=[{"value": {"total": 1}}, {"value": {"total": 2}}])
+    LIST_RESPONSE = MockedResponse(
+        status_code=200, json_response={"result": [{"value": {"total": 1}}, {"value": {"total": 2}}]})
 
     def setUp(self):
         super(QueryTests, self).setUp()
@@ -380,18 +379,33 @@ class QueryTests(BaseTestCase):
 
     def test_funnel(self, get):
         get.return_value = self.LIST_RESPONSE
+
         step1 = {
-            "event_collection": "query test",
-            "actor_property": "number",
+            "event_collection": "signed up",
+            "actor_property": "visitor.guid",
             "timeframe": "today"
         }
         step2 = {
-            "event_collection": "step2",
-            "actor_property": "number",
+            "event_collection": "completed profile",
+            "actor_property": "user.guid",
             "timeframe": "today"
         }
+
         resp = keen.funnel([step1, step2])
         self.assertEqual(type(resp), list)
+
+    def test_funnel_return_all_keys(self, get):
+        get.return_value = MockedResponse(status_code=200, json_response={
+            "result": [],
+            "actors": [],
+            "random_key": [],
+            "steps": []
+        })
+
+        resp = keen.funnel([1, 2], all_keys=True)
+        self.assertEquals(type(resp), dict)
+        self.assertTrue("actors" in resp)
+        self.assertTrue("random_key" in resp)
 
     def test_group_by(self, get):
         get.return_value = self.LIST_RESPONSE
@@ -452,7 +466,7 @@ class DeleteTests(BaseTestCase):
         super(DeleteTests, self).tearDown()
 
     def test_delete_events(self, delete):
-        delete.return_value = MockedRequest(status_code=204, json_response=[])
+        delete.return_value = MockedResponse(status_code=204, json_response=[])
         # Assert that the mocked delete function is called the way we expect.
         keen.delete_events("foo", filters=[{"property_name": 'username', "operator": 'eq', "property_value": 'Bob'}])
         # Check that the URL is generated correctly.
@@ -471,7 +485,7 @@ if sys.version_info[0] < 3:
             api_key = unicode("2e79c6ec1d0145be8891bf668599c79a")
             keen.write_key = unicode(api_key)
 
-        @patch("requests.Session.post", MagicMock(return_value=MockedRequest(status_code=201, json_response=[0, 1, 2])))
+        @patch("requests.Session.post", MagicMock(return_value=MockedResponse(status_code=201, json_response=[0, 1, 2])))
         def test_add_event_with_unicode(self):
             keen.add_event(unicode("unicode test"), {unicode("number"): 5, "string": unicode("foo")})
 
