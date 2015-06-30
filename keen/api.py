@@ -142,9 +142,9 @@ class KeenApi(object):
 
     def delete_collection(self, collection):
         """
-        Deletes a single event in the Keen IO API. The master key must be set first.
+        Deletes a single collection in the Keen IO API. The master key must be set first.
 
-        :param event: an Event to delete
+        :param event: a Collection to delete
         """
         if not self.master_key:
             raise exceptions.InvalidEnvironmentError(
@@ -188,7 +188,6 @@ class KeenApi(object):
         Extracts info about a collection using the Keen IO API. A master key must be set first.
 
         :param event_name: the name of the collection to retrieve info for
-
         """
         if not self.master_key:
             raise exception.InvalidEnvironmentError(
@@ -197,8 +196,7 @@ class KeenApi(object):
                 "KeenApi object."
             )
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
-                                                       self.project_id,
-                                                       event_name)
+                                                       self.project_id, collection_name)
         headers = {"Authorization": self.master_key}
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
         self.error_handling(response)
@@ -207,7 +205,7 @@ class KeenApi(object):
 
     def get_all_collections(self):
         """
-        Extracts info about collections using the Keen IO API. A master key must be set first.
+        Extracts info about all collections using the Keen IO API. A master key must be set first.
 
         """
         if not self.master_key:
@@ -217,7 +215,7 @@ class KeenApi(object):
                 "KeenApi object."
             )
         url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version,
-                                                       self.project_id)
+                                                   self.project_id)
         headers = {"Authorization": self.master_key}
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
         self.error_handling(response)
