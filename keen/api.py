@@ -190,7 +190,7 @@ class KeenApi(object):
         :param event_name: the name of the collection to retrieve info for
         """
         if not self.master_key:
-            raise exception.InvalidEnvironmentError(
+            raise exceptions.InvalidEnvironmentError(
                 "The Keen IO API requires a master key to get events. "
                 "Please set a 'master_key' when initializing the "
                 "KeenApi object."
@@ -209,7 +209,7 @@ class KeenApi(object):
 
         """
         if not self.master_key:
-            raise exception.InvalidEnvironmentError(
+            raise exceptions.InvalidEnvironmentError(
                 "The Keen IO API requires a master key to get events. "
                 "Please set a 'master_key' when initializing the "
                 "KeenApi object."

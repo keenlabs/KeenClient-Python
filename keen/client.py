@@ -506,7 +506,6 @@ class KeenClient(object):
         for collection in collections:
             self.api.delete_collection(collection)
 
-
     def multi_analysis(self, event_collection, analyses, timeframe=None, interval=None, timezone=None, filters=None,
                        group_by=None, max_age=None):
         """ Performs a multi-analysis query
