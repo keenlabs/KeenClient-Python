@@ -470,7 +470,7 @@ class KeenClient(object):
         params = self.get_params(steps=steps, timeframe=timeframe, timezone=timezone, max_age=max_age)
         return self.api.query("funnel", params)
 
-    def get_collection(self, event_name):
+    def get_collection(self, collection_name):
         """
 
         Returns a description of a collection
@@ -478,7 +478,7 @@ class KeenClient(object):
         :param event_name: the name of the event to get the collection info from
         """
 
-        return self.api.get_collection(event_name)
+        return self.api.get_collection(collection_name)
 
     def get_collections(self):
         """
@@ -487,6 +487,25 @@ class KeenClient(object):
         """
 
         return self.api.get_all_collections()
+
+    def delete_collection(self, collection):
+        """ Performs a deletion of a collection
+
+
+        :param collection_name: the name of the collection
+        """
+
+        self.api.delete_collection(collection)
+
+    def delete_collections(self, collections):
+        """ Performs a deletion of multiple collections in the list
+
+        :param collections: a list of collections to be deleted
+        """
+
+        for collection in collections:
+            self.delete_collection(collection)
+
 
     def multi_analysis(self, event_collection, analyses, timeframe=None, interval=None, timezone=None, filters=None,
                        group_by=None, max_age=None):

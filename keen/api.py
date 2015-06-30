@@ -23,6 +23,7 @@ class HTTPMethods(object):
 
     GET = 'get'
     POST = 'post'
+    DELETE = 'delete'
 
 
 class KeenAdapter(HTTPAdapter):
@@ -139,7 +140,7 @@ class KeenApi(object):
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         self.error_handling(response)
 
-    def delete_event(self, event):
+    def delete_collection(self, collection):
         """
         Deletes a single event in the Keen IO API. The master key must be set first.
 
@@ -154,30 +155,10 @@ class KeenApi(object):
 
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
                                                        self.project_id,
-                                                       event.event_collection)
+                                                       collection['name'])
         headers = {"Content-Type": "application/json", "Authorization": self.master_key}
-        payload = event.to_json()
-        response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
-        self.error_handling(response)
-
-    def delete_events(self, events):
-        """
-        Deletes multiple events in the Keen IO API. The master key must be set first.
-
-        :param events: Events to delete
-        """
-        if not self.write_key:
-            raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a master key to delete events. "
-                "Please set a 'master_key' when initializing the "
-                "KeenApi object."
-            )
-
-        url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version,
-                                                   self.project_id)
-        headers = {"Content-Type": "application/json", "Authorization": self.master_key}
-        payload = json.dumps(events)
-        response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
+        payload = json.dumps(collection)
+        response = self.fulfill(HTTPMethods.DELETE, url, data=payload, headers=headers, timeout=self.post_timeout)
         self.error_handling(response)
 
     def query(self, analysis_type, params):
@@ -202,7 +183,7 @@ class KeenApi(object):
 
         return response.json()["result"]
 
-    def get_collection(self, event_name):
+    def get_collection(self, collection_name):
         """
         Extracts info about a collection using the Keen IO API. A master key must be set first.
 
