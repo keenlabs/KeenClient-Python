@@ -161,9 +161,50 @@ class KeenApi(object):
 
         return response.json()["result"]
 
+    def get_collection(self, event_name):
+        """
+        Extracts info about a collection using the Keen IO API. A master key must be set first.
+
+        :param event_name: the name of the collection to retrieve info for
+
+        """
+        if not self.master_key:
+            raise exception.InvalidEnvironmentError(
+                "The Keen IO API requires a master key to get events. "
+                "Please set a 'master_key' when initializing the "
+                "KeenApi object."
+            )
+        url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
+                                                       self.project_id,
+                                                       event_name)
+        headers = {"Authorization": self.master_key}
+        response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
+        self.error_handling(response)
+
+        return response.json()
+
+    def get_all_collections(self):
+        """
+        Extracts info about collections using the Keen IO API. A master key must be set first.
+
+        """
+        if not self.master_key:
+            raise exception.InvalidEnvironmentError(
+                "The Keen IO API requires a master key to get events. "
+                "Please set a 'master_key' when initializing the "
+                "KeenApi object."
+            )
+        url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version,
+                                                       self.project_id)
+        headers = {"Authorization": self.master_key}
+        response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
+        self.error_handling(response)
+
+        return response.json()
+
     def error_handling(self, res):
         """
-        Helper function to do the error handling 
+        Helper function to do the error handling
 
         :params res: the response from a request
         """

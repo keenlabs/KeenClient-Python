@@ -470,6 +470,24 @@ class KeenClient(object):
         params = self.get_params(steps=steps, timeframe=timeframe, timezone=timezone, max_age=max_age)
         return self.api.query("funnel", params)
 
+    def get_collection(self, event_name):
+        """
+
+        Returns a description of a collection
+
+        :param event_name: the name of the event to get the collection info from
+        """
+
+        return self.api.get_collection(event_name)
+
+    def get_collections(self):
+        """
+
+        Returns a description of all collections
+        """
+
+        return self.api.get_all_collections()
+
     def multi_analysis(self, event_collection, analyses, timeframe=None, interval=None, timezone=None, filters=None,
                        group_by=None, max_age=None):
         """ Performs a multi-analysis query
