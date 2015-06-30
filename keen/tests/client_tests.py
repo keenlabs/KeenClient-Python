@@ -466,7 +466,7 @@ class DeleteTests(BaseTestCase):
         super(DeleteTests, self).tearDown()
 
     def test_delete_events(self, delete):
-        delete.return_value = MockedRequest(status_code=204, json_response=[])
+        delete.return_value = MockedResponse(status_code=204, json_response=[])
         # Assert that the mocked delete function is called the way we expect.
         keen.delete_events("foo", filters=[{"property_name": 'username', "operator": 'eq', "property_value": 'Bob'}])
         # Check that the URL is generated correctly.
