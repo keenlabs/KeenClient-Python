@@ -33,11 +33,11 @@ def _initialize_client_from_environment():
 
 def add_event(event_collection, body, timestamp=None):
     """ Adds an event.
-    
+
     Depending on the persistence strategy of the client,
     this will either result in the event being uploaded to Keen
     immediately or will result in saving the event to some local cache.
-    
+
     :param event_collection: the name of the collection to insert the
     event to
     :param body: dict, the body of the event to insert the event to
@@ -49,11 +49,11 @@ def add_event(event_collection, body, timestamp=None):
 
 def add_events(events):
     """ Adds a batch of events.
-    
+
     Depending on the persistence strategy of the client,
     this will either result in the event being uploaded to Keen
     immediately or will result in saving the event to some local cache.
-    
+
     :param events: dictionary of events
     """
     _initialize_client_from_environment()
@@ -62,7 +62,7 @@ def add_events(events):
 
 def generate_image_beacon(event_collection, body, timestamp=None):
     """ Generates an image beacon URL.
-    
+
     :param event_collection: the name of the collection to insert the
     event to
     :param body: dict, the body of the event to insert the event to
@@ -355,7 +355,7 @@ def extraction(event_collection, timeframe=None, timezone=None, filters=None, la
                               filters=filters, latest=latest, email=email, property_names=property_names)
 
 
-def funnel(steps, timeframe=None, timezone=None, max_age=None):
+def funnel(*args, **kwargs):
     """ Performs a Funnel query
 
     Returns an object containing the results for each step of the funnel.
@@ -372,7 +372,7 @@ def funnel(steps, timeframe=None, timezone=None, max_age=None):
 
     """
     _initialize_client_from_environment()
-    return _client.funnel(steps=steps, timeframe=timeframe, timezone=timezone, max_age=max_age)
+    return _client.funnel(*args, **kwargs)
 
 
 def multi_analysis(event_collection, analyses, timeframe=None, interval=None,
@@ -403,3 +403,21 @@ def multi_analysis(event_collection, analyses, timeframe=None, interval=None,
     return _client.multi_analysis(event_collection=event_collection, timeframe=timeframe,
                                   interval=interval, timezone=timezone, filters=filters,
                                   group_by=group_by, analyses=analyses, max_age=max_age)
+
+
+def delete_events(*args, **kwargs):
+    """ Performs a delete for events.
+
+    Returns true upon success.
+
+    :param event_collection: string, the event collection from which event are being deleted
+    :param timeframe: string or dict, the timeframe in which the events
+    happened example: "previous_7_days"
+    :param timezone: int, the timezone you'd like to use for the timeframe
+    and interval in seconds
+    :param filters: array of dict, contains the filters you'd like to apply to the data
+    example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+
+    """
+    _initialize_client_from_environment()
+    return _client.delete_events(*args, **kwargs)

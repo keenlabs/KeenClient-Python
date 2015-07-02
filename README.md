@@ -64,13 +64,13 @@ Or if using unique client instances:
 ##### Send Batch Events to Keen IO
 
 You can upload Events in a batch, like so:
-    
+
 ```python
     # uploads 4 events total - 2 to the "sign_ups" collection and 2 to the "purchases" collection
     keen.add_events({
         "sign_ups": [
             { "username": "nameuser1" },
-            { "username": "nameuser2" } 
+            { "username": "nameuser2" }
         ],
         "purchases": [
             { "price": 5 },
@@ -111,6 +111,20 @@ Here are some examples of querying.  Let's assume you've added some events to th
         "actor_property": "user.email"
     }
     keen.funnel([step1, step2], timeframe="today") # => [2039, 201]
+```
+
+To return the full API response (as opposed to the singular "result" key), set `all_keys=True`.
+
+For example, `keen.funnel([step1, step2], all_keys=True)` would return "result", "actors" and "steps" keys.
+
+##### Delete Events
+
+The Keen IO API allows you to [delete events](https://keen.io/docs/api/#delete-events) from event collections, optionally supplying filters, timeframe or timezone to narrow the scope of what you would like to delete.
+
+You'll need to set your master_key.
+
+```python
+    keen.delete_events("event_collection", filters=[{"property_name": 'username', "operator": 'eq', "property_value": 'Bob'}])
 ```
 
 #### Advanced Usage
@@ -188,8 +202,12 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 
 ### Changelog
 
+##### 0.3.16
++ Added `all_keys` parameter which allows users to expose all keys in query response.
++ Added `delete_events` method.
+
 ##### 0.3.15
-+ Added better error handling to surface all errors from HTTP API calls 
++ Added better error handling to surface all errors from HTTP API calls.
 
 ##### 0.3.14
 + Added compatibility for pip 1.0
