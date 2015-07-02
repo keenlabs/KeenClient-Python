@@ -140,7 +140,6 @@ class KeenApi(object):
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         self.error_handling(response)
 
-<<<<<<< HEAD
     def delete_collection(self, collection):
         """
         Deletes a single collection in the Keen IO API. The master key must be set first.
@@ -162,10 +161,7 @@ class KeenApi(object):
         response = self.fulfill(HTTPMethods.DELETE, url, data=payload, headers=headers, timeout=self.post_timeout)
         self.error_handling(response)
 
-    def query(self, analysis_type, params):
-=======
     def query(self, analysis_type, params, all_keys=False):
->>>>>>> upststream/master
         """
         Performs a query using the Keen IO analysis API.  A read key must be set first.
 
