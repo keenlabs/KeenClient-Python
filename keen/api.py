@@ -142,9 +142,9 @@ class KeenApi(object):
 
     def delete_collection(self, collection):
         """
-        Deletes a single collection in the Keen IO API. The master key must be set first.
+        Delete a collection in the Keen IO API. The master key must be set first.
 
-        :param event: a Collection to delete
+        :param colelction: a Collection to delete
         """
         if not self.master_key:
             raise exceptions.InvalidEnvironmentError(
@@ -211,11 +211,11 @@ class KeenApi(object):
         self.error_handling(response)
         return True
 
-    def get_collection(self, collection_name):
+    def get_collection(self, event_collection):
         """
         Extracts info about a collection using the Keen IO API. A master key must be set first.
 
-        :param event_name: the name of the collection to retrieve info for
+        :param event_collection: the name of the collection to retrieve info for
         """
         if not self.master_key:
             raise exceptions.InvalidEnvironmentError(
@@ -224,7 +224,7 @@ class KeenApi(object):
                 "KeenApi object."
             )
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
-                                                       self.project_id, collection_name)
+                                                       self.project_id, event_collection)
         headers = {"Authorization": self.master_key}
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
         self.error_handling(response)
@@ -233,7 +233,7 @@ class KeenApi(object):
 
     def get_all_collections(self):
         """
-        Extracts info about all collections using the Keen IO API. A master key must be set first.
+        Return schema information for all the event collections in a given project. A master key must be set first.
 
         """
         if not self.master_key:

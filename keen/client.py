@@ -469,7 +469,7 @@ class KeenClient(object):
     def funnel(self, steps, timeframe=None, timezone=None, max_age=None, all_keys=False):
         """ Performs a Funnel query
 
-        Returns an object containing the results for each step of the funnel.
+        Returns an object contaExtracts info about all collectionsining the results for each step of the funnel.
 
         :param steps: array of dictionaries, one for each step. example:
         [{"event_collection":"signup","actor_property":"user.id"},
@@ -491,42 +491,6 @@ class KeenClient(object):
         )
 
         return self.api.query("funnel", params, all_keys=all_keys)
-
-    def get_collection(self, collection_name):
-        """
-
-        Returns a description of a collection
-
-        :param event_name: the name of the event to get the collection info from
-        """
-
-        return self.api.get_collection(collection_name)
-
-    def get_collections(self):
-        """
-
-        Returns a description of all collections
-        """
-
-        return self.api.get_all_collections()
-
-    def delete_collection(self, collection):
-        """ Performs a deletion of a collection
-
-
-        :param collection_name: the name of the collection
-        """
-
-        self.api.delete_collection(collection)
-
-    def delete_collections(self, collections):
-        """ Performs a deletion of multiple collections in the list
-
-        :param collections: a list of collections to be deleted
-        """
-
-        for collection in collections:
-            self.api.delete_collection(collection)
 
     def multi_analysis(self, event_collection, analyses, timeframe=None, interval=None, timezone=None, filters=None,
                        group_by=None, max_age=None):
