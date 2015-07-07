@@ -7,7 +7,7 @@ import requests
 from keen import exceptions, persistence_strategies, scoped_keys
 import keen
 from keen.client import KeenClient
-from keen.tests.base_test_case import BaseTestCase
+from base_test_case import BaseTestCase
 from mock import patch, MagicMock
 import sys
 
@@ -474,6 +474,12 @@ class DeleteTests(BaseTestCase):
         # Check that the master_key is in the Authorization header.
         self.assertTrue(keen.master_key in delete.call_args[1]["headers"]["Authorization"])
 
+    def test_delete_collection(self, delete):
+        delete.return_value = MockedResponse(status_code=204, json_response=[])
+        keen.delete_collection("foo")
+        self.assertEqual("https://api.keen.io/3.0/projects/" + keen.project_id + "/events/foo", delete.call_ars[0][0])
+        self.assertTrue(keen.master_key in delete.call_args[1]["headers"]["Authorization"])
+
 # only need to test unicode separately in python2
 if sys.version_info[0] < 3:
 
@@ -496,3 +502,6 @@ if sys.version_info[0] < 3:
             keen.master_key = None
             keen._client = None
             super(UnicodeTests, self).tearDown()
+
+if __name__ == '__main__':
+     
