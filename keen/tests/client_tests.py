@@ -502,6 +502,3 @@ if sys.version_info[0] < 3:
             keen.master_key = None
             keen._client = None
             super(UnicodeTests, self).tearDown()
-
-if __name__ == '__main__':
-     
