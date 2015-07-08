@@ -144,7 +144,7 @@ class KeenApi(object):
         """
         Delete a collection in the Keen IO API. The master key must be set first.
 
-        :param colelction: a Collection to delete
+        :param collection: a Collection to delete
         """
         if not self.master_key:
             raise exceptions.InvalidEnvironmentError(

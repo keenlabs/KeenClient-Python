@@ -469,7 +469,7 @@ class KeenClient(object):
     def funnel(self, steps, timeframe=None, timezone=None, max_age=None, all_keys=False):
         """ Performs a Funnel query
 
-        Returns an object contaExtracts info about all collectionsining the results for each step of the funnel.
+        Returns an object containing the results for each step of the funnel.
 
         :param steps: array of dictionaries, one for each step. example:
         [{"event_collection":"signup","actor_property":"user.id"},
