@@ -474,11 +474,30 @@ class DeleteTests(BaseTestCase):
         # Check that the master_key is in the Authorization header.
         self.assertTrue(keen.master_key in delete.call_args[1]["headers"]["Authorization"])
 
-    def test_delete_collection(self, delete):
-        delete.return_value = MockedResponse(status_code=204, json_response=[])
-        keen.delete_collection("foo")
-        self.assertEqual("https://api.keen.io/3.0/projects/" + keen.project_id + "/events/foo", delete.call_ars[0][0])
-        self.assertTrue(keen.master_key in delete.call_args[1]["headers"]["Authorization"])
+
+@patch("requests.Session.get")
+class GetTests(BaseTestCase):
+
+    def setUp(self):
+        super(GetTests, self).setUp()
+        keen._client = None
+        keen.project_id = "1k4jb23kjbkjkjsd"
+        keen.master_key = "sdofnasofagaergub"
+
+    def tearDown(self):
+        keen._client = None
+        keen.project_id = None
+        keen.master_key = None
+        super(GetTests, self).tearDown()
+
+    def test_get_collection(self, get):
+        get.return_value = MockedResponse(status_code=204, json_response=[])
+        # Assert that the mocked get function is called the way we expect.
+        keen.get_collection("foo")
+        # Check that the URL is generated correctly
+        self.assertEqual("https://api.keen.io/3.0/projects/1k4jb23kjbkjkjsd/events/foo", get.call_args[0][0])
+        # Check that the master_key is in the Authorization header
+        self.assertTrue(keen.master_key in get.call_args[1]["headers"]["Authorization"])
 
 # only need to test unicode separately in python2
 if sys.version_info[0] < 3:

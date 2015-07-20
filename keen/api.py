@@ -140,27 +140,6 @@ class KeenApi(object):
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         self.error_handling(response)
 
-    def delete_collection(self, collection):
-        """
-        Delete a collection in the Keen IO API. The master key must be set first.
-
-        :param colelction: a Collection to delete
-        """
-        if not self.master_key:
-            raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a master key to delete events. "
-                "Please set a 'master_key' when initializing the "
-                "KeenApi object."
-            )
-
-        url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
-                                                       self.project_id,
-                                                       collection['name'])
-        headers = {"Content-Type": "application/json", "Authorization": self.master_key}
-        payload = json.dumps(collection)
-        response = self.fulfill(HTTPMethods.DELETE, url, data=payload, headers=headers, timeout=self.post_timeout)
-        self.error_handling(response)
-
     def query(self, analysis_type, params, all_keys=False):
         """
         Performs a query using the Keen IO analysis API.  A read key must be set first.
@@ -219,31 +198,12 @@ class KeenApi(object):
         """
         if not self.master_key:
             raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a master key to get events. "
+                "The Keen IO API requires a master key to get event collection schema. "
                 "Please set a 'master_key' when initializing the "
                 "KeenApi object."
             )
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
                                                        self.project_id, event_collection)
-        headers = {"Authorization": self.master_key}
-        response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
-        self.error_handling(response)
-
-        return response.json()
-
-    def get_all_collections(self):
-        """
-        Return schema information for all the event collections in a given project. A master key must be set first.
-
-        """
-        if not self.master_key:
-            raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a master key to get events. "
-                "Please set a 'master_key' when initializing the "
-                "KeenApi object."
-            )
-        url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version,
-                                                   self.project_id)
         headers = {"Authorization": self.master_key}
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
         self.error_handling(response)
