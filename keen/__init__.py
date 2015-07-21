@@ -421,3 +421,19 @@ def delete_events(*args, **kwargs):
     """
     _initialize_client_from_environment()
     return _client.delete_events(*args, **kwargs)
+
+def get_collection(*args, **kwargs):
+    """ Returns event collection schema
+
+    :param event_collection: string, the event collection from which schema is to be returned,
+    if left blank will return schema for all collections
+    """
+    _initialize_client_from_environment()
+    return _client.get_collection(*args, **kwargs)
+
+def get_all_collections():
+    """ Returns event collection schema for all events
+
+    """
+    _initialize_client_from_environment()
+    return _client.get_all_collections()
