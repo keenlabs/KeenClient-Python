@@ -430,3 +430,10 @@ def get_collection(*args, **kwargs):
     """
     _initialize_client_from_environment()
     return _client.get_collection(*args, **kwargs)
+
+def get_all_collections():
+    """ Returns event collection schema for all events
+
+    """
+    _initialize_client_from_environment()
+    return _client.get_all_collections()

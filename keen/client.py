@@ -179,6 +179,13 @@ class KeenClient(object):
 
         return self.api.get_collection(event_collection)
 
+    def get_all_collections(self):
+        """ Returns event collection schema for all events
+
+        """
+
+        return self.api.get_all_collections()
+
     def _base64_encode(self, string_to_encode):
         """ Base64 encodes a string, with either Python 2 or 3.
 
