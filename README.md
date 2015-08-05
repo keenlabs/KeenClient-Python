@@ -87,20 +87,31 @@ That's it! After running your code, check your Keen IO Project to see the event/
 Here are some examples of querying.  Let's assume you've added some events to the "purchases" collection.
 
 ```python
-    keen.count("purchases") # => 100
-    keen.sum("purchases", target_property="price") # => 10000
-    keen.minimum("purchases", target_property="price") # => 20
-    keen.maximum("purchases", target_property="price") # => 100
-    keen.average("purchases", target_property="price") # => 49.2
+    keen.count("purchases", timeframe="this_14_days") # => 100
+    keen.sum("purchases", target_property="price", timeframe="this_14_days") # => 10000
+    keen.minimum("purchases", target_property="price", timeframe="this_14_days") # => 20
+    keen.maximum("purchases", target_property="price", timeframe="this_14_days") # => 100
+    keen.average("purchases", target_property="price", timeframe="this_14_days") # => 49.2
 
-    keen.sum("purchases", target_property="price", group_by="item.id") # => [{ "item.id": 123, "result": 240 }, { ... }]
+    keen.sum("purchases", target_property="price", group_by="item.id", timeframe="this_14_days") # => [{ "item.id": 123, "result": 240 }, { ... }]
 
-    keen.count_unique("purchases", target_property="user.id") # => 3
-    keen.select_unique("purchases", target_property="user.email") # => ["bob@aol.com", "joe@yahoo.biz"]
+    keen.count_unique("purchases", target_property="user.id", timeframe="this_14_days") # => 3
+    keen.select_unique("purchases", target_property="user.email", timeframe="this_14_days") # => ["bob@aol.com", "joe@yahoo.biz"]
 
     keen.extraction("purchases", timeframe="today") # => [{ "price" => 20, ... }, { ... }]
 
-    keen.multi_analysis("purchases", analyses={"total":{"analysis_type":"sum", "target_property":"price"}, "average":{"analysis_type":"average", "target_property":"price"}) # => {"total":10329.03, "average":933.93}
+    keen.multi_analysis("purchases", analyses={
+        "total":{
+            "analysis_type": "sum", 
+            "target_property":"price", 
+            "timeframe": "this_14_days"
+        }, 
+        "average":{
+            "analysis_type": "average",
+            "target_property":"price",
+            "timeframe": "this_14_days"
+        }
+    ) # => {"total":10329.03, "average":933.93}
 
     step1 = {
         "event_collection": "signup",
