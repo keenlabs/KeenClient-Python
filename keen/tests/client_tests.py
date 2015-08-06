@@ -286,6 +286,21 @@ class ClientTests(BaseTestCase):
             import urllib.parse
             return urllib.parse.quote(url)
 
+@patch("requests.Session.post")
+class EventTests(BaseTestCase):
+
+    def test_custom_addon(self):
+        event = Event(
+            '<project_id>',
+            '<event_collection>',
+            {'keen': {'addons': {'asdf': 1}}},
+            timestamp=datetime.datetime.now(),
+        )
+        as_json = json.loads(event.to_json())
+
+        self.assertEqual(as_json['keen']['addons']['asdf'], 1)
+        self.assertTrue('timestamp' in as_json['keen'])
+
 
 @patch("requests.Session.get")
 class QueryTests(BaseTestCase):
