@@ -286,7 +286,6 @@ class ClientTests(BaseTestCase):
             import urllib.parse
             return urllib.parse.quote(url)
 
-@patch("requests.Session.post")
 class EventTests(BaseTestCase):
 
     def test_custom_addon(self):
