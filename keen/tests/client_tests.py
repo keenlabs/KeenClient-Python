@@ -6,7 +6,7 @@ from nose.tools import raises
 import requests
 from keen import exceptions, persistence_strategies, scoped_keys
 import keen
-from keen.client import KeenClient
+from keen.client import KeenClient, Event
 from keen.tests.base_test_case import BaseTestCase
 from mock import patch, MagicMock
 import sys
