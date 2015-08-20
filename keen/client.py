@@ -37,7 +37,10 @@ class Event(object):
         """
         event_as_dict = copy.deepcopy(self.event_body)
         if self.timestamp:
-            event_as_dict["keen"] = {"timestamp": self.timestamp.isoformat()}
+            if "keen" in event_as_dict:
+                event_as_dict["keen"]["timestamp"] = self.timestamp.isoformat()
+            else:
+                event_as_dict["keen"] = {"timestamp": self.timestamp.isoformat()}
         return json.dumps(event_as_dict)
 
 
