@@ -28,7 +28,7 @@ if sys.version_info < (2, 7):
 
 setup(
     name="keen",
-    version="0.3.16",
+    version="0.3.17",
     description="Python Client for Keen IO",
     author="Keen IO",
     author_email="team@keen.io",

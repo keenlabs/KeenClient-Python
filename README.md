@@ -14,7 +14,9 @@ Use pip to install!
 
     pip install keen
 
-This client is known to work on Python 2.6, 2.7, 3.2 and 3.3
+This client is known to work on Python 2.6, 2.7, 3.2 and 3.3.
+
+For versions of Python < 2.7.9, you’ll need to install pyasn1, ndg-httpsclient, pyOpenSSL.
 
 ### Usage
 
@@ -102,10 +104,10 @@ Here are some examples of querying.  Let's assume you've added some events to th
 
     keen.multi_analysis("purchases", analyses={
         "total":{
-            "analysis_type": "sum", 
-            "target_property":"price", 
+            "analysis_type": "sum",
+            "target_property":"price",
             "timeframe": "this_14_days"
-        }, 
+        },
         "average":{
             "analysis_type": "average",
             "target_property":"price",
@@ -212,6 +214,10 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 `write_key` and `read_key` now contain scoped keys based on your master API key.
 
 ### Changelog
+
+##### 0.3.17
+- fixed timestamp overriding keen addons
+- add `get_collection` and `get_all_collections` methods
 
 ##### 0.3.16
 + Added `all_keys` parameter which allows users to expose all keys in query response.
