@@ -170,6 +170,22 @@ class KeenClient(object):
         params = self.get_params(timeframe=timeframe, timezone=timezone, filters=filters)
         return self.api.delete_events(event_collection, params)
 
+    def get_collection(self, event_collection):
+        """ Returns event collection schema
+
+        :param event_collection: string, the event collection from which schema is to be returned,
+        if left blank will return schema for all collections
+        """
+
+        return self.api.get_collection(event_collection)
+
+    def get_all_collections(self):
+        """ Returns event collection schema for all events
+
+        """
+
+        return self.api.get_all_collections()
+
     def _base64_encode(self, string_to_encode):
         """ Base64 encodes a string, with either Python 2 or 3.
 
