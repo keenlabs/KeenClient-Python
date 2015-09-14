@@ -86,7 +86,7 @@ class KeenClient(object):
 
         if persistence_strategy:
             # validate the given persistence strategy
-            if not isinstance(persistence_strategy, BasePersistenceStrategy):
+            if not issubclass(persistence_strategy, BasePersistenceStrategy):
                 raise exceptions.InvalidPersistenceStrategyError()
         if not persistence_strategy:
             # setup a default persistence strategy
