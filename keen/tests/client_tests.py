@@ -88,7 +88,8 @@ class ClientTests(BaseTestCase):
                         "project_id", persistence_strategy=TestClass)
         from keen.persistence_strategies import BasePersistenceStrategy
         class TestPersistenceStrategy(BasePersistenceStrategy):
-            pass
+            def __init__(self, api):
+                pass
         positive_helper("project_id", persistence_strategy=TestPersistenceStrategy)
         # needs to be an instance of a strategy, not the class
         negative_helper(exceptions.InvalidPersistenceStrategyError,
