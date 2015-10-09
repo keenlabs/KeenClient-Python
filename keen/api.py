@@ -239,7 +239,7 @@ class KeenApi(object):
         if res.status_code // 100 != 2:
             try:
                 error = res.json()
-            except json.JSONDecodeError:
+            except ValueError:
                 error = {
                     'message': 'The API did not respond with JSON, but: "{0}"'.format(res.text[:1000]),
                     "error_code": "InvalidResponseFormat"
