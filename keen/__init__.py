@@ -85,7 +85,7 @@ def count(event_collection, timeframe=None, timezone=None, interval=None, filter
     :param interval: string, the time interval used for measuring data over
     time example: "daily"
     :param filters: array of dict, contains the filters you'd like to apply to the data
-    example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+    example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
@@ -112,7 +112,7 @@ def sum(event_collection, target_property, timeframe=None, timezone=None, interv
     :param interval: string, the time interval used for measuring data over
     time example: "daily"
     :param filters: array of dict, contains the filters you'd like to apply to the data
-    example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+    example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
@@ -140,7 +140,7 @@ def minimum(event_collection, target_property, timeframe=None, timezone=None, in
     :param interval: string, the time interval used for measuring data over
     time example: "daily"
     :param filters: array of dict, contains the filters you'd like to apply to the data
-    example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+    example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
@@ -168,7 +168,7 @@ def maximum(event_collection, target_property, timeframe=None, timezone=None, in
     :param interval: string, the time interval used for measuring data over
     time example: "daily"
     :param filters: array of dict, contains the filters you'd like to apply to the data
-    example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+    example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
@@ -196,7 +196,7 @@ def average(event_collection, target_property, timeframe=None, timezone=None, in
     :param interval: string, the time interval used for measuring data over
     time example: "daily"
     :param filters: array of dict, contains the filters you'd like to apply to the data
-    example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+    example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
@@ -210,7 +210,7 @@ def average(event_collection, target_property, timeframe=None, timezone=None, in
 
 
 def median(event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-            group_by=None, max_age=None):
+           group_by=None, max_age=None):
     """ Performs a median query
 
     Finds the median of a target property for events that meet the given criteria.
@@ -224,7 +224,7 @@ def median(event_collection, target_property, timeframe=None, timezone=None, int
     :param interval: string, the time interval used for measuring data over
     time example: "daily"
     :param filters: array of dict, contains the filters you'd like to apply to the data
-    example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+    example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
@@ -233,8 +233,8 @@ def median(event_collection, target_property, timeframe=None, timezone=None, int
     """
     _initialize_client_from_environment()
     return _client.median(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                           interval=interval, filters=filters, group_by=group_by,
-                           target_property=target_property, max_age=max_age)
+                          interval=interval, filters=filters, group_by=group_by,
+                          target_property=target_property, max_age=max_age)
 
 
 def percentile(event_collection, target_property, percentile, timeframe=None, timezone=None, interval=None,
@@ -254,7 +254,7 @@ def percentile(event_collection, target_property, percentile, timeframe=None, ti
     :param interval: string, the time interval used for measuring data over
     time example: "daily"
     :param filters: array of dict, contains the filters you'd like to apply to the data
-    example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+    example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
@@ -290,7 +290,7 @@ def count_unique(event_collection, target_property, timeframe=None, timezone=Non
     :param interval: string, the time interval used for measuring data over
     time example: "daily"
     :param filters: array of dict, contains the filters you'd like to apply to the data
-    example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+    example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
@@ -318,7 +318,7 @@ def select_unique(event_collection, target_property, timeframe=None, timezone=No
     :param interval: string, the time interval used for measuring data over
     time example: "daily"
     :param filters: array of dict, contains the filters you'd like to apply to the data
-    example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+    example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
@@ -344,7 +344,7 @@ def extraction(event_collection, timeframe=None, timezone=None, filters=None, la
     :param timezone: int, the timezone you'd like to use for the timeframe
     and interval in seconds
     :param filters: array of dict, contains the filters you'd like to apply to the data
-    example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+    example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param latest: int, the number of most recent records you'd like to return
     :param email: string, optional string containing an email address to email results to
     :param property_names: string or list of strings, used to limit the properties returned
@@ -392,7 +392,7 @@ def multi_analysis(event_collection, analyses, timeframe=None, interval=None,
     :param timezone: int, the timezone you'd like to use for the timeframe
     and interval in seconds
     :param filters: array of dict, contains the filters you'd like to apply to the data
-    example: {["property_name":"device", "operator":"eq", "property_value":"iPhone"}]
+    example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
@@ -422,6 +422,7 @@ def delete_events(*args, **kwargs):
     _initialize_client_from_environment()
     return _client.delete_events(*args, **kwargs)
 
+
 def get_collection(*args, **kwargs):
     """ Returns event collection schema
 
@@ -430,6 +431,7 @@ def get_collection(*args, **kwargs):
     """
     _initialize_client_from_environment()
     return _client.get_collection(*args, **kwargs)
+
 
 def get_all_collections():
     """ Returns event collection schema for all events
