@@ -215,9 +215,12 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 
 ### Changelog
 
+##### 0.3.18
++ Updated error handling to except `ValueError`
+
 ##### 0.3.17
-- fixed timestamp overriding keen addons
-- add `get_collection` and `get_all_collections` methods
++ Fixed timestamp overriding keen addons
++ Added `get_collection` and `get_all_collections` methods
 
 ##### 0.3.16
 + Added `all_keys` parameter which allows users to expose all keys in query response.
