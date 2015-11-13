@@ -144,6 +144,30 @@ You'll need to set your master_key.
 
 See below for more options.
 
+##### Saved Queries
+You can manage your saved queries from the Keen python client.
+
+```python
+# Create a saved query
+keen.saved_queries.create("name", saved_query_attributes)
+
+# Get all saved queries
+keen.saved_queries.all
+
+# Get one saved query
+keen.saved_queries.get("saved-query-slug")
+
+# Get saved query with results
+keen.saved_queries.results("saved-query-slug")
+
+# Update a saved query
+saved_query_attributes = { refresh_rate: 14400 }
+keen.saved_queries.update("saved-query-slug", saved_query_attributes)
+
+# Delete a saved query
+keen.saved_queries.delete("saved-query-slug")
+```
+
 ##### Overwriting event timestamps
 
 Two time-related properties are included in your event automatically. The properties “keen.timestamp” and “keen.created_at” are set at the time your event is recorded. You have the ability to overwrite the keen.timestamp property. This could be useful, for example, if you are backfilling historical data. Be sure to use [ISO-8601 Format](https://keen.io/docs/event-data-modeling/event-data-intro/#iso-8601-format).
@@ -212,6 +236,13 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 ```
 
 `write_key` and `read_key` now contain scoped keys based on your master API key.
+
+### Testing
+
+To run tests:
+```
+python setup.py tests
+```
 
 ### Changelog
 

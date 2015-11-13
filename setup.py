@@ -21,7 +21,7 @@ reqs_file = open(os.path.join(setup_path, 'requirements.txt'), 'r')
 reqs = reqs_file.readlines()
 reqs_file.close()
 
-tests_require = ['nose', 'mock']
+tests_require = ['nose', 'mock', 'responses']
 
 if sys.version_info < (2, 7):
     tests_require.append('unittest2')

@@ -84,14 +84,6 @@ class KeenApi(object):
         self.post_timeout = post_timeout
         self.session = self._create_session()
 
-    def _create_session(self):
-
-        """ Build a session that uses KeenAdapter for SSL """
-
-        s = requests.Session()
-        s.mount('https://', KeenAdapter())
-        return s
-
     def fulfill(self, method, *args, **kwargs):
 
         """ Fulfill an HTTP request to Keen's API. """
@@ -117,7 +109,7 @@ class KeenApi(object):
         headers = {"Content-Type": "application/json", "Authorization": self.write_key}
         payload = event.to_json()
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
-        self.error_handling(response)
+        self._error_handling(response)
 
     def post_events(self, events):
 
@@ -138,7 +130,7 @@ class KeenApi(object):
         headers = {"Content-Type": "application/json", "Authorization": self.write_key}
         payload = json.dumps(events)
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
-        self.error_handling(response)
+        self._error_handling(response)
 
     def query(self, analysis_type, params, all_keys=False):
         """
@@ -158,7 +150,7 @@ class KeenApi(object):
         headers = {"Authorization": self.read_key}
         payload = params
         response = self.fulfill(HTTPMethods.GET, url, params=payload, headers=headers, timeout=self.get_timeout)
-        self.error_handling(response)
+        self._error_handling(response)
 
         response = response.json()
 
@@ -174,11 +166,7 @@ class KeenApi(object):
         :param event_collection: string, the event collection from which event are being deleted
 
         """
-        if not self.master_key:
-            raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a master key to run deletes. "
-                "Please set a 'master_key' when initializing the KeenApi object."
-            )
+        self._check_for_master_key()
 
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url,
                                                        self.api_version,
@@ -187,7 +175,7 @@ class KeenApi(object):
         headers = {"Content-Type": "application/json", "Authorization": self.master_key}
         response = self.fulfill(HTTPMethods.DELETE, url, params=params, headers=headers, timeout=self.post_timeout)
 
-        self.error_handling(response)
+        self._error_handling(response)
         return True
 
     def get_collection(self, event_collection):
@@ -196,17 +184,12 @@ class KeenApi(object):
 
         :param event_collection: the name of the collection to retrieve info for
         """
-        if not self.master_key:
-            raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a master key to get event collection schema. "
-                "Please set a 'master_key' when initializing the "
-                "KeenApi object."
-            )
+        self._check_for_master_key()
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
                                                        self.project_id, event_collection)
         headers = {"Authorization": self.master_key}
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
-        self.error_handling(response)
+        self._error_handling(response)
 
         return response.json()
 
@@ -215,21 +198,16 @@ class KeenApi(object):
         Extracts schema for all collections using the Keen IO API. A master key must be set first.
 
         """
-        if not self.master_key:
-            raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a master key to get event collection schema. "
-                "Please set a 'master_key' when initializing the "
-                "KeenApi object."
-            )
+        self._check_for_master_key()
         url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version,
                                                        self.project_id)
         headers = {"Authorization": self.master_key}
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
-        self.error_handling(response)
+        self._error_handling(response)
 
         return response.json()
 
-    def error_handling(self, res):
+    def _error_handling(self, res):
         """
         Helper function to do the error handling
 
@@ -245,3 +223,19 @@ class KeenApi(object):
                     "error_code": "InvalidResponseFormat"
                 }
             raise exceptions.KeenApiError(error)
+
+    def _create_session(self):
+
+        """ Build a session that uses KeenAdapter for SSL """
+
+        s = requests.Session()
+        s.mount('https://', KeenAdapter())
+        return s
+
+    def _check_for_master_key(self):
+        if not self.master_key:
+            raise exceptions.InvalidEnvironmentError(
+                "The Keen IO API requires a master key to perform this operation. "
+                "Please set a 'master_key' when initializing the "
+                "KeenApi object."
+            )
