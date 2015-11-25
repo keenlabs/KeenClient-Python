@@ -135,6 +135,7 @@ class ClientTests(BaseTestCase):
         keen.write_key = None
         keen.read_key = None
         keen.master_key = None
+        keen.base_url = None
         self.assert_raises(exceptions.InvalidEnvironmentError,
                            keen.add_event, "python_test", {"hello": "goodbye"})
 
@@ -156,13 +157,15 @@ class ClientTests(BaseTestCase):
         exp_write_key = "yyyy4567"
         exp_read_key = "zzzz8912"
         exp_master_key = "abcd3456"
+        exp_base_url = "keen.base.url"
 
         # create Client instance
         client = KeenClient(
             project_id=exp_project_id,
             write_key=exp_write_key,
             read_key=exp_read_key,
-            master_key=exp_master_key
+            master_key=exp_master_key,
+            base_url=exp_base_url
         )
 
         # assert values
@@ -170,6 +173,7 @@ class ClientTests(BaseTestCase):
         self.assertEquals(exp_write_key, client.api.write_key)
         self.assertEquals(exp_read_key, client.api.read_key)
         self.assertEquals(exp_master_key, client.api.master_key)
+        self.assertEquals(exp_base_url, client.api.base_url)
 
     def test_set_keys_using_env_var(self, post):
         # reset Client settings
@@ -178,12 +182,14 @@ class ClientTests(BaseTestCase):
         keen.write_key = None
         keen.read_key = None
         keen.master_key = None
+        keen.base_url = None
 
         # set env vars
         exp_project_id = os.environ["KEEN_PROJECT_ID"] = "xxxx5678"
         exp_write_key = os.environ["KEEN_WRITE_KEY"] = "yyyy8901"
         exp_read_key = os.environ["KEEN_READ_KEY"] = "zzzz2345"
         exp_master_key = os.environ["KEEN_MASTER_KEY"] = "abcd1234"
+        exp_base_url = os.environ["KEEN_BASE_URL"] = "keen.base.url"
 
         keen._initialize_client_from_environment()
 
@@ -192,22 +198,26 @@ class ClientTests(BaseTestCase):
         self.assertEquals(exp_write_key, keen.write_key)
         self.assertEquals(exp_read_key, keen.read_key)
         self.assertEquals(exp_master_key, keen.master_key)
+        self.assertEquals(exp_base_url, keen.base_url)
         self.assertEquals(exp_project_id, keen._client.api.project_id)
         self.assertEquals(exp_write_key, keen._client.api.write_key)
         self.assertEquals(exp_read_key, keen._client.api.read_key)
         self.assertEquals(exp_master_key, keen._client.api.master_key)
+        self.assertEquals(exp_base_url, keen._client.api.base_url)
 
         # remove env vars
         del os.environ["KEEN_PROJECT_ID"]
         del os.environ["KEEN_WRITE_KEY"]
         del os.environ["KEEN_READ_KEY"]
         del os.environ["KEEN_MASTER_KEY"]
+        del os.environ["KEEN_BASE_URL"]
 
     def test_set_keys_using_package_var(self, post):
         exp_project_id = keen.project_id = "uuuu5678"
         exp_write_key = keen.write_key = "vvvv8901"
         exp_read_key = keen.read_key = "wwwww2345"
         exp_master_key = keen.master_key = "abcd4567"
+        exp_base_url = keen.base_url = "keen.base.url"
 
         keen._initialize_client_from_environment()
 
@@ -220,6 +230,7 @@ class ClientTests(BaseTestCase):
         self.assertEquals(exp_write_key, keen._client.api.write_key)
         self.assertEquals(exp_read_key, keen._client.api.read_key)
         self.assertEquals(exp_master_key, keen._client.api.master_key)
+        self.assertEquals(exp_base_url, keen._client.api.base_url)
 
     def test_configure_through_code(self, post):
         client = KeenClient(project_id="123456", read_key=None, write_key=None)
@@ -324,6 +335,7 @@ class QueryTests(BaseTestCase):
         keen.write_key = None
         keen.read_key = None
         keen.master_key = None
+        keen.base_url = None
         keen._client = None
         super(QueryTests, self).tearDown()
 
@@ -472,6 +484,7 @@ class DeleteTests(BaseTestCase):
         keen._client = None
         keen.project_id = "1k4jb23kjbkjkjsd"
         keen.master_key = "sdofnasofagaergub"
+        keen.base_url = None
 
     def tearDown(self):
         keen._client = None
@@ -502,6 +515,7 @@ class GetTests(BaseTestCase):
         keen._client = None
         keen.project_id = "1k4jb23kjbkjkjsd"
         keen.master_key = "sdofnasofagaergub"
+        keen.base_url = None
 
     def tearDown(self):
         keen._client = None
