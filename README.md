@@ -246,7 +246,7 @@ python setup.py tests
 
 ### Changelog
 
-##### 0.3.2
+##### 0.3.20
 + Add `saved_queries` support
 + Add Python 3.4 support
 
