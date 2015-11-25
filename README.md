@@ -246,6 +246,10 @@ python setup.py tests
 
 ### Changelog
 
+##### 0.3.2
++ Add `saved_queries` support
++ Add Python 3.4 support
+
 ##### 0.3.19
 + Added `base_url` as a possible env variable
 
