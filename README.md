@@ -215,6 +215,9 @@ The Python client enables you to create [Scoped Keys](https://keen.io/docs/secur
 
 ### Changelog
 
+##### 0.3.19
++ Added `base_url` as a possible env variable
+
 ##### 0.3.18
 + Updated error handling to except `ValueError`
 
