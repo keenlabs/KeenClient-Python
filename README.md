@@ -152,7 +152,7 @@ You can manage your saved queries from the Keen python client.
 keen.saved_queries.create("name", saved_query_attributes)
 
 # Get all saved queries
-keen.saved_queries.all
+keen.saved_queries.all()
 
 # Get one saved query
 keen.saved_queries.get("saved-query-slug")
