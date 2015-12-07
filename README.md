@@ -38,7 +38,7 @@ You can also configure unique client instances as follows:
 ```python
     from keen.client import KeenClient
 
-    client = KeenClient(
+    keen = KeenClient(
         project_id="xxxx",
         write_key="yyyy",
         read_key="zzzz",
@@ -60,7 +60,7 @@ Once you've set `KEEN_PROJECT_ID` and `KEEN_WRITE_KEY`, sending events is simple
 Or if using unique client instances:
 
 ```python
-    client.add_event(...)
+    keen.add_event(...)
 ```
 
 ##### Send Batch Events to Keen IO
@@ -191,7 +191,7 @@ By default, GET requests will timeout after 305 seconds. If you want to manually
 ```python
     from keen.client import KeenClient
 
-    client = KeenClient(
+    keen = KeenClient(
         project_id="xxxx",
         write_key="yyyy",
         read_key="zzzz",
@@ -209,7 +209,7 @@ By default, POST requests will timeout after 305 seconds. If you want to manuall
 ```python
     from keen.client import KeenClient
 
-    client = KeenClient(
+    keen = KeenClient(
         project_id="xxxx",
         write_key="yyyy",
         read_key="zzzz",
