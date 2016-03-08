@@ -14,7 +14,7 @@ Use pip to install!
 
     pip install keen
 
-This client is known to work on Python 2.6, 2.7, 3.2 and 3.3.
+This client is known to work on Python 2.6, 2.7, 3.2, 3.3 and 3.4.
 
 For versions of Python < 2.7.9, you’ll need to install pyasn1, ndg-httpsclient, pyOpenSSL.
 
@@ -33,18 +33,7 @@ If you don't want to use environment variables for some reason, you can directly
     keen.master_key = "abcd"
 ```
 
-You can also configure unique client instances as follows:
-
-```python
-    from keen.client import KeenClient
-
-    client = KeenClient(
-        project_id="xxxx",
-        write_key="yyyy",
-        read_key="zzzz",
-        master_key="abcd"
-    )
-```
+For information on how to configure unique client instances, take a look at the [Advanced Usage](https://github.com/keenlabs/KeenClient-Python#advanced-usage) section below.
 
 ##### Send Events to Keen IO
 
@@ -55,12 +44,6 @@ Once you've set `KEEN_PROJECT_ID` and `KEEN_WRITE_KEY`, sending events is simple
         "username": "lloyd",
         "referred_by": "harry"
     })
-```
-
-Or if using unique client instances:
-
-```python
-    client.add_event(...)
 ```
 
 ##### Send Batch Events to Keen IO
@@ -86,7 +69,7 @@ That's it! After running your code, check your Keen IO Project to see the event/
 
 ##### Do analysis with Keen IO
 
-Here are some examples of querying.  Let's assume you've added some events to the "purchases" collection.
+Here are some examples of querying. Let's assume you've added some events to the "purchases" collection. For more code samples, take a look at Keen's [docs](https://keen.io/docs/api/?python#)
 
 ```python
     keen.count("purchases", timeframe="this_14_days") # => 100
@@ -143,6 +126,44 @@ You'll need to set your master_key.
 #### Advanced Usage
 
 See below for more options.
+
+##### Configure Unique Client Instances
+
+If you intend to send events or query from different projects within the same python file, you'll need to set up unique client instances (one per project). You can do this by assigning an instance of KeenClient to a variable like so:
+
+```python
+    from keen.client import KeenClient
+
+    client = KeenClient(
+        project_id="xxxx",  # your project ID for collecting cycling data
+        write_key="yyyy",
+        read_key="zzzz",
+        master_key="abcd"
+    )
+
+    client_hike = KeenClient(
+        project_id="xxxx",  # your project ID for collecting hiking data (different from the one above)
+        write_key="yyyy",
+        read_key="zzzz",
+        master_key="abcd"
+    )
+```
+
+You can send events like this:
+
+```python
+    # add an event to an event collection in your cycling project
+    client.add_event(...)
+
+    # or add an event to an event collection in your hiking project
+    client_hike.add_event(...)
+```
+
+Similarly, you can query events like this:
+
+```python
+    client.count(...)
+```
 
 ##### Saved Queries
 You can manage your saved queries from the Keen python client.
