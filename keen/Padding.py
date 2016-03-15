@@ -103,7 +103,10 @@ def appendCMSPadding(str, blocksize=AES_blocksize):
 
 def removeCMSPadding(str, blocksize=AES_blocksize):
   '''CMS padding: Remove padding with bytes containing the number of padding bytes '''
-  pad_len = ord(str[-1]) # last byte contains number of padding bytes
+  try:
+    pad_len = ord(str[-1]) # last byte contains number of padding bytes
+  except TypeError:
+    pad_len = str[-1]
   assert pad_len <= blocksize, 'padding error' 
   assert pad_len <= len(str), 'padding error'
     
@@ -152,7 +155,10 @@ def appendZeroLenPadding(str, blocksize=AES_blocksize):
 
 def removeZeroLenPadding(str, blocksize=AES_blocksize):
   'Remove Padding with zeroes + last byte equal to the number of padding bytes'
-  pad_len = ord(str[-1]) # last byte contains number of padding bytes
+  try:
+    pad_len = ord(str[-1]) # last byte contains number of padding bytes
+  except TypeError:
+    pad_len = str[-1]
   assert pad_len < blocksize, 'padding error' 
   assert pad_len < len(str), 'padding error'
     

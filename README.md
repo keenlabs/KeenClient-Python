@@ -267,6 +267,9 @@ python setup.py tests
 
 ### Changelog
 
+##### 0.3.21
++ Fix bug with scoped key generation not working with newer Keen projects.
+
 ##### 0.3.20
 + Add `saved_queries` support
 + Add Python 3.4 support
