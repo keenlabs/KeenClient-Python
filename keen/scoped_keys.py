@@ -89,7 +89,7 @@ def encode_aes256(key, plaintext):
     # generate AES.block_size cryptographically secure random bytes for our IV (initial value)
     iv = os.urandom(AES.block_size)
     # set up an AES cipher object
-    cipher = AES.new(binascii.unhexlify(key), mode=AES.MODE_CBC, IV=iv)
+    cipher = AES.new(binascii.unhexlify(key.encode('ascii')), mode=AES.MODE_CBC, IV=iv)
     # encrypt the plaintext after padding it
     ciphertext = cipher.encrypt(pad_aes256(plaintext))
     # append the hexed IV and the hexed ciphertext
@@ -115,7 +115,7 @@ def decode_aes256(key, iv_plus_encrypted):
     iv = binascii.unhexlify(hexed_iv)
     ciphertext = binascii.unhexlify(hexed_ciphertext)
     # set up the correct AES cipher object
-    cipher = AES.new(binascii.unhexlify(key), mode=AES.MODE_CBC, IV=iv)
+    cipher = AES.new(binascii.unhexlify(key.encode('ascii')), mode=AES.MODE_CBC, IV=iv)
     # decrypt!
     plaintext = cipher.decrypt(ciphertext)
     # return the unpadded version of this
@@ -184,4 +184,7 @@ def decrypt(api_key, scoped_key):
         json_string = decode_aes256(api_key, scoped_key)
     else:
         json_string = old_decode_aes(api_key, scoped_key)
-    return json.loads(json_string)
+    try:
+        return json.loads(json_string)
+    except TypeError:
+        return json.loads(json_string.decode())

@@ -26,7 +26,7 @@ class ScopedKeyTests(BaseTestCase):
             scoped_keys.decrypt(self.bad_api_key, encrypted)
             self.fail("shouldn't get here")
         except ValueError as e:
-            self.assert_is_not_none(e)
+            self.assert_not_equal(e, None)
 
     def test_old_scoped_key_encrypts_and_decrypts(self):
         encrypted = scoped_keys.encrypt(self.old_api_key, self.options)
@@ -39,4 +39,4 @@ class ScopedKeyTests(BaseTestCase):
             scoped_keys.decrypt(self.old_bad_api_key, encrypted)
             self.fail("shouldn't get here")
         except ValueError as e:
-            self.assert_is_not_none(e)
+            self.assert_not_equal(e, None)
