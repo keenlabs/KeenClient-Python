@@ -267,12 +267,15 @@ python setup.py tests
 
 ### Changelog
 
+##### 0.3.22
++ Added support for python 3.5
+
 ##### 0.3.21
-+ Fix bug with scoped key generation not working with newer Keen projects.
++ Fixed bug with scoped key generation not working with newer Keen projects.
 
 ##### 0.3.20
-+ Add `saved_queries` support
-+ Add Python 3.4 support
++ Added `saved_queries` support
++ Added Python 3.4 support
 
 ##### 0.3.19
 + Added `base_url` as a possible env variable
