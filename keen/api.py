@@ -218,8 +218,8 @@ class KeenApi(object):
                 error = res.json()
             except ValueError:
                 error = {
-                    "message": "The API did not respond with JSON, but: {}".format(res.text[:1000]),
-                    "error_code": "{}".format(res.status_code)
+                    "message": "The API did not respond with JSON, but: {0}".format(res.text[:1000]),
+                    "error_code": "{0}".format(res.status_code)
                 }
             raise exceptions.KeenApiError(error)
 
