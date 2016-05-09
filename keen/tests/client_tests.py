@@ -144,8 +144,8 @@ class ClientTests(BaseTestCase):
 
             exception = e
 
-        self.assertIn(post.return_value.text, str(exception))
-        self.assertIn(str(post.return_value.status_code), str(exception))
+        self.assertTrue(post.return_value.text in str(exception))
+        self.assertTrue(str(post.return_value.status_code) in str(exception))
 
     def test_environment_variables(self, post):
         post.return_value = MockedFailedResponse(
