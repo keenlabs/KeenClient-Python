@@ -136,11 +136,16 @@ class ClientTests(BaseTestCase):
             text="test error text"
         )
 
-        with self.assert_raises(exceptions.KeenApiError) as cm:
-            keen.add_event("python_test", {"hello": "goodbye"})
+        exception = None
 
-        self.assertIn(post.return_value.text, str(cm.exception))
-        self.assertIn(str(post.return_value.status_code), str(cm.exception))
+        try:
+            keen.add_event("python_test", {"hello": "goodbye"})
+        except exceptions.KeenApiError as e:
+
+            exception = e
+
+        self.assertIn(post.return_value.text, str(exception))
+        self.assertIn(str(post.return_value.status_code), str(exception))
 
     def test_environment_variables(self, post):
         post.return_value = MockedFailedResponse(
