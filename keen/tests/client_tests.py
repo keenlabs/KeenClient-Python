@@ -132,7 +132,7 @@ class ClientTests(BaseTestCase):
     def test_malformed_json_response(self, post):
         post.return_value = MockedMalformedJsonResponse(
             status_code=401,
-            json_response={},
+            json_response=" ",
             text="test error text"
         )
 
