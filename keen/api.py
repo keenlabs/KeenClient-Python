@@ -199,8 +199,7 @@ class KeenApi(object):
 
         """
         self._check_for_master_key()
-        url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version,
-                                                       self.project_id)
+        url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version, self.project_id)
         headers = {"Authorization": self.master_key}
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
         self._error_handling(response)
@@ -219,8 +218,8 @@ class KeenApi(object):
                 error = res.json()
             except ValueError:
                 error = {
-                    'message': 'The API did not respond with JSON, but: "{0}"'.format(res.text[:1000]),
-                    "error_code": "InvalidResponseFormat"
+                    "message": "The API did not respond with JSON, but: {}".format(res.text[:1000]),
+                    "error_code": "{}".format(res.status_code)
                 }
             raise exceptions.KeenApiError(error)
 
