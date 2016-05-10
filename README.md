@@ -267,6 +267,9 @@ python setup.py tests
 
 ### Changelog
 
+##### 0.3.23
++ Added status code to JSON parse error response
+
 ##### 0.3.22
 + Added support for python 3.5
 

@@ -15,9 +15,10 @@ __author__ = 'dkador'
 
 
 class MockedResponse(object):
-    def __init__(self, status_code, json_response):
+    def __init__(self, status_code, json_response, text=None):
         self.status_code = status_code
         self.json_response = json_response
+        self.text = text
 
     def json(self):
         return self.json_response
@@ -26,6 +27,11 @@ class MockedResponse(object):
 class MockedFailedResponse(MockedResponse):
     def json(self):
         return self.json_response
+
+
+class MockedMalformedJsonResponse(MockedResponse):
+    def json(self):
+        raise ValueError
 
 
 @patch("requests.Session.post")
@@ -122,6 +128,24 @@ class ClientTests(BaseTestCase):
     def test_post_timeout_batch(self, post):
         post.side_effect = requests.Timeout
         self.assert_raises(requests.Timeout, keen.add_events, {"python_test": [{"hello": "goodbye"}]})
+
+    def test_malformed_json_response(self, post):
+        post.return_value = MockedMalformedJsonResponse(
+            status_code=401,
+            json_response=" ",
+            text="test error text"
+        )
+
+        exception = None
+
+        try:
+            keen.add_event("python_test", {"hello": "goodbye"})
+        except exceptions.KeenApiError as e:
+
+            exception = e
+
+        self.assertTrue(post.return_value.text in str(exception))
+        self.assertTrue(str(post.return_value.status_code) in str(exception))
 
     def test_environment_variables(self, post):
         post.return_value = MockedFailedResponse(
@@ -296,6 +320,7 @@ class ClientTests(BaseTestCase):
         except AttributeError:
             import urllib.parse
             return urllib.parse.quote(url)
+
 
 class EventTests(BaseTestCase):
 
