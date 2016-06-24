@@ -109,7 +109,7 @@ Here are some examples of querying. Let's assume you've added some events to the
     keen.funnel([step1, step2], timeframe="today") # => [2039, 201]
 ```
 
-To return the full API response (as opposed to the singular "result" key), set `all_keys=True`.
+To return the full API response from a funnel analysis (as opposed to the singular "result" key), set `all_keys=True`.
 
 For example, `keen.funnel([step1, step2], all_keys=True)` would return "result", "actors" and "steps" keys.
 
