@@ -124,7 +124,7 @@ For more code samples, take a look at Keen's `docs <https://keen.io/docs/api/?py
     keen.funnel([step1, step2], timeframe="today") # => [2039, 201]
 
 
-To return the full API response (as opposed to the singular "result" key), set `all_keys=True`.
+To return the full API response from a funnel analysis (as opposed to the singular "result" key), set `all_keys=True`.
 
 For example, `keen.funnel([step1, step2], all_keys=True)` would return "result", "actors" and "steps" keys.
 
