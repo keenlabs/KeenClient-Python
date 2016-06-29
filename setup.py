@@ -30,6 +30,7 @@ setup(
     name="keen",
     version="0.3.23",
     description="Python Client for Keen IO",
+    long_description=open(os.path.join('README.rst'), 'r').read(),
     author="Keen IO",
     author_email="team@keen.io",
     url="https://github.com/keenlabs/KeenClient-Python",
@@ -37,4 +38,20 @@ setup(
     install_requires=reqs,
     tests_require=tests_require,
     test_suite='nose.collector',
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'Natural Language :: English',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+    ]
 )
