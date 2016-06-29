@@ -313,6 +313,11 @@ To run tests:
 Changelog
 ---------
 
+0.3.24
+``````
+
++ Updated documentation
+
 0.3.23
 ``````
 
