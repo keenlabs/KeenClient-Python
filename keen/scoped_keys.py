@@ -1,6 +1,7 @@
 import binascii
 import json
 import os
+import six
 from Crypto.Cipher import AES
 
 from keen import Padding
@@ -9,6 +10,14 @@ __author__ = 'dkador'
 
 # the block size for the cipher object; must be 16, 24, or 32 for AES
 OLD_BLOCK_SIZE = 32
+
+DEFAULT_ENCODING = 'UTF-8'
+
+
+def ensure_bytes(s, encoding=None):
+	if isinstance(s, six.text_type):
+		return six.binary_type(s, encoding or DEFAULT_ENCODING)
+	return s
 
 
 def pad_aes256(s):
@@ -91,7 +100,7 @@ def encode_aes256(key, plaintext):
     # set up an AES cipher object
     cipher = AES.new(binascii.unhexlify(key.encode('ascii')), mode=AES.MODE_CBC, IV=iv)
     # encrypt the plaintext after padding it
-    ciphertext = cipher.encrypt(pad_aes256(plaintext))
+    ciphertext = cipher.encrypt(ensure_bytes(pad_aes256(plaintext)))
     # append the hexed IV and the hexed ciphertext
     iv_plus_encrypted = binascii.hexlify(iv) + binascii.hexlify(ciphertext)
     # return that
@@ -139,9 +148,9 @@ def old_encode_aes(key, plaintext):
     # generate 16 cryptographically secure random bytes for our IV (initial value)
     iv = os.urandom(16)
     # set up an AES cipher object
-    cipher = AES.new(old_pad(key), mode=AES.MODE_CBC, IV=iv)
+    cipher = AES.new(ensure_bytes(old_pad(key)), mode=AES.MODE_CBC, IV=iv)
     # encrypte the plaintext after padding it
-    ciphertext = cipher.encrypt(old_pad(plaintext))
+    ciphertext = cipher.encrypt(ensure_bytes(old_pad(plaintext)))
     # append the hexed IV and the hexed ciphertext
     iv_plus_encrypted = binascii.hexlify(iv) + binascii.hexlify(ciphertext)
     # return that
@@ -164,7 +173,7 @@ def old_decode_aes(key, iv_plus_encrypted):
     iv = binascii.unhexlify(hexed_iv)
     ciphertext = binascii.unhexlify(hexed_ciphertext)
     # set up the correct AES cipher object
-    cipher = AES.new(old_pad(key), mode=AES.MODE_CBC, IV=iv)
+    cipher = AES.new(ensure_bytes(old_pad(key)), mode=AES.MODE_CBC, IV=iv)
     # decrypt!
     plaintext = cipher.decrypt(ciphertext)
     # return the unpadded version of this
