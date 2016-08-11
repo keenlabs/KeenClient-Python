@@ -16,7 +16,7 @@ DEFAULT_ENCODING = 'UTF-8'
 
 def ensure_bytes(s, encoding=None):
 	if isinstance(s, six.text_type):
-		return six.binary_type(s, encoding or DEFAULT_ENCODING)
+		return s.encode(encoding or DEFAULT_ENCODING)
 	return s
 
 
