@@ -313,6 +313,12 @@ To run tests:
 Changelog
 ---------
 
+0.3.25
+``````
+
++ Replaced defunct `pycrypto` library with `cryptodome`.
++ Fixed UnicodeDecodeError under PY3 while installing in Windows.
+
 0.3.24
 ``````
 
