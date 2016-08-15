@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from setuptools import setup
-import os, sys
+import os, sys, codecs
 
 try:
     # nose uses multiprocessing if available.
@@ -30,7 +30,7 @@ setup(
     name="keen",
     version="0.3.24",
     description="Python Client for Keen IO",
-    long_description=open(os.path.join('README.rst'), 'r').read(),
+    long_description=codecs.open(os.path.join('README.rst'), 'r', encoding='UTF-8').read(),
     author="Keen IO",
     author_email="team@keen.io",
     url="https://github.com/keenlabs/KeenClient-Python",
