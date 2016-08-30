@@ -1,3 +1,2 @@
-Padding>=0.4
 pycryptodome>=3.4
 requests>=2.5,<2.11.0
