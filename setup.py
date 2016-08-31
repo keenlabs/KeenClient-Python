@@ -28,7 +28,7 @@ if sys.version_info < (2, 7):
 
 setup(
     name="keen",
-    version="0.3.25",
+    version="0.3.26",
     description="Python Client for Keen IO",
     long_description=codecs.open(os.path.join('README.rst'), 'r', encoding='UTF-8').read(),
     author="Keen IO",
