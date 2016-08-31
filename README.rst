@@ -313,6 +313,11 @@ To run tests:
 Changelog
 ---------
 
+0.3.26
+``````
+
++ Removed unused `Padding` from requirements.txt to make python 3.x installs cleaner.
+
 0.3.25
 ``````
 
