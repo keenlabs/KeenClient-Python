@@ -39,7 +39,9 @@ class ClientTests(BaseTestCase):
 
     SINGLE_ADD_RESPONSE = MockedResponse(status_code=201, json_response={"result": {"hello": "goodbye"}})
 
-    MULTI_ADD_RESPONSE = MockedResponse(status_code=200, json_response={"result": {"hello": "goodbye"}})
+    MULTI_ADD_RESPONSE = MockedResponse(status_code=200, json_response={"collection_a": {"success": True}})
+    MULTI_ADD_RESPONSE_FAILURE = MockedResponse(status_code=200, json_response={"collection_a": {"success": False,
+                                                                                                 "error": "message"}})
 
     def setUp(self):
         super(ClientTests, self).setUp()
@@ -99,7 +101,7 @@ class ClientTests(BaseTestCase):
         keen.add_event("python_test", {"hello": "goodbye"})
 
         post.return_value = self.MULTI_ADD_RESPONSE
-        keen.add_events(
+        response = keen.add_events(
             {
                 "sign_ups": [{
                     "username": "timmy",
@@ -112,6 +114,23 @@ class ClientTests(BaseTestCase):
                     {"price": 7}
                 ]}
         )
+        self.assertEqual(self.MULTI_ADD_RESPONSE.json_response, response)
+
+        post.return_value = self.MULTI_ADD_RESPONSE_FAILURE
+        response = keen.add_events(
+            {
+                "sign_ups": [{
+                    "username": "timmy",
+                    "referred_by": "steve",
+                    "son_of": "my_mom"
+                }],
+                "purchases": [
+                    {"price": 5},
+                    {"price": 6},
+                    {"price": 7}
+                ]}
+        )
+        self.assertEqual(self.MULTI_ADD_RESPONSE_FAILURE.json_response, response)
 
     def test_module_level_add_event(self, post):
         post.return_value = self.SINGLE_ADD_RESPONSE

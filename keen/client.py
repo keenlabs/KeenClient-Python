@@ -141,7 +141,7 @@ class KeenClient(object):
 
         :param events: dictionary of events
         """
-        self.persistence_strategy.batch_persist(events)
+        return self.persistence_strategy.batch_persist(events)
 
     def generate_image_beacon(self, event_collection, event_body, timestamp=None):
         """ Generates an image beacon URL.

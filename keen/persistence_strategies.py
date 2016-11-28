@@ -41,7 +41,7 @@ class DirectPersistenceStrategy(BasePersistenceStrategy):
 
         :param events: a batch of events to persist
         """
-        self.api.post_events(events)
+        return self.api.post_events(events)
 
 
 class RedisPersistenceStrategy(BasePersistenceStrategy):

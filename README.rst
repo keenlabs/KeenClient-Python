@@ -313,6 +313,11 @@ To run tests:
 Changelog
 ---------
 
+0.3.27
+``````
+
++ Return JSON response when uploading events in a batch.
+
 0.3.26
 ``````
 
