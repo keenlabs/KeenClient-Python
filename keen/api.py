@@ -131,6 +131,7 @@ class KeenApi(object):
         payload = json.dumps(events)
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         self._error_handling(response)
+        return self._get_response_json(response)
 
     def query(self, analysis_type, params, all_keys=False):
         """
@@ -214,14 +215,24 @@ class KeenApi(object):
         """
         # making the error handling generic so if an status_code starting with 2 doesn't exist, we raise the error
         if res.status_code // 100 != 2:
-            try:
-                error = res.json()
-            except ValueError:
-                error = {
-                    "message": "The API did not respond with JSON, but: {0}".format(res.text[:1000]),
-                    "error_code": "{0}".format(res.status_code)
-                }
+            error = self._get_response_json(res)
             raise exceptions.KeenApiError(error)
+
+    def _get_response_json(self, res):
+        """
+        Helper function to extract the JSON body out of a response OR throw an exception.
+
+        :param res: the response from a request
+        :return: the JSON body OR throws an exception
+        """
+        try:
+            error = res.json()
+        except ValueError:
+            error = {
+                "message": "The API did not respond with JSON, but: {0}".format(res.text[:1000]),
+                "error_code": "{0}".format(res.status_code)
+            }
+        return error
 
     def _create_session(self):
 

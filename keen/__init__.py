@@ -60,7 +60,7 @@ def add_events(events):
     :param events: dictionary of events
     """
     _initialize_client_from_environment()
-    _client.add_events(events)
+    return _client.add_events(events)
 
 
 def generate_image_beacon(event_collection, body, timestamp=None):
