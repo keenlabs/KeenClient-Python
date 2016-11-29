@@ -152,6 +152,7 @@ When you upload events in a batch, some of them may succeed and some of them may
 Upload code (remember, Keen IO doesn't allow periods in property names):
 
 .. code-block:: python
+
     response = keen.add_events({
         "sign_ups": [
             { "username": "nameuser1" },
@@ -166,6 +167,7 @@ Upload code (remember, Keen IO doesn't allow periods in property names):
 That code would result in the following API JSON response:
 
 .. code-block:: javascript
+
     {
         "sign_ups": [
             {"success": true},
@@ -180,6 +182,7 @@ That code would result in the following API JSON response:
 So in python, to check on the results of your batch, you'd have code like so:
 
 .. code-block:: python
+
     batch = {
         "sign_ups": [
             { "username": "nameuser1" },
@@ -368,6 +371,11 @@ To run tests:
 
 Changelog
 ---------
+
+0.3.28
+``````
+
++ Fix incorrect README.
 
 0.3.27
 ``````
