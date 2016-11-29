@@ -39,9 +39,9 @@ class ClientTests(BaseTestCase):
 
     SINGLE_ADD_RESPONSE = MockedResponse(status_code=201, json_response={"result": {"hello": "goodbye"}})
 
-    MULTI_ADD_RESPONSE = MockedResponse(status_code=200, json_response={"collection_a": {"success": True}})
-    MULTI_ADD_RESPONSE_FAILURE = MockedResponse(status_code=200, json_response={"collection_a": {"success": False,
-                                                                                                 "error": "message"}})
+    MULTI_ADD_RESPONSE = MockedResponse(status_code=200, json_response={"collection_a": [{"success": True}]})
+    MULTI_ADD_RESPONSE_FAILURE = MockedResponse(status_code=200, json_response={"collection_a": [{"success": False,
+                                                                                                 "error": "message"}]})
 
     def setUp(self):
         super(ClientTests, self).setUp()

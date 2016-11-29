@@ -144,6 +144,62 @@ Advanced Usage
 
 See below for more options.
 
+Check Batch Upload Response For Errors
+''''''''''''''''''''''''''''''''''''''
+
+When you upload events in a batch, some of them may succeed and some of them may have errors. The Keen API returns information on each. Here's an example:
+
+Upload code (remember, Keen IO doesn't allow periods in property names):
+
+.. code-block:: python
+    response = keen.add_events({
+        "sign_ups": [
+            { "username": "nameuser1" },
+            { "username": "nameuser2", "an.invalid.property.name": 1 }
+        ],
+        "purchases": [
+            { "price": 5 },
+            { "price": 6 }
+        ]
+    })
+
+That code would result in the following API JSON response:
+
+.. code-block:: javascript
+    {
+        "sign_ups": [
+            {"success": true},
+            {"success": false, "error": {"name": "some_error_name", "description": "some longer description"}}
+        ],
+        "purchases": [
+            {"success": true},
+            {"success": true}
+        ]
+    }
+
+So in python, to check on the results of your batch, you'd have code like so:
+
+.. code-block:: python
+    batch = {
+        "sign_ups": [
+            { "username": "nameuser1" },
+            { "username": "nameuser2", "an.invalid.property.name": 1 }
+        ],
+        "purchases": [
+            { "price": 5 },
+            { "price": 6 }
+        ]
+    }
+    response = keen.add_events(batch)
+
+    for collection in response:
+        collection_result = response[collection]
+        event_count = 0
+        for individual_result in collection_result:
+            if not individual_result["success"]:
+                print("Event had error! Collection: '{}'. Event body: '{}'.".format(collection, batch[collection][event_count]))
+            event_count += 1
+
 Configure Unique Client Instances
 '''''''''''''''''''''''''''''''''
 
