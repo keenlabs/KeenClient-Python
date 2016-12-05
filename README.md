@@ -5,6 +5,19 @@
 This is the official Python Client for the [Keen IO](https://keen.io/) API. With Keen’s developer-friendly APIs, it’s easy to collect, explore, and visualize data anywhere. Apps and websites, customer-facing dashboards, IoT devices, you name it.
 
 ## Table of Contents
+* [Changelog](#changelog)
+* [Installation](#installation)
+* [Usage](#usage)
+  * [Configuring Client](#configuring-client)
+  * [Recording Events](#recording-events)
+  * [Querying Events](#querying-events)
+  * [Advanced Usage](#advanced-usage)
+* [FAQs](#faqs)
+* [Roadmap](#roadmap)
+* [Questions & Support](#questions--support)
+* [Contributing](#contributing)
+  * [Testing](#testing)
+
 
 ## Changelog
 For details on fixes and updates, see the [Changelog](CHANGELOG.md)
@@ -23,7 +36,7 @@ For versions of Python < 2.7.9, you’ll need to install pyasn1, ndg-httpsclient
 
 ## Usage
 
-### Configuring client
+### Configuring Client
 
 To use this client with the Keen IO API, you have to configure your Keen IO Project ID and its access
 keys (if you need an account, [sign up here](https://keen.io/) - it's free).
