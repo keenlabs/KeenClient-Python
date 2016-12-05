@@ -352,7 +352,3 @@ report them via Github Issues. We'd love to hear your feedback and ideas!
 ## Contributing
 
 This is an open source project and we love involvement from the community! Hit us up with pull requests and issues.
-
-.. |build-status| image:: https://secure.travis-ci.org/keenlabs/KeenClient-Python.png
-    :target: http://travis-ci.org/keenlabs/KeenClient-Python
-    :alt: Build status
