@@ -23,6 +23,8 @@ For versions of Python < 2.7.9, you’ll need to install pyasn1, ndg-httpsclient
 
 ## Usage
 
+### Configuring client
+
 To use this client with the Keen IO API, you have to configure your Keen IO Project ID and its access
 keys (if you need an account, [sign up here](https://keen.io/) - it's free).
 
@@ -41,9 +43,11 @@ If you don't want to use environment variables for some reason, you can directly
 
 For information on how to configure unique client instances, take a look at the [Advanced Usage](#advanced-usage) section below.
 
-### Send Events to Keen IO
+### Recording Events
 
-Once you've set `KEEN_PROJECT_ID` and `KEEN_WRITE_KEY`, sending events is simple:
+Once you've set `KEEN_PROJECT_ID` and `KEEN_WRITE_KEY`, sending events is simple.
+
+#### Record a single event
 
 ```python
     keen.add_event("sign_ups", {
@@ -52,9 +56,9 @@ Once you've set `KEEN_PROJECT_ID` and `KEEN_WRITE_KEY`, sending events is simple
     })
 ```
 
-### Send Batch Events to Keen IO
+#### Record multiple events
 
-You can upload Events in a batch, like so:
+You can upload events in a batch, like so:
 
 ```python
     # uploads 4 events total - 2 to the "sign_ups" collection and 2 to the "purchases" collection
@@ -72,10 +76,14 @@ You can upload Events in a batch, like so:
 
 That's it! After running your code, check your Keen IO Project to see the event/events has been added.
 
-### Do analysis with Keen IO
+#### Data enrichment
+
+### Querying Events
+
+#### Analysis examples
 
 Here are some examples of querying. Let's assume you've added some events to the "purchases" collection.
-For more code samples, take a look at Keen's `docs <https://keen.io/docs/api/?python#>`_
+For more code samples, take a look at Keen's [docs](https://keen.io/docs/api/?python#).
 
 ```python
     keen.count("purchases", timeframe="this_14_days") # => 100
@@ -119,7 +127,53 @@ To return the full API response from a funnel analysis (as opposed to the singul
 
 For example, `keen.funnel([step1, step2], all_keys=True)` would return "result", "actors" and "steps" keys.
 
-### Delete Events
+#### Saved queries
+
+You can manage your saved queries from the Keen python client.
+
+```python
+    # Create a saved query
+    keen.saved_queries.create("name", saved_query_attributes)
+
+    # Get all saved queries
+    keen.saved_queries.all()
+
+    # Get one saved query
+    keen.saved_queries.get("saved-query-slug")
+
+    # Get saved query with results
+    keen.saved_queries.results("saved-query-slug")
+
+    # Update a saved query
+    saved_query_attributes = { refresh_rate: 14400 }
+    keen.saved_queries.update("saved-query-slug", saved_query_attributes)
+
+    # Delete a saved query
+    keen.saved_queries.delete("saved-query-slug")
+```
+
+### Advanced Usage
+
+#### Overwriting event timestamps
+
+Two time-related properties are included in your event automatically. The properties `keen.timestamp`
+and `keen.created_at` are set at the time your event is recorded. You have the ability to overwrite the
+`keen.timestamp` property. This could be useful, for example, if you are backfilling historical data. Be
+sure to use [ISO-8601 Format](https://keen.io/docs/event-data-modeling/event-data-intro/#iso-8601-format).
+
+Keen stores all date and time information in UTC!
+
+```python
+    keen.add_event("sign_ups", {
+        "keen": {
+            "timestamp": "2012-07-06T02:09:10.141Z"
+        },
+        "username": "lloyd",
+        "referred_by": "harry"
+    })
+```
+
+#### Deleting events
 
 The Keen IO API allows you to [delete events](https://keen.io/docs/api/#delete-events) from event collections, optionally supplying filters, timeframe or timezone to narrow the scope of what you would like to delete.
 
@@ -129,9 +183,23 @@ You'll need to set your `master_key`.
     keen.delete_events("event_collection", filters=[{"property_name": 'username', "operator": 'eq', "property_value": 'Bob'}])
 ```
 
-## Advanced Usage
+#### Scoped keys
 
-### Check Batch Upload Response For Errors
+The Python client enables you to create [Scoped Keys](https://keen.io/docs/security/#scoped-key) easily. For example:
+
+```python
+    from keen.client import KeenClient
+    from keen import scoped_keys
+
+    api_key = KEEN_MASTER_KEY
+
+    write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
+    read_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]})
+```
+
+`write_key` and `read_key` now contain scoped keys based on your master API key.
+
+#### Check batch upload response for errors
 
 When you upload events in a batch, some of them may succeed and some of them may have errors. The Keen API returns information on each. Here's an example:
 
@@ -189,7 +257,7 @@ So in python, to check on the results of your batch, you'd have code like so:
             event_count += 1
 ```
 
-### Configure Unique Client Instances
+#### Configure unique client instances
 
 If you intend to send events or query from different projects within the same python file, you'll need to set up
 unique client instances (one per project). You can do this by assigning an instance of KeenClient to a variable like so:
@@ -228,51 +296,7 @@ Similarly, you can query events like this:
     client.count(...)
 ```
 
-### Saved Queries
-
-You can manage your saved queries from the Keen python client.
-
-```python
-    # Create a saved query
-    keen.saved_queries.create("name", saved_query_attributes)
-
-    # Get all saved queries
-    keen.saved_queries.all()
-
-    # Get one saved query
-    keen.saved_queries.get("saved-query-slug")
-
-    # Get saved query with results
-    keen.saved_queries.results("saved-query-slug")
-
-    # Update a saved query
-    saved_query_attributes = { refresh_rate: 14400 }
-    keen.saved_queries.update("saved-query-slug", saved_query_attributes)
-
-    # Delete a saved query
-    keen.saved_queries.delete("saved-query-slug")
-```
-
-### Overwriting event timestamps
-
-Two time-related properties are included in your event automatically. The properties `keen.timestamp`
-and `keen.created_at` are set at the time your event is recorded. You have the ability to overwrite the
-`keen.timestamp` property. This could be useful, for example, if you are backfilling historical data. Be
-sure to use [ISO-8601 Format](https://keen.io/docs/event-data-modeling/event-data-intro/#iso-8601-format).
-
-Keen stores all date and time information in UTC!
-
-```python
-    keen.add_event("sign_ups", {
-        "keen": {
-            "timestamp": "2012-07-06T02:09:10.141Z"
-        },
-        "username": "lloyd",
-        "referred_by": "harry"
-    })
-```
-
-### Get from Keen IO with a Timeout
+#### Get from Keen IO with a timeout
 
 By default, GET requests will timeout after 305 seconds. If you want to manually override this, you can
 create a KeenClient with the "get_timeout" parameter. This client will fail GETs if no bytes have been
@@ -294,7 +318,7 @@ This will cause queries such as `count()`, `sum()`, `and average()` to timeout a
 limit is hit, a requests.Timeout will be raised. Due to a bug in the requests library, you might also see an
 SSLError [#1294](https://github.com/kennethreitz/requests/issues/1294).
 
-### Send to Keen IO with a Timeout
+#### Send to Keen IO with a timeout
 
 By default, POST requests will timeout after 305 seconds. If you want to manually override this, you can
 create a KeenClient with the "post_timeout" parameter. This client will fail POSTs if no bytes have been
@@ -315,40 +339,25 @@ returned by the server in the specified time. For example:
 This will cause both `add_event()` and `add_events(`) to timeout after 100 seconds. If this timeout limit is hit, a requests.Timeout will be raised. Due to a bug in the requests library, you might also see an
 SSLError [#1294](https://github.com/kennethreitz/requests/issues/1294).
 
-### Create Scoped Keys
+## FAQs
 
-The Python client enables you to create [Scoped Keys](https://keen.io/docs/security/#scoped-key) easily. For example:
-
-```python
-    from keen.client import KeenClient
-    from keen import scoped_keys
-
-    api_key = KEEN_MASTER_KEY
-
-    write_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]})
-    read_key = scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]})
-```
-
-`write_key` and `read_key` now contain scoped keys based on your master API key.
-
-## Testing
-
-To run tests:
-
-```python
-    python setup.py tests
-```
-
-## To Do
+## Roadmap
 
 * Asynchronous insert
 * Scoped keys
 
 ## Questions & Support
 
-If you have any questions, bugs, or suggestions, please
-report them via Github Issues. We'd love to hear your feedback and ideas!
+If you have any questions, bugs, or suggestions, please report them via Github Issues. We'd love to hear your feedback and ideas!
 
 ## Contributing
 
 This is an open source project and we love involvement from the community! Hit us up with pull requests and issues.
+
+### Testing
+
+To run tests:
+
+```python
+    python setup.py tests
+```
