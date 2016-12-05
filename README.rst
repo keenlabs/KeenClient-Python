@@ -3,10 +3,10 @@ Keen IO Official Python Client Library
 
 |build-status|
 
-This is the official Python Client for the `Keen IO <https://keen.io/>`_ API. The
-Keen IO API lets developers build analytics features directly into their apps.
+This is the official Python Client for the `Keen IO <https://keen.io/>`_ API. With Keen’s developer-friendly APIs, it’s easy to collect, explore, and visualize data anywhere. Apps and websites, customer-facing dashboards, IoT devices, you name it.
 
-This is still under active development. Stay tuned for improvements!
+Table of Contents
+-----------------
 
 Installation
 ------------
