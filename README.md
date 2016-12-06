@@ -36,7 +36,7 @@ For versions of Python < 2.7.9, you’ll need to install pyasn1, ndg-httpsclient
 
 ## Usage
 
-### Configuring Client
+### Configuring the Client
 
 To use this client with the Keen IO API, you have to configure your Keen IO Project ID and its access
 keys (if you need an account, [sign up here](https://keen.io/) - it's free).
@@ -58,7 +58,7 @@ For information on how to configure unique client instances, take a look at the 
 
 ### Recording Events
 
-Once you've set `KEEN_PROJECT_ID` and `KEEN_WRITE_KEY`, sending events is simple.
+Once you've [configured your client](#configuring-the-client) by setting the `KEEN_PROJECT_ID` and `KEEN_WRITE_KEY`, sending events is simple.
 
 #### Record a single event
 
@@ -382,18 +382,21 @@ SSLError [#1294](https://github.com/kennethreitz/requests/issues/1294).
 
 ## FAQs
 
+A place for fequently asked questions! 
+
 ## Roadmap
 
-* Asynchronous insert
-* Scoped keys
+To be determined
 
 ## Questions & Support
 
-If you have any questions, bugs, or suggestions, please report them via Github Issues. We'd love to hear your feedback and ideas!
+If you have any questions, bugs, or suggestions, please report them via Github Issues. We'd love to hear your feedback and ideas! Need a little bit more help getting started? Send us an email at [team@keen.io](mailto:team@keen.io).
 
 ## Contributing
 
-This is an open source project and we love involvement from the community! Hit us up with pull requests and issues.
+This is an open source project and we love involvement from the community! If you are interested in getting involved, please see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+The aim is to build up this module to completely represent the API provided by Keen IO, which is quite extensive. The more contributions the better!
 
 ### Testing
 
