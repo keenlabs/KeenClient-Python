@@ -91,6 +91,34 @@ That's it! After running your code, check your Keen IO Project to see the event/
 
 #### Data enrichment
 
+Keen IO can enrich event data by parsing or joining it with other data sets. This is done through the concept of “add-ons”.
+
+To activate add-ons, you simply add some new properties within the “keen” namespace in your events. Detailed documentation for the configuration of our add-ons is available [here](https://keen.io/docs/api/?shell#data-enrichment).
+
+Here is an example of using the [Datetime parser](https://keen.io/docs/api/?shell#datetime-parser). Let's assume you want do deeper analysis on the "purchases" event by day of the week (Monday, Tuesday, Wednesday, etc.) and other interesting Datetime components. 
+
+```python
+    keen.add_event("purchases", {
+      "keen": {
+        "addons": [
+          {
+            "name": "keen:date_time_parser",
+            "input": {
+              "date_time" : "keen.timestamp"
+            },
+            "output": "timestamp_info"
+          }
+        ]
+      },
+      "item": {
+        "price": 500,
+        "name" : "laptop"
+      }
+    })
+```
+
+Other data enrichment add-ons are located in the [API reference docs](https://keen.io/docs/api/?shell#data-enrichment).
+
 ### Querying Events
 
 #### Analysis examples
