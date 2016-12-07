@@ -64,8 +64,8 @@ Once you've [configured your client](#configuring-the-client) by setting the `KE
 
 ```python
     keen.add_event("sign_ups", {
-        "username": "lloyd",
-        "referred_by": "harry"
+        "username": "hopper",
+        "referred_by": "lovelace"
     })
 ```
 
@@ -110,10 +110,7 @@ Here is an example of using the [Datetime parser](https://keen.io/docs/api/?shel
           }
         ]
       },
-      "item": {
-        "price": 500,
-        "name" : "laptop"
-      }
+      "price": 500
     })
 ```
 
@@ -136,7 +133,7 @@ For more code samples, take a look at Keen's [docs](https://keen.io/docs/api/?py
     keen.sum("purchases", target_property="price", group_by="item.id", timeframe="this_14_days") # => [{ "item.id": 123, "result": 240 }, { ... }]
 
     keen.count_unique("purchases", target_property="user.id", timeframe="this_14_days") # => 3
-    keen.select_unique("purchases", target_property="user.email", timeframe="this_14_days") # => ["bob@aol.com", "joe@yahoo.biz"]
+    keen.select_unique("purchases", target_property="user.email", timeframe="this_14_days") # => ["hopper@aol.com", "joe@yahoo.biz"]
 
     keen.extraction("purchases", timeframe="today") # => [{ "price" => 20, ... }, { ... }]
 
@@ -227,8 +224,8 @@ Keen stores all date and time information in UTC!
         "keen": {
             "timestamp": "2012-07-06T02:09:10.141Z"
         },
-        "username": "lloyd",
-        "referred_by": "harry"
+        "username": "hopper",
+        "referred_by": "lovelace"
     })
 ```
 
