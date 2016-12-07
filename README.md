@@ -170,11 +170,10 @@ For example, `keen.funnel([step1, step2], all_keys=True)` would return "result",
 
 #### Saved queries
 
-You can manage your saved queries from the Keen Python client.
+You can manage your saved queries from the Keen Python client, here's an example:
 
 ```python
     # Create a saved query
-    
     saved_query_attributes = {
     "refresh_rate": 0,
     "query": {
