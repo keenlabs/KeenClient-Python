@@ -390,7 +390,9 @@ To be determined
 
 ## Questions & Support
 
-If you have any questions, bugs, or suggestions, please report them via Github Issues. We'd love to hear your feedback and ideas! Need a little bit more help getting started? Send us an email at [team@keen.io](mailto:team@keen.io).
+If you have any questions, bugs, or suggestions, please report them via Github Issues. We'd love to hear your feedback and ideas! If you have a support question please come hang out in http://keen.chat or send an email to team@keen.io.
+
+ Send us an email at [team@keen.io](mailto:team@keen.io).
 
 ## Contributing
 
