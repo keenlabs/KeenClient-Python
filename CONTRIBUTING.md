@@ -1,6 +1,6 @@
 # Keen IO Official Python Client Library
 
-First off, thank you for considering contributing to this official Keen IO client. It's people like you that make Keen IO such a great tool.
+First off, thank you for considering contributing to the Keen IO official Python client. It's people like you that make Keen IO such a great tool.
 
 We put these guidelines together to try and make working with our SDK as straight forward as possible, and hopefully help you understand how we communicate about potential changes and improvements.
 
