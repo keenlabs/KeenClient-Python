@@ -170,12 +170,30 @@ For example, `keen.funnel([step1, step2], all_keys=True)` would return "result",
 
 #### Saved queries
 
-You can manage your saved queries from the Keen python client.
+You can manage your saved queries from the Keen Python client.
 
 ```python
     # Create a saved query
-    keen.saved_queries.create("name", saved_query_attributes)
-
+    
+    saved_query_attributes = {
+    "refresh_rate": 0,
+    "query": {
+      "analysis_type": "count",
+      "event_collection": "purchases",
+      "timeframe": "this_2_weeks",
+      "filters": [
+      {
+        "property_name": "price",
+        "operator": "gte",
+        "property_value": 1.00
+      }]},
+      "metadata": {
+        "display_name": "Purchases (past 2 weeks)",
+      }
+    }
+    
+    keen.saved_queries.create("saved-query-slug", saved_query_attributes)
+    
     # Get all saved queries
     keen.saved_queries.all()
 
@@ -186,7 +204,8 @@ You can manage your saved queries from the Keen python client.
     keen.saved_queries.results("saved-query-slug")
 
     # Update a saved query
-    saved_query_attributes = { refresh_rate: 14400 }
+    # You can auto cache a saved query with refresh_rate, see https://keen.io/docs/api/#auto-cache-a-saved-query for more info
+    saved_query_attributes = { refresh_rate: 14400 } 
     keen.saved_queries.update("saved-query-slug", saved_query_attributes)
 
     # Delete a saved query
