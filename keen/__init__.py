@@ -11,7 +11,6 @@ read_key = None
 master_key = None
 base_url = None
 
-
 def _initialize_client_from_environment():
     ''' Initialize a KeenCLient instance using environment variables. '''
     global _client, project_id, write_key, read_key, master_key, base_url

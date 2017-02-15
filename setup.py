@@ -26,9 +26,12 @@ tests_require = ['nose', 'mock', 'responses']
 if sys.version_info < (2, 7):
     tests_require.append('unittest2')
 
+version_file = open(os.path.join('.', 'VERSION'))
+version = version_file.read().strip()
+
 setup(
     name="keen",
-    version="0.3.28",
+    version=version,
     description="Python Client for Keen IO",
     long_description=codecs.open(os.path.join('README.rst'), 'r', encoding='UTF-8').read(),
     author="Keen IO",

@@ -7,8 +7,8 @@ import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.poolmanager import PoolManager
 
-# keen exceptions
-from keen import exceptions
+# keen
+from keen import exceptions, utilities
 
 # json
 from requests.compat import json
@@ -106,7 +106,7 @@ class KeenApi(object):
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
                                                        self.project_id,
                                                        event.event_collection)
-        headers = {"Content-Type": "application/json", "Authorization": self.write_key}
+        headers = utilities.headers(self.write_key)
         payload = event.to_json()
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         self._error_handling(response)
@@ -127,7 +127,7 @@ class KeenApi(object):
 
         url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version,
                                                    self.project_id)
-        headers = {"Content-Type": "application/json", "Authorization": self.write_key}
+        headers = utilities.headers(self.write_key)
         payload = json.dumps(events)
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         self._error_handling(response)
@@ -148,7 +148,7 @@ class KeenApi(object):
         url = "{0}/{1}/projects/{2}/queries/{3}".format(self.base_url, self.api_version,
                                                         self.project_id, analysis_type)
 
-        headers = {"Authorization": self.read_key}
+        headers = utilities.headers(self.read_key)
         payload = params
         response = self.fulfill(HTTPMethods.GET, url, params=payload, headers=headers, timeout=self.get_timeout)
         self._error_handling(response)
@@ -173,7 +173,7 @@ class KeenApi(object):
                                                        self.api_version,
                                                        self.project_id,
                                                        event_collection)
-        headers = {"Content-Type": "application/json", "Authorization": self.master_key}
+        headers = utilities.headers(self.master_key)
         response = self.fulfill(HTTPMethods.DELETE, url, params=params, headers=headers, timeout=self.post_timeout)
 
         self._error_handling(response)
@@ -188,7 +188,7 @@ class KeenApi(object):
         self._check_for_master_key()
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
                                                        self.project_id, event_collection)
-        headers = {"Authorization": self.master_key}
+        headers = utilities.headers(self.master_key)
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
         self._error_handling(response)
 
@@ -201,7 +201,7 @@ class KeenApi(object):
         """
         self._check_for_master_key()
         url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version, self.project_id)
-        headers = {"Authorization": self.master_key}
+        headers = utilities.headers(self.master_key)
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
         self._error_handling(response)
 
