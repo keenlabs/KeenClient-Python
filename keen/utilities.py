@@ -1,3 +1,5 @@
+import os
+
 VERSION = None
 
 def version():
@@ -5,6 +7,7 @@ def version():
   Retrives the current version of the SDK
   """
 
+  global VERSION
   if VERSION is None:
     version_file = open(os.path.join('.', 'VERSION'))
     VERSION = version_file.read().strip()
@@ -21,5 +24,5 @@ def headers(api_key):
   return {
       "Content-Type": "application/json",
       "Authorization": api_key,
-      "X-Keensdkversion-X": "python-#{0}".format(version)
+      "X-Keensdkversion-X": "python-{0}".format(version())
   }
