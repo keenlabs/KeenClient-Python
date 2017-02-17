@@ -24,5 +24,5 @@ def headers(api_key):
   return {
       "Content-Type": "application/json",
       "Authorization": api_key,
-      "X-Keensdkversion-X": "python-{0}".format(version())
+      "Keen-Sdk": "python-{0}".format(version())
   }
