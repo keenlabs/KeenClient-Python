@@ -9,8 +9,8 @@ def version():
 
     global VERSION
     if VERSION is None:
-    version_file = open(os.path.join('.', 'VERSION'))
-    VERSION = version_file.read().strip()
+        version_file = open(os.path.join('.', 'VERSION'))
+        VERSION = version_file.read().strip()
 
     return VERSION
 
