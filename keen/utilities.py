@@ -4,7 +4,7 @@ VERSION = None
 
 def version():
   """
-  Retrives the current version of the SDK
+  Retrieves the current version of the SDK
   """
 
   global VERSION
