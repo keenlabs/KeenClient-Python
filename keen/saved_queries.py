@@ -1,5 +1,5 @@
 from keen.api import KeenApi
-from keen import exceptions
+from keen import exceptions, utilities
 
 class SavedQueriesInterface:
 
@@ -18,7 +18,7 @@ class SavedQueriesInterface:
         url = "{0}/{1}/projects/{2}/queries/saved".format(
             keen_api.base_url, keen_api.api_version, self.project_id
         )
-        response = keen_api.fulfill("get", url, headers=self._headers())
+        response = keen_api.fulfill("get", url, headers=utilities.headers(self.master_key))
 
         return response.json()
 
@@ -33,7 +33,7 @@ class SavedQueriesInterface:
         url = "{0}/{1}/projects/{2}/queries/saved/{3}".format(
             keen_api.base_url, keen_api.api_version, self.project_id, query_name
         )
-        response = keen_api.fulfill("get", url, headers=self._headers())
+        response = keen_api.fulfill("get", url, headers=utilities.headers(self.master_key))
         keen_api._error_handling(response)
 
         return response.json()
@@ -50,7 +50,7 @@ class SavedQueriesInterface:
             keen_api.base_url, keen_api.api_version, self.project_id, query_name
         )
         key = self.master_key if self.master_key else self.read_key
-        response = keen_api.fulfill("get", url, headers={"Authorization": key })
+        response = keen_api.fulfill("get", url, headers=utilities.headers(key))
         keen_api._error_handling(response)
 
         return response.json()
@@ -65,7 +65,7 @@ class SavedQueriesInterface:
             keen_api.base_url, keen_api.api_version, self.project_id, query_name
         )
         response = keen_api.fulfill(
-            "put", url, headers=self._headers(), data=saved_query
+            "put", url, headers=utilities.headers(self.master_key), data=saved_query
         )
         keen_api._error_handling(response)
 
@@ -89,13 +89,10 @@ class SavedQueriesInterface:
         url = "{0}/{1}/projects/{2}/queries/saved/{3}".format(
             keen_api.base_url, keen_api.api_version, self.project_id, query_name
         )
-        response = keen_api.fulfill("delete", url, headers=self._headers())
+        response = keen_api.fulfill("delete", url, headers=utilities.headers(self.master_key))
         keen_api._error_handling(response)
 
         return True
-
-    def _headers(self):
-        return {"Authorization": self.master_key}
 
     def _check_for_master_key(self):
         if not self.master_key:
