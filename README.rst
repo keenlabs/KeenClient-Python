@@ -372,10 +372,15 @@ To run tests:
 Changelog
 ---------
 
+0.3.30
+``````
+
++ Fix broken 0.3.29 release.
+
 0.3.29
 ``````
 
-+ Add Keen-Sdk header to all requests, containing the SDK version
++ Add Keen-Sdk header to all requests, containing the SDK version.
 
 0.3.28
 ``````
