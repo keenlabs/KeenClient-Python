@@ -372,10 +372,10 @@ To run tests:
 Changelog
 ---------
 
-0.3.30
+0.3.31
 ``````
 
-+ Fix broken 0.3.29 release.
++ Fix broken releases.
 
 0.3.29
 ``````
