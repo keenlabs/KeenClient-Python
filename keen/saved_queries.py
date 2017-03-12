@@ -1,3 +1,6 @@
+
+import json
+
 from keen.api import KeenApi
 from keen import exceptions, utilities
 
@@ -40,7 +43,7 @@ class SavedQueriesInterface:
 
     def results(self, query_name):
         """
-        Gets a single saved query with a 'result' object for a project from thei
+        Gets a single saved query with a 'result' object for a project from the
         Keen IO API given a query name.
         Read or Master key must be set.
         """
@@ -57,15 +60,18 @@ class SavedQueriesInterface:
 
     def create(self, query_name, saved_query):
         """
-        Creates the saved query via a PUT request to Keen IO Saved Query endpoint. Master key must be set.
+        Creates the saved query via a PUT request to Keen IO Saved Query endpoint.
+        Master key must be set.
         """
         keen_api = KeenApi(self.project_id, master_key=self.master_key)
         self._check_for_master_key()
         url = "{0}/{1}/projects/{2}/queries/saved/{3}".format(
             keen_api.base_url, keen_api.api_version, self.project_id, query_name
         )
+        
+        payload = json.dumps(saved_query)
         response = keen_api.fulfill(
-            "put", url, headers=utilities.headers(self.master_key), data=saved_query
+            "put", url, headers=utilities.headers(self.master_key), data=payload
         )
         keen_api._error_handling(response)
 
