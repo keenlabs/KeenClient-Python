@@ -24,6 +24,7 @@ class HTTPMethods(object):
     GET = 'get'
     POST = 'post'
     DELETE = 'delete'
+    PUT = 'put'
 
 
 class KeenAdapter(HTTPAdapter):
