@@ -68,7 +68,7 @@ class SavedQueriesInterface:
         url = "{0}/{1}/projects/{2}/queries/saved/{3}".format(
             keen_api.base_url, keen_api.api_version, self.project_id, query_name
         )
-        
+
         payload = json.dumps(saved_query)
         response = keen_api.fulfill(
             "put", url, headers=utilities.headers(self.master_key), data=payload
