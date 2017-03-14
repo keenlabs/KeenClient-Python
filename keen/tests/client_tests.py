@@ -494,6 +494,8 @@ class QueryTests(BaseTestCase):
 
     def test_passing_invalid_custom_api_client(self, get):
         class CustomApiClient(object):
+            api_version = "3.0"
+
             def __init__(self, project_id, write_key=None, read_key=None,
                          base_url=None, api_version=None, **kwargs):
                 super(CustomApiClient, self).__init__()
@@ -506,7 +508,11 @@ class QueryTests(BaseTestCase):
                     self.api_version = api_version
 
         api_key = "2e79c6ec1d0145be8891bf668599c79a"
-        client = KeenClient("5004ded1163d66114f000000", write_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]}), read_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]}), api_class=CustomApiClient)
+        client = KeenClient("5004ded1163d66114f000000",
+            write_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]}),
+            read_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]}),
+            api_class=CustomApiClient,
+            base_url="keen.base.url")
 
         # Should raise an error, we never added this method on our class
         # But it shows it is actually using our class
