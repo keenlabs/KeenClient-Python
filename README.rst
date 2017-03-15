@@ -108,11 +108,11 @@ For more code samples, take a look at Keen's `docs <https://keen.io/docs/api/?py
         analyses={
             "total":{
                 "analysis_type": "sum",
-                "target_property":"price"
+                "target_property": "price"
             },
             "average":{
                 "analysis_type": "average",
-                "target_property":"price",
+                "target_property": "price"
             }
         },
         timeframe='this_14_days'
@@ -365,7 +365,6 @@ returned by the server in the specified time. For example:
         project_id="xxxx",
         write_key="yyyy",
         post_timeout=100
-
     )
 
 
