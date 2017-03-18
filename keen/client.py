@@ -228,7 +228,7 @@ class KeenClient(object):
         :param filters: array of dict, contains the filters you'd like to apply to the data
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
-        like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        like to group your results by.  example: "customer.id" or ["browser","operating_system"]
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
 
@@ -254,7 +254,7 @@ class KeenClient(object):
         :param filters: array of dict, contains the filters you'd like to apply to the data
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
-        like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        like to group your results by.  example: "customer.id" or ["browser","operating_system"]
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
 
@@ -281,7 +281,7 @@ class KeenClient(object):
         :param filters: array of dict, contains the filters you'd like to apply to the data
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
-        like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        like to group your results by.  example: "customer.id" or ["browser","operating_system"]
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
 
@@ -308,7 +308,7 @@ class KeenClient(object):
         :param filters: array of dict, contains the filters you'd like to apply to the data
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
-        like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        like to group your results by.  example: "customer.id" or ["browser","operating_system"]
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
 
@@ -335,7 +335,7 @@ class KeenClient(object):
         :param filters: array of dict, contains the filters you'd like to apply to the data
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
-        like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        like to group your results by.  example: "customer.id" or ["browser","operating_system"]
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
 
@@ -362,7 +362,7 @@ class KeenClient(object):
         :param filters: array of dict, contains the filters you'd like to apply to the data
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
-        like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        like to group your results by.  example: "customer.id" or ["browser","operating_system"]
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
 
@@ -391,7 +391,7 @@ class KeenClient(object):
         :param filters: array of dict, contains the filters you'd like to apply to the data
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
-        like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        like to group your results by.  example: "customer.id" or ["browser","operating_system"]
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
 
@@ -426,7 +426,7 @@ class KeenClient(object):
         :param filters: array of dict, contains the filters you'd like to apply to the data
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
-        like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        like to group your results by.  example: "customer.id" or ["browser","operating_system"]
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
 
@@ -453,7 +453,7 @@ class KeenClient(object):
         :param filters: array of dict, contains the filters you'd like to apply to the data
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
-        like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        like to group your results by.  example: "customer.id" or ["browser","operating_system"]
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
 
@@ -531,7 +531,7 @@ class KeenClient(object):
         :param filters: array of dict, contains the filters you'd like to apply to the data
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
-        like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+        like to group your results by.  example: "customer.id" or ["browser","operating_system"]
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
 
