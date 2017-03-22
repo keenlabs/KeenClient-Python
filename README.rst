@@ -30,6 +30,9 @@ keys (if you need an account, `sign up here <https://keen.io/>`_ - it's free).
 Setting a write key is required for publishing events. Setting a read key is required for
 running queries. The recommended way to set this configuration information is via the environment.
 The keys you can set are `KEEN_PROJECT_ID`, `KEEN_WRITE_KEY`, `KEEN_READ_KEY`, and `KEEN_MASTER_KEY`.
+As per the `Principle of Least Privilege <https://en.wikipedia.org/wiki/Principle_of_least_privilege>`_, it's recommended that you not use the master_key if not 
+necessary. This SDK will expect and use the precise key for a given operation, and throw an
+exception in cases of misuse.
 
 If you don't want to use environment variables for some reason, you can directly set values as follows:
 
@@ -38,7 +41,7 @@ If you don't want to use environment variables for some reason, you can directly
     keen.project_id = "xxxx"
     keen.write_key = "yyyy"
     keen.read_key = "zzzz"
-    keen.master_key = "abcd"
+    keen.master_key = "abcd" # not required for typical usage
 
 
 For information on how to configure unique client instances, take a look at the
@@ -100,25 +103,27 @@ For more code samples, take a look at Keen's `docs <https://keen.io/docs/api/?py
 
     keen.extraction("purchases", timeframe="today") # => [{ "price" => 20, ... }, { ... }]
 
-    keen.multi_analysis("purchases", analyses={
-        "total":{
-            "analysis_type": "sum",
-            "target_property":"price",
-            "timeframe": "this_14_days"
+    keen.multi_analysis(
+        "purchases",
+        analyses={
+            "total":{
+                "analysis_type": "sum",
+                "target_property": "price"
+            },
+            "average":{
+                "analysis_type": "average",
+                "target_property": "price"
+            }
         },
-        "average":{
-            "analysis_type": "average",
-            "target_property":"price",
-            "timeframe": "this_14_days"
-        }
+        timeframe='this_14_days'
     ) # => {"total":10329.03, "average":933.93}
 
     step1 = {
-        "event_collection": "signup",
+        "event_collection": "sign_ups",
         "actor_property": "user.email"
     }
     step2 = {
-        "event_collection": "purchase",
+        "event_collection": "purchases",
         "actor_property": "user.email"
     }
     keen.funnel([step1, step2], timeframe="today") # => [2039, 201]
@@ -126,7 +131,7 @@ For more code samples, take a look at Keen's `docs <https://keen.io/docs/api/?py
 
 To return the full API response from a funnel analysis (as opposed to the singular "result" key), set `all_keys=True`.
 
-For example, `keen.funnel([step1, step2], all_keys=True)` would return "result", "actors" and "steps" keys.
+For example, `keen.funnel([step1, step2], timeframe="today", all_keys=True)` would return "result", "actors" and "steps" keys.
 
 Delete Events
 `````````````
@@ -217,14 +222,14 @@ unique client instances (one per project). You can do this by assigning an insta
         project_id="xxxx",  # your project ID for collecting cycling data
         write_key="yyyy",
         read_key="zzzz",
-        master_key="abcd"
+        master_key="abcd" # not required for typical usage
     )
 
     client_hike = KeenClient(
         project_id="xxxx",  # your project ID for collecting hiking data (different from the one above)
         write_key="yyyy",
         read_key="zzzz",
-        master_key="abcd"
+        master_key="abcd" # not required for typical usage
     )
 
 
@@ -249,28 +254,56 @@ Similarly, you can query events like this:
 Saved Queries
 '''''''''''''
 
-You can manage your saved queries from the Keen python client.
+You can manage your `saved queries <https://keen.io/docs/api/?shell#saved-queries>`_ from the Keen python client.
 
 .. code-block:: python
 
+    # Create your KeenClient
+    from keen.client import KeenClient
+
+    client = KeenClient(
+        project_id="xxxx",  # your project ID
+        read_key="zzzz",
+        master_key="abcd" # Most Saved Query functionality requires master_key
+    )
+
     # Create a saved query
-    keen.saved_queries.create("name", saved_query_attributes)
+    saved_query_attributes = {
+        # NOTE : For now, refresh_rate must explicitly be set to 0 unless you
+        # intend to create a Cached Query.
+        "refresh_rate": 0,
+        "query": {
+            "analysis_type": "count",
+            "event_collection": "purchases",
+            "timeframe": "this_2_weeks",
+            "filters": [{
+                "property_name": "price",
+                "operator": "gte",
+                "property_value": 1.00
+            }]
+        }
+    }
+    client.saved_queries.create("name", saved_query_attributes)
 
     # Get all saved queries
-    keen.saved_queries.all()
+    client.saved_queries.all()
 
     # Get one saved query
-    keen.saved_queries.get("saved-query-slug")
+    client.saved_queries.get("saved-query-name")
 
     # Get saved query with results
-    keen.saved_queries.results("saved-query-slug")
+    client.saved_queries.results("saved-query-name")
 
-    # Update a saved query
-    saved_query_attributes = { refresh_rate: 14400 }
-    keen.saved_queries.update("saved-query-slug", saved_query_attributes)
+    # Update a saved query to now be a cached query with the minimum refresh rate of 4 hrs
+    saved_query_attributes = { "refresh_rate": 14400 }
+    client.saved_queries.update("saved-query-name", saved_query_attributes)
 
-    # Delete a saved query
-    keen.saved_queries.delete("saved-query-slug")
+    # Update a saved query to a new resource name
+    saved_query_attributes = { "query_name": "cached-query-name" }
+    client.saved_queries.update("saved-query-name", saved_query_attributes)
+
+    # Delete a saved query (use the new resource name since we just changed it)
+    client.saved_queries.delete("cached-query-name")
 
 
 Overwriting event timestamps
@@ -310,7 +343,6 @@ returned by the server in the specified time. For example:
         write_key="yyyy",
         read_key="zzzz",
         get_timeout=100
-
     )
 
 
@@ -332,10 +364,7 @@ returned by the server in the specified time. For example:
     client = KeenClient(
         project_id="xxxx",
         write_key="yyyy",
-        read_key="zzzz",
-        master_key="abcd",
         post_timeout=100
-
     )
 
 
@@ -366,7 +395,7 @@ To run tests:
 
 ::
 
-    python setup.py tests
+    python setup.py test
 
 
 Changelog
