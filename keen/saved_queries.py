@@ -68,7 +68,6 @@ class SavedQueriesInterface:
             payload = json.dumps(saved_query)
 
         response = self._get_json(HTTPMethods.PUT, url, self._get_master_key(), data=payload)
-        keen_api._error_handling(response)
 
         return response
 
