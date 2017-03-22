@@ -9,6 +9,7 @@ from requests.packages.urllib3.poolmanager import PoolManager
 
 # keen
 from keen import exceptions, utilities
+from keen.utilities import KeenKeys, requires_key
 
 # json
 from requests.compat import json
@@ -24,6 +25,7 @@ class HTTPMethods(object):
     GET = 'get'
     POST = 'post'
     DELETE = 'delete'
+    PUT = 'put'
 
 
 class KeenAdapter(HTTPAdapter):
@@ -48,6 +50,7 @@ class KeenApi(object):
 
     # the default base URL of the Keen API
     base_url = "https://api.keen.io"
+
     # the default version of the Keen API
     api_version = "3.0"
 
@@ -90,18 +93,13 @@ class KeenApi(object):
 
         return getattr(self.session, method)(*args, **kwargs)
 
+    @requires_key(KeenKeys.WRITE)
     def post_event(self, event):
         """
         Posts a single event to the Keen IO API. The write key must be set first.
 
         :param event: an Event to upload
         """
-        if not self.write_key:
-            raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a write key to send events. "
-                "Please set a 'write_key' when initializing the "
-                "KeenApi object."
-            )
 
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
                                                        self.project_id,
@@ -111,6 +109,7 @@ class KeenApi(object):
         response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.post_timeout)
         self._error_handling(response)
 
+    @requires_key(KeenKeys.WRITE)
     def post_events(self, events):
 
         """
@@ -118,12 +117,6 @@ class KeenApi(object):
 
         :param events: an Event to upload
         """
-        if not self.write_key:
-            raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a write key to send events. "
-                "Please set a 'write_key' when initializing the "
-                "KeenApi object."
-            )
 
         url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version,
                                                    self.project_id)
@@ -133,17 +126,12 @@ class KeenApi(object):
         self._error_handling(response)
         return self._get_response_json(response)
 
+    @requires_key(KeenKeys.READ)
     def query(self, analysis_type, params, all_keys=False):
         """
         Performs a query using the Keen IO analysis API.  A read key must be set first.
 
         """
-        if not self.read_key:
-            raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a read key to perform queries. "
-                "Please set a 'read_key' when initializing the "
-                "KeenApi object."
-            )
 
         url = "{0}/{1}/projects/{2}/queries/{3}".format(self.base_url, self.api_version,
                                                         self.project_id, analysis_type)
@@ -160,6 +148,7 @@ class KeenApi(object):
 
         return response
 
+    @requires_key(KeenKeys.MASTER)
     def delete_events(self, event_collection, params):
         """
         Deletes events via the Keen IO API. A master key must be set first.
@@ -167,7 +156,6 @@ class KeenApi(object):
         :param event_collection: string, the event collection from which event are being deleted
 
         """
-        self._check_for_master_key()
 
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url,
                                                        self.api_version,
@@ -179,29 +167,31 @@ class KeenApi(object):
         self._error_handling(response)
         return True
 
+    @requires_key(KeenKeys.READ)
     def get_collection(self, event_collection):
         """
         Extracts info about a collection using the Keen IO API. A master key must be set first.
 
         :param event_collection: the name of the collection to retrieve info for
         """
-        self._check_for_master_key()
+
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
                                                        self.project_id, event_collection)
-        headers = utilities.headers(self.master_key)
+        headers = utilities.headers(self.read_key)
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
         self._error_handling(response)
 
         return response.json()
 
+    @requires_key(KeenKeys.READ)
     def get_all_collections(self):
         """
         Extracts schema for all collections using the Keen IO API. A master key must be set first.
 
         """
-        self._check_for_master_key()
+
         url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version, self.project_id)
-        headers = utilities.headers(self.master_key)
+        headers = utilities.headers(self.read_key)
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
         self._error_handling(response)
 
@@ -213,6 +203,7 @@ class KeenApi(object):
 
         :params res: the response from a request
         """
+
         # making the error handling generic so if an status_code starting with 2 doesn't exist, we raise the error
         if res.status_code // 100 != 2:
             error = self._get_response_json(res)
@@ -225,6 +216,7 @@ class KeenApi(object):
         :param res: the response from a request
         :return: the JSON body OR throws an exception
         """
+
         try:
             error = res.json()
         except ValueError:
@@ -242,10 +234,11 @@ class KeenApi(object):
         s.mount('https://', KeenAdapter())
         return s
 
-    def _check_for_master_key(self):
-        if not self.master_key:
-            raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a master key to perform this operation. "
-                "Please set a 'master_key' when initializing the "
-                "KeenApi object."
-            )
+    def _get_read_key(self):
+        return self.read_key
+
+    def _get_write_key(self):
+        return self.write_key
+
+    def _get_master_key(self):
+        return self.master_key

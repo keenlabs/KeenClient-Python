@@ -1,74 +1,63 @@
 
 import json
 
-from keen.api import KeenApi
+from keen.api import KeenApi, HTTPMethods
 from keen import exceptions, utilities
+from keen.utilities import KeenKeys, requires_key
+
 
 class SavedQueriesInterface:
 
-    def __init__(self, project_id, master_key, read_key):
-        self.project_id = project_id
-        self.master_key = master_key
-        self.read_key = read_key
+    def __init__(self, api):
+        self.api = api
+        self.saved_query_url = "{0}/{1}/projects/{2}/queries/saved".format(
+            self.api.base_url, self.api.api_version, self.api.project_id
+        )
 
+    @requires_key(KeenKeys.MASTER)
     def all(self):
         """
         Gets all saved queries for a project from the Keen IO API.
         Master key must be set.
         """
-        keen_api = KeenApi(self.project_id, master_key=self.master_key)
-        self._check_for_master_key()
-        url = "{0}/{1}/projects/{2}/queries/saved".format(
-            keen_api.base_url, keen_api.api_version, self.project_id
-        )
-        response = keen_api.fulfill("get", url, headers=utilities.headers(self.master_key))
 
-        return response.json()
+        response = self._get_json(HTTPMethods.GET, self.saved_query_url, self._get_master_key())
 
+        return response
+
+    @requires_key(KeenKeys.MASTER)
     def get(self, query_name):
         """
         Gets a single saved query for a project from the Keen IO API given a
         query name.
         Master key must be set.
         """
-        keen_api = KeenApi(self.project_id, master_key=self.master_key)
-        self._check_for_master_key()
-        url = "{0}/{1}/projects/{2}/queries/saved/{3}".format(
-            keen_api.base_url, keen_api.api_version, self.project_id, query_name
-        )
-        response = keen_api.fulfill("get", url, headers=utilities.headers(self.master_key))
-        keen_api._error_handling(response)
 
-        return response.json()
+        url = "{0}/{1}".format(self.saved_query_url, query_name)
+        response = self._get_json(HTTPMethods.GET, url, self._get_master_key())
 
+        return response
+
+    @requires_key(KeenKeys.READ)
     def results(self, query_name):
         """
         Gets a single saved query with a 'result' object for a project from the
         Keen IO API given a query name.
         Read or Master key must be set.
         """
-        keen_api = KeenApi(self.project_id, master_key=self.master_key)
-        self._check_for_master_or_read_key()
-        url = "{0}/{1}/projects/{2}/queries/saved/{3}/result".format(
-            keen_api.base_url, keen_api.api_version, self.project_id, query_name
-        )
-        key = self.master_key if self.master_key else self.read_key
-        response = keen_api.fulfill("get", url, headers=utilities.headers(key))
-        keen_api._error_handling(response)
 
-        return response.json()
+        url = "{0}/{1}/result".format(self.saved_query_url, query_name)
+        response = self._get_json(HTTPMethods.GET, url, self._get_read_key())
 
+        return response
+
+    @requires_key(KeenKeys.MASTER)
     def create(self, query_name, saved_query):
         """
         Creates the saved query via a PUT request to Keen IO Saved Query endpoint.
         Master key must be set.
         """
-        keen_api = KeenApi(self.project_id, master_key=self.master_key)
-        self._check_for_master_key()
-        url = "{0}/{1}/projects/{2}/queries/saved/{3}".format(
-            keen_api.base_url, keen_api.api_version, self.project_id, query_name
-        )
-
+        url = "{0}/{1}".format(self.saved_query_url, query_name)
         payload = saved_query
 
         # To support clients that may have already called dumps() to work around how this used to
@@ -78,48 +67,45 @@ class SavedQueriesInterface:
         if not isinstance(payload, str):
             payload = json.dumps(saved_query)
 
-        response = keen_api.fulfill(
-            "put", url, headers=utilities.headers(self.master_key), data=payload
-        )
-        keen_api._error_handling(response)
+        response = self._get_json(HTTPMethods.PUT, url, self._get_master_key(), data=payload)
 
-        return response.json()
+        return response
 
+    @requires_key(KeenKeys.MASTER)
     def update(self, query_name, saved_query):
         """
         Updates the saved query via a PUT request to Keen IO Saved Query
         endpoint.
         Master key must be set.
         """
+
         return self.create(query_name, saved_query)
 
+    @requires_key(KeenKeys.MASTER)
     def delete(self, query_name):
         """
         Deletes a saved query from a project with a query name.
         Master key must be set.
         """
-        keen_api = KeenApi(self.project_id, master_key=self.master_key)
-        self._check_for_master_key()
-        url = "{0}/{1}/projects/{2}/queries/saved/{3}".format(
-            keen_api.base_url, keen_api.api_version, self.project_id, query_name
-        )
-        response = keen_api.fulfill("delete", url, headers=utilities.headers(self.master_key))
-        keen_api._error_handling(response)
+
+        url = "{0}/{1}".format(self.saved_query_url, query_name)
+        response = self._get_json(HTTPMethods.DELETE, url, self._get_master_key())
 
         return True
 
-    def _check_for_master_key(self):
-        if not self.master_key:
-            raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a master key to perform this operation on saved queries. "
-                "Please set a 'master_key' when initializing the "
-                "KeenApi object."
-            )
+    def _get_json(self, http_method, url, key, *args, **kwargs):
+        response = self.api.fulfill(http_method, url, headers=utilities.headers(key), *args, **kwargs)
+        self.api._error_handling(response)
 
-    def _check_for_master_or_read_key(self):
-        if not (self.read_key or self.master_key):
-            raise exceptions.InvalidEnvironmentError(
-                "The Keen IO API requires a read key or master key to perform this operation on saved queries. "
-                "Please set a 'read_key' or 'master_key' when initializing the "
-                "KeenApi object."
-            )
+        try:
+            response = response.json()
+        except ValueError:
+            response = "No JSON available."
+
+        return response
+
+    def _get_read_key(self):
+        return self.api.read_key
+
+    def _get_master_key(self):
+        return self.api.master_key

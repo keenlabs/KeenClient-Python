@@ -12,6 +12,7 @@ class SavedQueryTests(BaseTestCase):
         exp_master_key = "abcd3456"
         self.client = KeenClient(
             project_id=self.exp_project_id,
+            read_key="efgh7890",
             master_key=exp_master_key
         )
 

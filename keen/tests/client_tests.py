@@ -494,6 +494,8 @@ class QueryTests(BaseTestCase):
 
     def test_passing_invalid_custom_api_client(self, get):
         class CustomApiClient(object):
+            api_version = "3.0"
+
             def __init__(self, project_id, write_key=None, read_key=None,
                          base_url=None, api_version=None, **kwargs):
                 super(CustomApiClient, self).__init__()
@@ -506,7 +508,11 @@ class QueryTests(BaseTestCase):
                     self.api_version = api_version
 
         api_key = "2e79c6ec1d0145be8891bf668599c79a"
-        client = KeenClient("5004ded1163d66114f000000", write_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]}), read_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]}), api_class=CustomApiClient)
+        client = KeenClient("5004ded1163d66114f000000",
+            write_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["write"]}),
+            read_key=scoped_keys.encrypt(api_key, {"allowed_operations": ["read"]}),
+            api_class=CustomApiClient,
+            base_url="keen.base.url")
 
         # Should raise an error, we never added this method on our class
         # But it shows it is actually using our class
@@ -558,13 +564,13 @@ class GetTests(BaseTestCase):
         super(GetTests, self).setUp()
         keen._client = None
         keen.project_id = "1k4jb23kjbkjkjsd"
-        keen.master_key = "sdofnasofagaergub"
+        keen.read_key = "sdofnasofagaergub"
         keen.base_url = None
 
     def tearDown(self):
         keen._client = None
         keen.project_id = None
-        keen.master_key = None
+        keen.read_key = None
         super(GetTests, self).tearDown()
 
     def test_get_collection(self, get):
@@ -574,7 +580,7 @@ class GetTests(BaseTestCase):
         # Check that the URL is generated correctly
         self.assertEqual("https://api.keen.io/3.0/projects/1k4jb23kjbkjkjsd/events/foo", get.call_args[0][0])
         # Check that the master_key is in the Authorization header
-        self.assertTrue(keen.master_key in get.call_args[1]["headers"]["Authorization"])
+        self.assertTrue(keen.read_key in get.call_args[1]["headers"]["Authorization"])
 
     def test_get_all_collections(self, get):
         get.return_value = self.LIST_RESPONSE
@@ -583,7 +589,7 @@ class GetTests(BaseTestCase):
         # Check that the URL is generated correctly
         self.assertEqual("https://api.keen.io/3.0/projects/1k4jb23kjbkjkjsd/events", get.call_args[0][0])
         # Check that the master_key in the Authorization header
-        self.assertTrue(keen.master_key in get.call_args[1]["headers"]["Authorization"])
+        self.assertTrue(keen.read_key in get.call_args[1]["headers"]["Authorization"])
 
 # only need to test unicode separately in python2
 if sys.version_info[0] < 3:
