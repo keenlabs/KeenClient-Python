@@ -69,7 +69,15 @@ class SavedQueriesInterface:
             keen_api.base_url, keen_api.api_version, self.project_id, query_name
         )
 
-        payload = json.dumps(saved_query)
+        payload = saved_query
+
+        # To support clients that may have already called dumps() to work around how this used to
+        # work, make sure it's not a str. Hopefully it's some sort of mapping. When we actually
+        # try to send the request, client code will get an InvalidJSONError if payload isn't
+        # a json-formatted string.
+        if not isinstance(payload, str):
+            payload = json.dumps(saved_query)
+
         response = keen_api.fulfill(
             "put", url, headers=utilities.headers(self.master_key), data=payload
         )
