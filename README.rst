@@ -30,7 +30,7 @@ keys (if you need an account, `sign up here <https://keen.io/>`_ - it's free).
 Setting a write key is required for publishing events. Setting a read key is required for
 running queries. The recommended way to set this configuration information is via the environment.
 The keys you can set are `KEEN_PROJECT_ID`, `KEEN_WRITE_KEY`, `KEEN_READ_KEY`, and `KEEN_MASTER_KEY`.
-As per the Principle of Least Privilege, it's recommended that you not use the master_key if not 
+As per the `Principle of Least Privilege <https://en.wikipedia.org/wiki/Principle_of_least_privilege>`_, it's recommended that you not use the master_key if not 
 necessary. This SDK will expect and use the precise key for a given operation, and throw an
 exception in cases of misuse.
 
@@ -289,21 +289,21 @@ You can manage your `saved queries <https://keen.io/docs/api/?shell#saved-querie
     client.saved_queries.all()
 
     # Get one saved query
-    client.saved_queries.get("saved-query-slug")
+    client.saved_queries.get("saved-query-name")
 
     # Get saved query with results
-    client.saved_queries.results("saved-query-slug")
+    client.saved_queries.results("saved-query-name")
 
     # Update a saved query to now be a cached query with the minimum refresh rate of 4 hrs
     saved_query_attributes = { "refresh_rate": 14400 }
-    client.saved_queries.update("saved-query-slug", saved_query_attributes)
+    client.saved_queries.update("saved-query-name", saved_query_attributes)
 
     # Update a saved query to a new resource name
-    saved_query_attributes = { "query_name": "cached-query-slug" }
-    client.saved_queries.update("saved-query-slug", saved_query_attributes)
+    saved_query_attributes = { "query_name": "cached-query-name" }
+    client.saved_queries.update("saved-query-name", saved_query_attributes)
 
     # Delete a saved query (use the new resource name since we just changed it)
-    client.saved_queries.delete("cached-query-slug")
+    client.saved_queries.delete("cached-query-name")
 
 
 Overwriting event timestamps
