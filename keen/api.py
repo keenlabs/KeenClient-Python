@@ -177,7 +177,7 @@ class KeenApi(object):
 
         url = "{0}/{1}/projects/{2}/events/{3}".format(self.base_url, self.api_version,
                                                        self.project_id, event_collection)
-        headers = utilities.headers(self.master_key)
+        headers = utilities.headers(self.read_key)
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
         self._error_handling(response)
 
@@ -191,7 +191,7 @@ class KeenApi(object):
         """
 
         url = "{0}/{1}/projects/{2}/events".format(self.base_url, self.api_version, self.project_id)
-        headers = utilities.headers(self.master_key)
+        headers = utilities.headers(self.read_key)
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
         self._error_handling(response)
 

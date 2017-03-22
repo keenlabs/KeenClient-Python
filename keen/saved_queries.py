@@ -57,9 +57,16 @@ class SavedQueriesInterface:
         Creates the saved query via a PUT request to Keen IO Saved Query endpoint.
         Master key must be set.
         """
-
         url = "{0}/{1}".format(self.saved_query_url, query_name)
-        payload = json.dumps(saved_query)
+        payload = saved_query
+
+        # To support clients that may have already called dumps() to work around how this used to
+        # work, make sure it's not a str. Hopefully it's some sort of mapping. When we actually
+        # try to send the request, client code will get an InvalidJSONError if payload isn't
+        # a json-formatted string.
+        if not isinstance(payload, str):
+            payload = json.dumps(saved_query)
+
         response = self._get_json(HTTPMethods.PUT, url, self._get_master_key(), data=payload)
 
         return response
