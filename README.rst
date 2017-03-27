@@ -283,7 +283,7 @@ You can manage your `saved queries <https://keen.io/docs/api/?shell#saved-querie
             }]
         }
     }
-    client.saved_queries.create("name", saved_query_attributes)
+    client.saved_queries.create("saved-query-name", saved_query_attributes)
 
     # Get all saved queries
     client.saved_queries.all()
@@ -294,12 +294,17 @@ You can manage your `saved queries <https://keen.io/docs/api/?shell#saved-querie
     # Get saved query with results
     client.saved_queries.results("saved-query-name")
 
+    # NOTE : Updating Saved Queries requires sending the entire query definition. Any attribute not
+    # sent is interpreted as being cleared/removed. This means that properties set via another
+    # client, including the Projects Explorer Web UI, will be lost this way.
+
     # Update a saved query to now be a cached query with the minimum refresh rate of 4 hrs
-    saved_query_attributes = { "refresh_rate": 14400 }
+    saved_query_attributes["refresh_rate"] = 14400
     client.saved_queries.update("saved-query-name", saved_query_attributes)
 
     # Update a saved query to a new resource name
-    saved_query_attributes = { "query_name": "cached-query-name" }
+    # We send "refresh_rate" again, along with the entire definition, or else it would be reset.
+    saved_query_attributes["query_name"] = "cached-query-name"
     client.saved_queries.update("saved-query-name", saved_query_attributes)
 
     # Delete a saved query (use the new resource name since we just changed it)
