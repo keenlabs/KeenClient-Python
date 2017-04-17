@@ -15,9 +15,9 @@ DEFAULT_ENCODING = 'UTF-8'
 
 
 def ensure_bytes(s, encoding=None):
-	if isinstance(s, six.text_type):
-		return s.encode(encoding or DEFAULT_ENCODING)
-	return s
+    if isinstance(s, six.text_type):
+        return s.encode(encoding or DEFAULT_ENCODING)
+    return s
 
 
 def pad_aes256(s):

@@ -1,5 +1,11 @@
 
+try:
+    from collections.abc import Mapping as Mapping  # for Python 3
+except ImportError as ie:
+    from collections import Mapping as Mapping  # for Python 2
+
 import json
+import six
 
 from keen.api import KeenApi, HTTPMethods
 from keen import exceptions, utilities
@@ -72,18 +78,19 @@ class SavedQueriesInterface:
         return response
 
     @requires_key(KeenKeys.MASTER)
-    def update(self, query_name, saved_query_full_definition):
+    def update_full(self, query_name, saved_query_full_definition):
         """
         Updates the saved query via a PUT request to Keen IO Saved Query
         endpoint. The entire query definition must be provided--anything
         excluded will be considered an explicit removal of that property.
+
         Master key must be set.
         """
 
         return self.create(query_name, saved_query_full_definition)
 
     @requires_key(KeenKeys.MASTER)
-    def update_partial(self, query_name, saved_query_attributes):
+    def update(self, query_name, saved_query_attributes):
         """
         Given a dict of attributes to be updated, update only those attributes
         in the Saved Query at the resource given by 'query_name'. This will
@@ -111,7 +118,7 @@ class SavedQueriesInterface:
 
         # If metadata was set, preserve it. The Explorer UI currently stores information here.
         old_metadata = (old_saved_query[metadata_attr_name]
-                       if hasattr(old_saved_query, metadata_attr_name)
+                       if metadata_attr_name in old_saved_query
                        else None)
 
         if old_metadata:
@@ -123,12 +130,12 @@ class SavedQueriesInterface:
 
         # Using dict.items() in both Python 2.x and Python 3.x. iteritems() might be better in 2.7.
         # Shallow copy since we want the entire object heirarchy to start with.
-        for (key, value) in old_query.items():
+        for (key, value) in six.iteritems(old_query):
             if value:
                 new_saved_query[query_attr_name][key] = value
 
         # Now, recursively overwrite any attributes passed in.
-        _deep_update(new_saved_query, saved_query_attributes)
+        SavedQueriesInterface._deep_update(new_saved_query, saved_query_attributes)
 
         return self.create(query_name, new_saved_query)
 
@@ -144,13 +151,13 @@ class SavedQueriesInterface:
 
         return True
 
+    @staticmethod
     def _deep_update(mapping, updates):
-        # NOTE : Careful with items()/iteritems()/viewitems() on Python 2 vs 3.
-        for (key, value) in updates.items():
-            # NOTE : should really check collections/collections.abc Mapping instead of dict.
-            if isinstance(mapping, dict):
-                if isinstance(value, dict):
-                    next_level_value = _deep_update(mapping.get(key, {}), value)
+        for (key, value) in six.iteritems(updates):
+            if isinstance(mapping, Mapping):
+                if isinstance(value, Mapping):
+                    next_level_value = SavedQueriesInterface._deep_update(mapping.get(key, {}),
+                                                                          value)
                     mapping[key] = next_level_value
                 else:
                     mapping[key] = value
