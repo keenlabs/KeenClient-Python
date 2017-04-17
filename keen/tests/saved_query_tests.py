@@ -89,18 +89,30 @@ class SavedQueryTests(BaseTestCase):
 
         saved_query = self.client.saved_queries.create("saved-query-name", saved_queries_response)
 
-        self.assertEquals(saved_query, saved_queries_response)
+        self.assertEqual(saved_query, saved_queries_response)
 
     @responses.activate
     def test_update_saved_query(self):
         saved_queries_response = {
-            "query_name": "saved-query-name"
+            "query_name": "saved-query-name",
+            "refresh_rate": 14400,
+            "query": {
+                "analysis_type": "average",
+                "event_collection": "TheCollection",
+                "target_property": "TheProperty",
+                "timeframe": "this_2_weeks"
+                }
         }
         url = "{0}/{1}/projects/{2}/queries/saved/saved-query-name".format(
             self.client.api.base_url,
             self.client.api.api_version,
             self.exp_project_id
         )
+
+        responses.add(
+            responses.GET, url, status=200, json=saved_queries_response
+        )
+
         responses.add(
             responses.PUT, url, status=200, json=saved_queries_response
         )
