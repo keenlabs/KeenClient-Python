@@ -86,15 +86,15 @@ class KeenClient(object):
 
         if persistence_strategy:
             # validate the given persistence strategy
-            if not isinstance(persistence_strategy, BasePersistenceStrategy):
+            if not issubclass(persistence_strategy, BasePersistenceStrategy):
                 raise exceptions.InvalidPersistenceStrategyError()
         if not persistence_strategy:
             # setup a default persistence strategy
             persistence_strategy = persistence_strategies \
-                .DirectPersistenceStrategy(self.api)
+                .DirectPersistenceStrategy
 
         self.project_id = project_id
-        self.persistence_strategy = persistence_strategy
+        self.persistence_strategy = persistence_strategy(self.api)
         self.get_timeout = get_timeout
         self.post_timeout = post_timeout
         self.saved_queries = saved_queries.SavedQueriesInterface(self.api)

@@ -88,8 +88,17 @@ class ClientTests(BaseTestCase):
         self.assert_true(isinstance(client.persistence_strategy,
                                     persistence_strategies.DirectPersistenceStrategy))
         # needs to be an instance of a strategy, not anything else
+        negative_helper(TypeError, "project_id", persistence_strategy="abc")
+        # needs to be a subclass of BasePersistanceStrategy
+        class TestClass(object):
+            pass
         negative_helper(exceptions.InvalidPersistenceStrategyError,
-                        "project_id", persistence_strategy="abc")
+                        "project_id", persistence_strategy=TestClass)
+        from keen.persistence_strategies import BasePersistenceStrategy
+        class TestPersistenceStrategy(BasePersistenceStrategy):
+            def __init__(self, api):
+                pass
+        positive_helper("project_id", persistence_strategy=TestPersistenceStrategy)
         # needs to be an instance of a strategy, not the class
         negative_helper(exceptions.InvalidPersistenceStrategyError,
                         "project_id",
