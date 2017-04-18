@@ -1,11 +1,11 @@
 
-try:
-    from collections.abc import Mapping as Mapping  # for Python 3
-except ImportError as ie:
-    from collections import Mapping as Mapping  # for Python 2
-
 import json
 import six
+
+if six.PY3:
+    from collections.abc import Mapping
+elif six.PY2:
+    from collections import Mapping
 
 from keen.api import KeenApi, HTTPMethods
 from keen import exceptions, utilities
@@ -128,7 +128,6 @@ class SavedQueriesInterface:
         # for 'group_by', 'interval' or 'timezone', but those aren't accepted values when updating.
         old_query = old_saved_query[query_attr_name] # expected
 
-        # Using dict.items() in both Python 2.x and Python 3.x. iteritems() might be better in 2.7.
         # Shallow copy since we want the entire object heirarchy to start with.
         for (key, value) in six.iteritems(old_query):
             if value:
