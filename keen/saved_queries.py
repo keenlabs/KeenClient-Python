@@ -2,9 +2,9 @@
 import json
 import six
 
-if six.PY3:
-    from collections.abc import Mapping
-elif six.PY2:
+try:
+    from collections.abc import Mapping # Python >=3.3
+except ImportError:
     from collections import Mapping
 
 from keen.api import KeenApi, HTTPMethods
