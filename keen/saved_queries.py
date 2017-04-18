@@ -7,8 +7,8 @@ try:
 except ImportError:
     from collections import Mapping
 
-from keen.api import KeenApi, HTTPMethods
-from keen import exceptions, utilities
+from keen.api import HTTPMethods
+from keen import utilities
 from keen.utilities import KeenKeys, requires_key
 
 
@@ -146,7 +146,7 @@ class SavedQueriesInterface:
         """
 
         url = "{0}/{1}".format(self.saved_query_url, query_name)
-        response = self._get_json(HTTPMethods.DELETE, url, self._get_master_key())
+        self._get_json(HTTPMethods.DELETE, url, self._get_master_key())
 
         return True
 
