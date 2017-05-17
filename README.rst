@@ -423,6 +423,14 @@ To run tests:
 Changelog
 ---------
 
+0.4.0
+``````
+
++ SavedQueriesInterface.create() now accepts a dict as the query definition.
++ get_collection() and get_all_collections() now only require a Read Key instead of Master.
++ SavedQueriesInterface.update() now performs partial updates. update_full() exhibits old behavior.
++ Misc documentation updates.
+
 0.3.31
 ``````
 
