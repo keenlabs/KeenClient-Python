@@ -23,6 +23,8 @@ reqs_file.close()
 
 tests_require = ['nose', 'mock', 'responses']
 
+# No real changes. Will CI succeed on Python 3.2? It did before.
+
 if sys.version_info < (2, 7):
     tests_require.append('unittest2')
 
