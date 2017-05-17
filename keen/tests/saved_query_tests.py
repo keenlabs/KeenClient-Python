@@ -1,4 +1,3 @@
-import copy
 import json
 import re
 from requests.exceptions import HTTPError
@@ -124,7 +123,7 @@ class SavedQueryTests(BaseTestCase):
             responses.GET, url, status=200, json=original_query
         )
 
-        updated_query = { "query": {} } # copy.deepcopy(original_query)
+        updated_query = { "query": {} }
         new_analysis_type = "sum"
         updated_query["query"]["analysis_type"] = new_analysis_type
 
