@@ -7,9 +7,13 @@ python:
   - "3.4"
   - "3.5"
 # command to install dependencies
-install:
-  - pip install --upgrade pip
-  - pip install -r requirements.txt
+install: |
+  if [ "$TRAVIS_PYTHON_VERSION" == 3.2 ]
+  then
+    pip install "setuptools<30"
+  fi
+
+  pip install -r requirements.txt
 
 # command to run tests
 script: "python setup.py test"
