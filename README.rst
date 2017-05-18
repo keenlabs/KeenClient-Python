@@ -17,7 +17,7 @@ Use pip to install!
 
     pip install keen
 
-This client is known to work on Python 2.6, 2.7, 3.2, 3.3, 3.4 and 3.5.
+This client is known to work on Python 2.6, 2.7, 3.2, 3.3, 3.4, 3.5 and 3.6.
 
 For versions of Python < 2.7.9, you’ll need to install pyasn1, ndg-httpsclient, pyOpenSSL.
 
@@ -283,6 +283,7 @@ You can manage your `saved queries <https://keen.io/docs/api/?shell#saved-querie
             }]
         }
     }
+
     client.saved_queries.create("saved-query-name", saved_query_attributes)
 
     # Get all saved queries
@@ -297,15 +298,31 @@ You can manage your `saved queries <https://keen.io/docs/api/?shell#saved-querie
     # NOTE : Updating Saved Queries requires sending the entire query definition. Any attribute not
     # sent is interpreted as being cleared/removed. This means that properties set via another
     # client, including the Projects Explorer Web UI, will be lost this way.
+    # 
+    # The update() function makes this easier by allowing client code to just specify the
+    # properties that need updating. To do this, it will retrieve the existing query definition
+    # first, which means there will be two HTTP requests. Use update_full() in code that already
+    # has a full query definition that can reasonably be expected to be current.
 
-    # Update a saved query to now be a cached query with the minimum refresh rate of 4 hrs
+    # Update a saved query to now be a cached query with the minimum refresh rate of 4 hrs...
+
+    # ...using partial update:
+    client.saved_queries.update("saved-query-name", { "refresh_rate": 14400 })
+
+    # ...using full update, if we've already fetched the query definition:
     saved_query_attributes["refresh_rate"] = 14400
-    client.saved_queries.update("saved-query-name", saved_query_attributes)
+    client.saved_queries.update_full("saved-query-name", saved_query_attributes)
 
-    # Update a saved query to a new resource name
-    # We send "refresh_rate" again, along with the entire definition, or else it would be reset.
+    # Update a saved query to a new resource name...
+
+    # ...using partial update:
+    client.saved_queries.update("saved-query-name", { "query_name": "cached-query-name" })
+
+    # ...using full update, if we've already fetched the query definition or have it lying around
+    # for whatever reason. We send "refresh_rate" again, along with the entire definition, or else
+    # it would be reset:
     saved_query_attributes["query_name"] = "cached-query-name"
-    client.saved_queries.update("saved-query-name", saved_query_attributes)
+    client.saved_queries.update_full("saved-query-name", saved_query_attributes)
 
     # Delete a saved query (use the new resource name since we just changed it)
     client.saved_queries.delete("cached-query-name")

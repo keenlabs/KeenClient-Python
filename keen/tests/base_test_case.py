@@ -1,5 +1,5 @@
 import string
-import unittest
+import unittest2 as unittest
 
 __author__ = 'dkador'
 
