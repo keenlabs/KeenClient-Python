@@ -137,8 +137,8 @@ class KeenApi(object):
                                                         self.project_id, analysis_type)
 
         headers = utilities.headers(self.read_key)
-        payload = params
-        response = self.fulfill(HTTPMethods.GET, url, params=payload, headers=headers, timeout=self.get_timeout)
+        payload = json.dumps(params)
+        response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.get_timeout)
         self._error_handling(response)
 
         response = response.json()
