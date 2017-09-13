@@ -220,7 +220,61 @@ class KeenClient(object):
         """
         return self.api.get_access_key(access_key_id)
 
-    def update_access_key(self, access_key_id, name, is_active, permitted, options):
+    def update_access_key_name(self, access_key_id, name):
+        """
+        Updates only the name portion of an access key.
+
+        :param access_key_id: the 'key' value of the access key to change the name of
+        :param name: the new name to give this access key
+        """
+        return self.api.update_access_key_name(access_key_id, name)
+
+    def add_access_key_permissions(self, access_key_id, permissions):
+        """
+        Adds to the existing list of permissions on this key with the contents of this list.
+        Will not remove any existing permissions or modify the remainder of the key.
+
+        :param access_key_id: the 'key' value of the access key to add permissions to
+        :param permissions: the new permissions to add to the existing list of permissions
+        """
+        return self.api.add_access_key_permissions(access_key_id, permissions)
+
+    def remove_access_key_permissions(self, access_key_id, permissions):
+        """
+        Removes a list of permissions from the existing list of permissions.
+        Will not remove all existing permissions unless all such permissions are included
+        in this list. Not to be confused with key revocation.
+
+        See also: revoke_access_key()
+
+        :param access_key_id: the 'key' value of the access key to remove some permissions from
+        :param permissions: the permissions you wish to remove from this access key
+        """
+        return self.api.remove_access_key_permissions(access_key_id, permissions)
+
+    def update_access_key_permissions(self, access_key_id, permissions):
+        """
+        Replaces all of the permissions on the access key but does not change
+        non-permission properties such as the key's name.
+
+        See also: add_access_key_permissions() and remove_access_key_permissions().
+
+        :param access_key_id: the 'key' value of the access key to change the permissions of
+        :param permissions: the new list of permissions for this key
+        """
+        return self.api.update_access_key_permissions(access_key_id, permissions)
+
+    def update_access_key_options(self, access_key_id, options):
+        """
+        Replaces all of the options on the access key but does not change
+        non-option properties such as permissions or the key's name.
+
+        :param access_key_id: the 'key' value of the access key to change the options of
+        :param options: the new dictionary of options for this key
+        """
+        return self.api.update_access_key_options(access_key_id, options)
+
+    def update_access_key_full(self, access_key_id, name, is_active, permitted, options):
         """
         Replaces the 'name', 'is_active', 'permitted', and 'options' values of a given key.
         A master key must be set first.
@@ -231,17 +285,21 @@ class KeenClient(object):
         :param permitted: the new list of permissions desired for this access key
         :param options: the new dictionary of options for this access key
         """
-        return self.api.update_access_key(access_key_id, name, is_active, permitted, options)
+        return self.api.update_access_key_full(access_key_id, name, is_active, permitted, options)
 
     def revoke_access_key(self, access_key_id):
         """
         Revokes an access key. "Bad dog! No biscuit!"
+
+        :param access_key_id: the 'key' value of the access key to revoke
         """
         return self.api.revoke_access_key(access_key_id)
 
     def unrevoke_access_key(self, access_key_id):
         """
         Re-enables an access key.
+
+        :param access_key_id: the 'key' value of the access key to re-enable (unrevoke)
         """
         return self.api.unrevoke_access_key(access_key_id)
 
