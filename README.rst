@@ -485,14 +485,14 @@ The Python client enables the creation and manipulation of `Access Keys <https:/
                            options={"cached_queries": {"allowed": ["dave_barry_in_cyberspace_sales"]}})
 
 This will generate a key with the user-friendly name "Dave_Barry_Key" with event writing and cached query permissions.
-Other access key functions include `list_all_access_keys`, `get_access_key`, `revoke_access_key`, `unrevoke_access_key`,
-and `update_access_key`. Use `help(keen.list_all_access_keys)` and friends for details on how to use them.
+Other access key functions include `list_access_keys`, `get_access_key`, `revoke_access_key`, `unrevoke_access_key`,
+and `update_access_key`. Use `help(keen.create_access_key)` and friends for details on how to use them.
 
 Create Scoped Keys (Deprecated)
 ''''''''''''''''''
 
 The Python client enables you to create `Scoped Keys <https://keen.io/docs/security/#scoped-key>`_ easily, but access keys are better! 
-If you need to use anyway, for legacy reasons, here's how:
+If you need to use them anyway, for legacy reasons, here's how:
 
 .. code-block:: python
 
