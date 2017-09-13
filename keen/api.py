@@ -244,7 +244,7 @@ class KeenApi(object):
     @requires_key(KeenKeys.READ)
     def get_all_collections(self):
         """
-        Extracts schema for all collections using the Keen IO API. A master key must be set first.
+        Extracts schema for all collections using the Keen IO API. A read key must be set first.
 
         """
 
@@ -253,6 +253,114 @@ class KeenApi(object):
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
         self._error_handling(response)
 
+        return response.json()
+
+    @requires_key(KeenKeys.MASTER)
+    def create_access_key(self, name, is_active=True, permitted=[], options={}):
+        """
+        Creates a new access key. A master key must be set first.
+
+        :param name: the name of the access key to create
+        :param is_active: Boolean value dictating whether this key is currently active (default True)
+        :param permitted: list of strings describing which operation types this key will permit
+                          Legal values include "writes", "queries", "saved_queries", "cached_queries",
+                          "datasets", and "schema".
+        :param options: dictionary containing more details about the key's permitted and restricted
+                        functionality
+        """
+
+        url = "{0}/{1}/projects/{2}/keys".format(self.base_url, self.api_version, self.project_id)
+        headers = utilities.headers(self.master_key)
+
+        payload_dict = {
+            "name": name,
+            "is_active": is_active,
+            "permitted": permitted,
+            "options": options
+        }
+        payload = json.dumps(payload_dict)
+
+        response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.get_timeout)
+        self._error_handling(response)
+        return response.json()
+
+    @requires_key(KeenKeys.MASTER)
+    def list_access_keys(self):
+        """
+        Returns a list of all access keys in this project. A master key must be set first.
+        """
+        url = "{0}/{1}/projects/{2}/keys".format(self.base_url, self.api_version, self.project_id)
+        headers = utilities.headers(self.master_key)
+        response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
+        self._error_handling(response)
+
+        return response.json()
+
+    @requires_key(KeenKeys.MASTER)
+    def get_access_key(self, access_key_id):
+        """
+        Returns details on a particular access key. A master key must be set first.
+
+        :param access_key_id: the 'key' value of the access key to retreive data from
+        """
+        url = "{0}/{1}/projects/{2}/keys/{3}".format(self.base_url, self.api_version, self.project_id,
+                                                     access_key_id)
+        headers = utilities.headers(self.master_key)
+        response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
+        self._error_handling(response)
+
+        return response.json()
+
+    @requires_key(KeenKeys.MASTER)
+    def update_access_key(self, access_key_id, name, is_active, permitted, options):
+        """
+        Replaces the 'name', 'is_active', 'permitted', and 'options' values of a given key.
+        A master key must be set first.
+
+        :param access_key_id: the 'key' value of the access key for which the values will be replaced
+        :param name: the new name desired for this access key
+        :param is_active: whether the key should become enabled (True) or revoked (False)
+        :param permitted: the new list of permissions desired for this access key
+        :param options: the new dictionary of options for this access key
+        """
+        url = "{0}/{1}/projects/{2}/keys/{3}".format(self.base_url, self.api_version,
+                                                     self.project_id, access_key_id)
+        headers = utilities.headers(self.master_key)
+        payload_dict = {
+            "name": name,
+            "is_active": is_active,
+            "permitted": permitted,
+            "options": options
+        }
+        payload = json.dumps(payload_dict)
+        response = self.fulfill(HTTPMethods.POST, url, data=payload, headers=headers, timeout=self.get_timeout)
+        self._error_handling(response)
+        return response.json()
+
+    @requires_key(KeenKeys.MASTER)
+    def revoke_access_key(self, access_key_id):
+        """
+        Revokes an access key. "Bad dog! No biscuit!"
+        """
+        url = "{0}/{1}/projects/{2}/keys/{3}/revoke".format(self.base_url, self.api_version,
+                                                            self.project_id, access_key_id)
+        headers = utilities.headers(self.master_key)
+        response = self.fulfill(HTTPMethods.POST, url, headers=headers, timeout=self.get_timeout)
+
+        self._error_handling(response)
+        return response.json()
+
+    @requires_key(KeenKeys.MASTER)
+    def unrevoke_access_key(self, access_key_id):
+        """
+        Re-enables an access key.
+        """
+        url = "{0}/{1}/projects/{2}/keys/{3}/unrevoke".format(self.base_url, self.api_version,
+                                                              self.project_id, access_key_id)
+        headers = utilities.headers(self.master_key)
+        response = self.fulfill(HTTPMethods.POST, url, headers=headers, timeout=self.get_timeout)
+
+        self._error_handling(response)
         return response.json()
 
     def _error_handling(self, res):

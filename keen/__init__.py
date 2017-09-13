@@ -496,3 +496,62 @@ def get_all_collections():
     """
     _initialize_client_from_environment()
     return _client.get_all_collections()
+
+def create_access_key(name, is_active=True, permitted=[], options={}):
+    """ Creates a new access key. A master key must be set first.
+
+    :param name: the name of the access key to create
+    :param is_active: Boolean value dictating whether this key is currently active (default True)
+    :param permitted: list of strings describing which operation types this key will permit
+                      Legal values include "writes", "queries", "saved_queries", "cached_queries",
+                      "datasets", and "schema".
+    :param options: dictionary containing more details about the key's permitted and restricted
+                    functionality
+    """
+    _initialize_client_from_environment()
+    return _client.create_access_key(name=name, is_active=is_active,
+                                     permitted=permitted, options=options)
+
+def list_access_keys():
+    """
+    Returns a list of all access keys in this project. A master key must be set first.
+    """
+    _initialize_client_from_environment()
+    return _client.list_access_keys()
+
+def get_access_key(access_key_id):
+    """
+    Returns details on a particular access key. A master key must be set first.
+
+    :param access_key_id: the 'key' value of the access key to retreive data from
+    """
+    _initialize_client_from_environment()
+    return _client.get_access_key(access_key_id)
+
+def update_access_key(access_key_id, name, is_active, permitted, options):
+    """
+    Replaces the 'name', 'is_active', 'permitted', and 'options' values of a given key.
+    A master key must be set first.
+
+    :param access_key_id: the 'key' value of the access key for which the values will be replaced
+    :param name: the new name desired for this access key
+    :param is_active: whether the key should become enabled (True) or revoked (False)
+    :param permitted: the new list of permissions desired for this access key
+    :param options: the new dictionary of options for this access key
+    """
+    _initialize_client_from_environment()
+    return _client.update_access_key(access_key_id, name, is_active, permitted, options)
+
+def revoke_access_key(access_key_id):
+    """
+    Revokes an access key. "Bad dog! No biscuit!"
+    """
+    _initialize_client_from_environment()
+    return _client.revoke_access_key(access_key_id)
+
+def unrevoke_access_key(access_key_id):
+    """
+    Re-enables an access key.
+    """
+    _initialize_client_from_environment()
+    return _client.unrevoke_access_key(access_key_id)
