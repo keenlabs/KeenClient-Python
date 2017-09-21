@@ -473,7 +473,7 @@ This will cause both add_event() and add_events() to timeout after 100 seconds. 
 Create Access Keys
 ''''''''''''''''''
 
-The Python client enables the creation and manipulation of `Access Keys <https://keen.io/docs/access/access-keys>`_. Example:
+The Python client enables the creation and manipulation of `Access Keys <https://keen.io/docs/access/access-keys>`_. Examples:
 
 .. code-block:: python
 
@@ -481,12 +481,59 @@ The Python client enables the creation and manipulation of `Access Keys <https:/
 
     # Master key must be set in an environment variable ahead of time.
 
+    # Create an access key.
     keen.create_access_key(name="Dave_Barry_Key", is_enabled=True, permitted=["writes", "cached_queries"],
                            options={"cached_queries": {"allowed": ["dave_barry_in_cyberspace_sales"]}})
 
-This will generate a key with the user-friendly name "Dave_Barry_Key" with event writing and cached query permissions.
-Other access key functions include `list_access_keys`, `get_access_key`, `revoke_access_key`, `unrevoke_access_key`,
-`update_access_key_full`, and more. Use `help(keen.create_access_key)` and friends for details on how to use them.
+    # Display all access keys associated with this project.
+    keen.list_access_keys()
+
+    # Get details on a particular access key.
+    keen.get_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+    # Revoke (disable) an access key.
+    keen.revoke_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+    # Unrevoke (re-enable) an access key.
+    keen.unrevoke_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+    # Change just the name of an access key.
+    keen.update_access_key_name(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", name="Some_New_Name")
+
+    # Add new access key permissions to existing permissions on a given key.
+    # In this case the set of permissions currently contains "writes" and "cached_queries".
+    # This function call keeps the old permissions and adds "queries" to that set.
+    #     ("writes", "cached_queries") + ("queries") = ("writes", "cached_queries", "queries")
+    keen.add_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["queries"])
+
+    # Remove one or more access key permissions from a given key.
+    # In this case the set of permissions currently contains "writes", "cached_queries", and "queries".
+    # This function call will keep the old permissions not explicitly removed here.
+    # So we will remove both "writes" and "queries" from the set, leaving only "cached_queries".
+    #     ("writes", "cached_queries", "queries") - ("writes", "queries") = ("cached_queries")
+    keen.remove_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["writes", "queries"])
+
+    # We can also perform a full update on the permissions, replacing all existing permissions with a new list.
+    # In this case our existing permissions contains only "cached_queries".
+    # We will replace this set with the "writes" permission with this function call.
+    #     ("cached_queries") REPLACE-WITH ("writes") = ("writes")
+    keen.update_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["writes"])
+
+    # Replace all existing key options with this new options object.
+    keen.update_access_key_options(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", options={"writes": {
+        "autofill": {
+            "customer": {
+                "id": "93iskds39kd93id",
+                "name": "Ada Corp."
+            }
+        }
+    }})
+
+    # Replace everything but the key ID with what is supplied here.
+    # If a field is not supplied here, it will be set to a blank value.
+    # In this case, no options are supplied, so any options will be removed.
+    keen.update_access_key_full(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", name="Strong_Bad", is_active=True, permitted=["queries"])
+
 
 Create Scoped Keys (Deprecated)
 ''''''''''''''''''
