@@ -477,50 +477,55 @@ The Python client enables the creation and manipulation of `Access Keys <https:/
 
 .. code-block:: python
 
-    import keen
+    from keen.client import KeenClient
+    # You could also simply use: import keen
+    # If you do this, you will need your project ID and master key set in environment variables.
 
-    # Master key must be set in an environment variable ahead of time.
+    client = KeenClient(
+        project_id="xxxx",
+        master_key="zzzz"
+    )
 
-    # Create an access key.
-    keen.create_access_key(name="Dave_Barry_Key", is_enabled=True, permitted=["writes", "cached_queries"],
-                           options={"cached_queries": {"allowed": ["dave_barry_in_cyberspace_sales"]}})
+    # Create an access key. See: https://keen.io/docs/access/access-keys/#customizing-your-access-key
+    client.create_access_key(name="Dave_Barry_Key", is_enabled=True, permitted=["writes", "cached_queries"],
+                             options={"cached_queries": {"allowed": ["dave_barry_in_cyberspace_sales"]}})
 
-    # Display all access keys associated with this project.
-    keen.list_access_keys()
+    # Display all access keys associated with this client's project.
+    client.list_access_keys()
 
     # Get details on a particular access key.
-    keen.get_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    client.get_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
     # Revoke (disable) an access key.
-    keen.revoke_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    client.revoke_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
     # Unrevoke (re-enable) an access key.
-    keen.unrevoke_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    client.unrevoke_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
     # Change just the name of an access key.
-    keen.update_access_key_name(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", name="Some_New_Name")
+    client.update_access_key_name(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", name="Some_New_Name")
 
     # Add new access key permissions to existing permissions on a given key.
     # In this case the set of permissions currently contains "writes" and "cached_queries".
     # This function call keeps the old permissions and adds "queries" to that set.
     #     ("writes", "cached_queries") + ("queries") = ("writes", "cached_queries", "queries")
-    keen.add_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["queries"])
+    client.add_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["queries"])
 
     # Remove one or more access key permissions from a given key.
     # In this case the set of permissions currently contains "writes", "cached_queries", and "queries".
     # This function call will keep the old permissions not explicitly removed here.
     # So we will remove both "writes" and "queries" from the set, leaving only "cached_queries".
     #     ("writes", "cached_queries", "queries") - ("writes", "queries") = ("cached_queries")
-    keen.remove_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["writes", "queries"])
+    client.remove_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["writes", "queries"])
 
     # We can also perform a full update on the permissions, replacing all existing permissions with a new list.
     # In this case our existing permissions contains only "cached_queries".
     # We will replace this set with the "writes" permission with this function call.
     #     ("cached_queries") REPLACE-WITH ("writes") = ("writes")
-    keen.update_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["writes"])
+    client.update_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["writes"])
 
     # Replace all existing key options with this new options object.
-    keen.update_access_key_options(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", options={"writes": {
+    client.update_access_key_options(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", options={"writes": {
         "autofill": {
             "customer": {
                 "id": "93iskds39kd93id",
@@ -531,11 +536,11 @@ The Python client enables the creation and manipulation of `Access Keys <https:/
 
     # Replace everything but the key ID with what is supplied here.
     # If a field is not supplied here, it will be set to a blank value.
-    # In this case, no options are supplied, so any options will be removed.
-    keen.update_access_key_full(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", name="Strong_Bad", is_active=True, permitted=["queries"])
+    # In this case, no options are supplied, so all options will be removed.
+    client.update_access_key_full(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", name="Strong_Bad", is_active=True, permitted=["queries"])
 
 
-Create Scoped Keys (Deprecated)
+Create Scoped Keys (**Deprecated**)
 ''''''''''''''''''
 
 The Python client enables you to create `Scoped Keys <https://keen.io/docs/security/#scoped-key>`_ easily, but Access Keys are better! 

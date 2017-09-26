@@ -311,7 +311,7 @@ class KeenApi(object):
 
         return response.json()
 
-    def _build_access_key_dict(self, access_key):
+    def _build_access_key_dict(access_key):
         """
         Populates a dictionary payload usable in a POST request from a full access key object.
 
