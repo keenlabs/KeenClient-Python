@@ -126,12 +126,50 @@ class KeenApi(object):
         self._error_handling(response)
         return self._get_response_json(response)
 
+    def _order_by_is_valid_or_none(self, params):
+        """
+        Validates that a given order_by has proper syntax.
+
+        :return: Returns True if either no order_by is present, or if the order_by is well-formed.
+        """
+        if not "order_by" in params or not params["order_by"]:
+            return True
+
+        def _order_by_dict_is_not_well_formed(d):
+            if not isinstance(d, dict):
+                # Bad type.
+                return True
+            if "property_name" in d and d["property_name"]:
+                if "direction" in d and not (d["direction"] == "ASC" or d["direction"] == "DESC"):
+                    # Bad direction provided.
+                    return True
+                for k in d:
+                    if k != "property_name" and k != "direction":
+                        # Unexpected key.
+                        return True
+                # Everything looks good!
+                return False
+            # Missing required key.
+            return True
+
+        # order_by is converted to a list before this point if it wasn't one before.
+        order_by_list = json.loads(params["order_by"])
+        if filter(_order_by_dict_is_not_well_formed, order_by_list):
+            # At least one order_by dict is broken.
+            return False
+        if not "group_by" in params or not params["group_by"]:
+            # We must have group_by to have order_by make sense.
+            return False
+        return True
+
     @requires_key(KeenKeys.READ)
     def query(self, analysis_type, params, all_keys=False):
         """
         Performs a query using the Keen IO analysis API.  A read key must be set first.
 
         """
+        if not self._order_by_is_valid_or_none(params):
+            raise ValueError("order_by given is invalid or is missing required group_by.")
 
         url = "{0}/{1}/projects/{2}/queries/{3}".format(self.base_url, self.api_version,
                                                         self.project_id, analysis_type)
