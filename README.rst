@@ -101,7 +101,7 @@ For more code samples, take a look at Keen's `docs <https://keen.io/docs/api/?py
     keen.count_unique("purchases", target_property="user.id", timeframe="this_14_days") # => 3
     keen.select_unique("purchases", target_property="user.email", timeframe="this_14_days") # => ["bob@aol.com", "joe@yahoo.biz"]
 
-    # Alpha support for ordering your results and limiting what is displayed is now supported in the Python SDK.
+    # Alpha support for ordering your results and limiting what is returned is now supported in the Python SDK.
     # Keep in mind that even if you limit your results with the 'limit' keyword, you are still querying over the
     # normal amount of data, and thus your compute costs will not change. Limit only changes what is displayed.
 
