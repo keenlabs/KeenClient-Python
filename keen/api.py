@@ -130,6 +130,7 @@ class KeenApi(object):
         """
         Validates that a given order_by has proper syntax.
 
+        :param params: Query params.
         :return: Returns True if either no order_by is present, or if the order_by is well-formed.
         """
         if not "order_by" in params or not params["order_by"]:
@@ -162,6 +163,21 @@ class KeenApi(object):
             return False
         return True
 
+    def _limit_is_valid_or_none(self, params):
+        """
+        Validates that a given limit is not present or is well-formed.
+
+        :param params: Query params.
+        :return: Returns True if a limit is present or is well-formed.
+        """
+        if not "limit" in params or not params["limit"]:
+            return True
+        if not isinstance(params["limit"], int) or params["limit"] < 1:
+            return False
+        if not "order_by" in params:
+            return False
+        return True
+
     @requires_key(KeenKeys.READ)
     def query(self, analysis_type, params, all_keys=False):
         """
@@ -170,6 +186,8 @@ class KeenApi(object):
         """
         if not self._order_by_is_valid_or_none(params):
             raise ValueError("order_by given is invalid or is missing required group_by.")
+        if not self._limit_is_valid_or_none(params):
+            raise ValueError("limit given is invalid or is missing required order_by.")
 
         url = "{0}/{1}/projects/{2}/queries/{3}".format(self.base_url, self.api_version,
                                                         self.project_id, analysis_type)
