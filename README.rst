@@ -101,6 +101,21 @@ For more code samples, take a look at Keen's `docs <https://keen.io/docs/api/?py
     keen.count_unique("purchases", target_property="user.id", timeframe="this_14_days") # => 3
     keen.select_unique("purchases", target_property="user.email", timeframe="this_14_days") # => ["bob@aol.com", "joe@yahoo.biz"]
 
+    # Alpha support for ordering your results and limiting what is displayed is now supported in the Python SDK.
+    # Keep in mind that even if you limit your results with the 'limit' keyword, you are still querying over the
+    # normal amount of data, and thus your compute costs will not change. Limit only changes what is displayed.
+
+    # The keyword "limit" must be a positive integer. The keyword "order_by" must be a dictionary with a required
+    # "property_name" specified and optionally a "direction". The "direction" may be either "DESC" (descending) or
+    # "ASC" (ascending). No other keywords may be used in the "order_by" dictionary.
+
+    # You may only use "order_by" if you supply a "group_by". You may only use "limit" if you supply an "order_by".
+
+    # This will run a count query with results grouped by zip code.
+    # It will display only the top ten zip code results based upon how many times users in those zip codes logged in.
+    keen.count("purchases", group_by="zip_code", timeframe="this_14_days", "limit"=10,
+               order_by={"property_name": "result", "direction": "DESC"})
+
     keen.extraction("purchases", timeframe="today") # => [{ "price" => 20, ... }, { ... }]
 
     keen.multi_analysis(
@@ -148,28 +163,6 @@ Advanced Usage
 ``````````````
 
 See below for more options.
-
-Order Your Grouped Results with order_by and limit
-''''''''''''''''''''''''''''''''''''''''''''''''''
-
-Alpha support for ordering your results and limiting what is displayed is now supported in the Python SDK.
-Keep in mind that even if you limit your results with the 'limit' keyword, you are still querying over the
-normal amount of data, and thus your compute costs will not change. Limit only changes what is displayed.
-
-The keyword 'limit' must be a positive integer. The keyword 'order_by' must be a dictionary with a required
-"property_name" specified and optionally a "direction". The "direction" may be either "DESC" (descending) or
-"ASC" (ascending). No other keywords may be used in the 'order_by' dictionary.
-
-You may only use 'order_by' if you supply a 'group_by'. You may only use 'limit' if you supply an 'order_by'.
-
-.. code-block:: python
-
-    # This will run a count query with results grouped by zip code.
-    # It will display only the top ten zip code results based upon how many times
-    # users in those zip codes logged in.
-    keen.count(event_collection="logins", timeframe="this_2_days", group_by="zip_code", "limit"=10,
-               order_by={"property_name": "result", "direction": "DESC"})
-
 
 Check Batch Upload Response For Errors
 ''''''''''''''''''''''''''''''''''''''
