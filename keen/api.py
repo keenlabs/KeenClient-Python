@@ -136,28 +136,23 @@ class KeenApi(object):
         :return: Returns True if either no order_by is present, or if the order_by is well-formed.
         """
         if not "order_by" in params or not params["order_by"]:
-            print("couldn't find 'order_by'")
             return True
 
         def _order_by_dict_is_not_well_formed(d):
             if not isinstance(d, dict):
-                print("wasn't a good type")
                 # Bad type.
                 return True
             if "property_name" in d and d["property_name"]:
                 if "direction" in d and not (d["direction"] == "ASC" or d["direction"] == "DESC"):
                     # Bad direction provided.
-                    print("found a bad direction")
                     return True
                 for k in d:
                     if k != "property_name" and k != "direction":
                         # Unexpected key.
-                        print("found a weird key: {}".format(k))
                         return True
                 # Everything looks good!
                 return False
             # Missing required key.
-            print("missing a needed key")
             return True
 
         # order_by is converted to a list before this point if it wasn't one before.
@@ -165,11 +160,9 @@ class KeenApi(object):
 
         for order_by in order_by_list:
             if _order_by_dict_is_not_well_formed(order_by):
-                print("a dict is broken")
                 return False
         if not "group_by" in params or not params["group_by"]:
             # We must have group_by to have order_by make sense.
-            print("missing group_by")
             return False
         return True
 
