@@ -499,7 +499,7 @@ class QueryTests(BaseTestCase):
         get.return_value = self.LIST_RESPONSE_DESCENDING
         collection = "query_test"
         limit = 2
-        order_by = {'property_name': 'result', 'direction': 'DESC'}
+        order_by = {"property_name": "result", "direction": "DESC"}
         resp = keen.count(collection, timeframe="today", group_by="number", order_by=order_by, limit=limit)
         self.assertTrue("https://api.keen.io/3.0/projects/{}/queries/count".format(keen.project_id) in
                          get.call_args[0][0])
