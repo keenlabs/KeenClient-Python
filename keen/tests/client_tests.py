@@ -598,7 +598,6 @@ class DeleteTests(BaseTestCase):
         # Check that the master_key is in the Authorization header.
         self.assertTrue(keen.master_key in delete.call_args[1]["headers"]["Authorization"])
 
-
 @patch("requests.Session.get")
 class GetTests(BaseTestCase):
 
