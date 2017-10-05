@@ -127,19 +127,6 @@ class KeenApi(object):
         self._error_handling(response)
         return self._get_response_json(response)
 
-    def _filtered_list_is_empty(self, lyst):
-        """
-        Python 3 does some odd porting of the filter function.
-        To be safe, we'll handle any number of layers of nesting of filter functions recursively.
-
-        :return: True if a python 2.7 version of an applied filter function would return an empty list.
-        """
-        if len(lyst) == 0:
-            return True
-        elif len(lyst) == 1 and _filtered_list_is_empty(lyst[0]):
-            return True
-        else:
-            return False
 
     def _order_by_is_valid_or_none(self, params):
         """
@@ -176,10 +163,10 @@ class KeenApi(object):
         # order_by is converted to a list before this point if it wasn't one before.
         order_by_list = json.loads(params["order_by"])
 
-        if not self._filtered_list_is_empty(filter(_order_by_dict_is_not_well_formed, order_by_list)):
-            # At least one order_by dict is broken.
-            print("a dict is broken")
-            return False
+        for order_by in order_by_list:
+            if _order_by_dict_is_not_well_formed(order_by):
+                print("a dict is broken")
+                return False
         if not "group_by" in params or not params["group_by"]:
             # We must have group_by to have order_by make sense.
             print("missing group_by")
