@@ -1,4 +1,3 @@
-from __future__ import print_function
 # stdlib
 import json
 import ssl
@@ -9,7 +8,7 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.poolmanager import PoolManager
 
 # keen
-from keen import exceptions, utilities
+from keen import direction, exceptions, utilities
 from keen.utilities import KeenKeys, requires_key
 
 # json
@@ -143,7 +142,7 @@ class KeenApi(object):
                 # Bad type.
                 return True
             if "property_name" in d and d["property_name"]:
-                if "direction" in d and not (d["direction"] == "ASC" or d["direction"] == "DESC"):
+                if "direction" in d and not direction.is_valid_direction(d["direction"]):
                     # Bad direction provided.
                     return True
                 for k in d:

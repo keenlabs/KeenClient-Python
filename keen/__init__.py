@@ -91,8 +91,10 @@ def count(event_collection, timeframe=None, timezone=None, interval=None, filter
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param order_by: dictionary object containing the property_name to order by and the
-    desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
     :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
@@ -122,8 +124,10 @@ def sum(event_collection, target_property, timeframe=None, timezone=None, interv
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param order_by: dictionary object containing the property_name to order by and the
-    desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
     :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
@@ -153,8 +157,10 @@ def minimum(event_collection, target_property, timeframe=None, timezone=None, in
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param order_by: dictionary object containing the property_name to order by and the
-    desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
     :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
@@ -184,8 +190,10 @@ def maximum(event_collection, target_property, timeframe=None, timezone=None, in
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param order_by: dictionary object containing the property_name to order by and the
-    desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
     :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
@@ -215,8 +223,10 @@ def average(event_collection, target_property, timeframe=None, timezone=None, in
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param order_by: dictionary object containing the property_name to order by and the
-    desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
     :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
@@ -246,8 +256,10 @@ def median(event_collection, target_property, timeframe=None, timezone=None, int
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param order_by: dictionary object containing the property_name to order by and the
-    desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
     :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
@@ -279,8 +291,10 @@ def percentile(event_collection, target_property, percentile, timeframe=None, ti
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param order_by: dictionary object containing the property_name to order by and the
-    desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
     :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
@@ -320,8 +334,10 @@ def count_unique(event_collection, target_property, timeframe=None, timezone=Non
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param order_by: dictionary object containing the property_name to order by and the
-    desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
     :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
@@ -351,8 +367,10 @@ def select_unique(event_collection, target_property, timeframe=None, timezone=No
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param order_by: dictionary object containing the property_name to order by and the
-    desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
     :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
@@ -428,8 +446,10 @@ def multi_analysis(event_collection, analyses, timeframe=None, interval=None, ti
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
-    :param order_by: dictionary object containing the property_name to order by and the
-    desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
     :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds

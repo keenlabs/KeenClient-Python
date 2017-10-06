@@ -229,8 +229,10 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group your results by.  example: "customer.id" or ["browser","operating_system"]
-        :param order_by: dictionary object containing the property_name to order by and the
-        desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+        :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+        to order by and the desired direction(s) of sorting.
+        Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+        May not be used without a group_by specified.
         :param limit: positive integer limiting the displayed results of a query using order_by
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
@@ -259,8 +261,10 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group your results by.  example: "customer.id" or ["browser","operating_system"]
-        :param order_by: dictionary object containing the property_name to order by and the
-        desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+        :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+        to order by and the desired direction(s) of sorting.
+        Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+        May not be used without a group_by specified.
         :param limit: positive integer limiting the displayed results of a query using order_by
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
@@ -289,8 +293,10 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group your results by.  example: "customer.id" or ["browser","operating_system"]
-        :param order_by: dictionary object containing the property_name to order by and the
-        desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+        :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+        to order by and the desired direction(s) of sorting.
+        Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+        May not be used without a group_by specified.
         :param limit: positive integer limiting the displayed results of a query using order_by
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
@@ -319,8 +325,10 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group your results by.  example: "customer.id" or ["browser","operating_system"]
-        :param order_by: dictionary object containing the property_name to order by and the
-        desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+        :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+        to order by and the desired direction(s) of sorting.
+        Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+        May not be used without a group_by specified.
         :param limit: positive integer limiting the displayed results of a query using order_by
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
@@ -349,8 +357,10 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group your results by.  example: "customer.id" or ["browser","operating_system"]
-        :param order_by: dictionary object containing the property_name to order by and the
-        desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+        :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+        to order by and the desired direction(s) of sorting.
+        Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+        May not be used without a group_by specified.
         :param limit: positive integer limiting the displayed results of a query using order_by
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
@@ -379,8 +389,10 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group your results by.  example: "customer.id" or ["browser","operating_system"]
-        :param order_by: dictionary object containing the property_name to order by and the
-        desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+        :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+        to order by and the desired direction(s) of sorting.
+        Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+        May not be used without a group_by specified.
         :param limit: positive integer limiting the displayed results of a query using order_by
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
@@ -411,8 +423,10 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group your results by.  example: "customer.id" or ["browser","operating_system"]
-        :param order_by: dictionary object containing the property_name to order by and the
-        desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+        :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+        to order by and the desired direction(s) of sorting.
+        Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+        May not be used without a group_by specified.
         :param limit: positive integer limiting the displayed results of a query using order_by
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
@@ -451,8 +465,10 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group your results by.  example: "customer.id" or ["browser","operating_system"]
-        :param order_by: dictionary object containing the property_name to order by and the
-        desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+        :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+        to order by and the desired direction(s) of sorting.
+        Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+        May not be used without a group_by specified.
         :param limit: positive integer limiting the displayed results of a query using order_by
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
@@ -481,8 +497,10 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group your results by.  example: "customer.id" or ["browser","operating_system"]
-        :param order_by: dictionary object containing the property_name to order by and the
-        desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+        :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+        to order by and the desired direction(s) of sorting.
+        Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+        May not be used without a group_by specified.
         :param limit: positive integer limiting the displayed results of a query using order_by
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds
@@ -562,8 +580,10 @@ class KeenClient(object):
         example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
         :param group_by: string or array of strings, the name(s) of the properties you would
         like to group your results by.  example: "customer.id" or ["browser","operating_system"]
-        :param order_by: dictionary object containing the property_name to order by and the
-        desired direction of sorting. Example: {"property_name":"result", "direction":"DESC"}
+        :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+        to order by and the desired direction(s) of sorting.
+        Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+        May not be used without a group_by specified.
         :param limit: positive integer limiting the displayed results of a query using order_by
         :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
         willing to trade for increased query performance, in seconds

@@ -102,19 +102,19 @@ For more code samples, take a look at Keen's `docs <https://keen.io/docs/api/?py
     keen.select_unique("purchases", target_property="user.email", timeframe="this_14_days") # => ["bob@aol.com", "joe@yahoo.biz"]
 
     # Alpha support for ordering your results and limiting what is returned is now supported in the Python SDK.
-    # Keep in mind that even if you limit your results with the 'limit' keyword, you are still querying over the
+    # Keep in mind that even if you limit your results with the "limit" keyword, you are still querying over the
     # normal amount of data, and thus your compute costs will not change. Limit only changes what is displayed.
 
     # The keyword "limit" must be a positive integer. The keyword "order_by" must be a dictionary with a required
-    # "property_name" specified and optionally a "direction". The "direction" may be either "DESC" (descending) or
-    # "ASC" (ascending). No other keywords may be used in the "order_by" dictionary.
+    # "property_name" specified and optionally a "direction". The "direction" may be either keen.direction.DESCENDING or
+    # keen.direction.ASCENDING. No other keywords may be used in the "order_by" dictionary.
 
     # You may only use "order_by" if you supply a "group_by". You may only use "limit" if you supply an "order_by".
 
     # This will run a count query with results grouped by zip code.
     # It will display only the top ten zip code results based upon how many times users in those zip codes logged in.
-    keen.count("purchases", group_by="zip_code", timeframe="this_14_days", "limit"=10,
-               order_by={"property_name": "result", "direction": "DESC"})
+    keen.count("purchases", group_by="zip_code", timeframe="this_14_days", limit=10,
+               order_by={"property_name": "result", "direction": keen.direction.DESCENDING})
 
     keen.extraction("purchases", timeframe="today") # => [{ "price" => 20, ... }, { ... }]
 
