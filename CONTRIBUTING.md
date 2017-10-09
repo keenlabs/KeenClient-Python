@@ -63,9 +63,10 @@ Fetch the branch and/or deploy to staging to test the following:
 This PR template can be viewed rendered in Markdown [here](./.github/PULL_REQUEST_TEMPLATE.md). Github will auto-populate any new PRs filed with this template, so don't worry about copy-pasting it.
 
 ## How to report a bug
+
 If you find a security vulnerability, do NOT open an issue. Email team@keen.io instead.
 
-If you find a bug that's not a security vulnerability please head over to the issues tab of this rep and open up an issue.
+If you find a bug that's not a security vulnerability please head over to the `issues <./issues>`_ page, and file a new report.
 
 We created these labels to help us organize issues: 
 

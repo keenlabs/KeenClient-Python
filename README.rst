@@ -435,7 +435,7 @@ Questions & Support
 -------------------
 
 If you have any questions, bugs, or suggestions, please
-report them via Github Issues. We'd love to hear your feedback and ideas!
+report them via Github `Issues <./issues>`_. We'd love to hear your feedback and ideas!
 
 Contributing
 ------------
