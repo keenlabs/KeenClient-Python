@@ -440,7 +440,7 @@ report them via Github Issues. We'd love to hear your feedback and ideas!
 Contributing
 ------------
 
-This is an open source project and we love involvement from the community! Hit us up with pull requests and issues.
+This is an open source project and we love involvement from the community! Hit us up with pull requests and issues. Here are our `guidelines <./CONTRIBUTING.md>`_ for how to contribute.
 
 .. |build-status| image:: https://secure.travis-ci.org/keenlabs/KeenClient-Python.png
     :target: http://travis-ci.org/keenlabs/KeenClient-Python
