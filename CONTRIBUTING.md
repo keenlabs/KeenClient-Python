@@ -54,13 +54,13 @@ Fetch the branch and/or deploy to staging to test the following:
 
 - [ ] Does the code compile without warnings (check shell, console)?
 - [ ] Do all tests pass?
-- [ ] Does the UI, pixel by pixel, look exactly as expected (check various screen sizes, including mobile)?
-- [ ] If the feature makes requests from the browser, inspect them in the Web Inspector. Do they look as expected (parameters, headers, etc)?
 - [ ] If the feature sends data to Keen, is the data visible in the project if you run an extraction (include link to collection/query)?
 - [ ] If the feature saves data to a database, can you confirm the data is indeed created in the database?
 
 ## Related tickets?
 ```
+
+This PR template can be viewed rendered in Markdown [here](./.github/PULL_REQUEST_TEMPLATE.md). Github will auto-populate any new PRs filed with this template, so don't worry about copy-pasting it.
 
 ## How to report a bug
 If you find a security vulnerability, do NOT open an issue. Email team@keen.io instead.
