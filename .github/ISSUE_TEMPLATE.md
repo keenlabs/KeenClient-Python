@@ -1,4 +1,4 @@
-Welcome to the Keen Python Client GitHub repo! 👋🎉
+Welcome to the Keen IO Python Client GitHub repo! 👋🎉
 
 - Please [**search for existing issues**](https://github.com/keenlabs/KeenClient-Python/issues) in order to ensure we don't have duplicate bugs/feature requests.
 - Please be respectful and considerate of others when commenting on issues
