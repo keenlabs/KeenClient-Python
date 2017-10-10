@@ -62,7 +62,7 @@ Once you've set `KEEN_PROJECT_ID` and `KEEN_WRITE_KEY`, sending events is simple
 Data Enrichment
 ```````````````
 
-Keen IO can enrich event data by parsing or joining it with other data properties. This is done through the concept of “add-ons”. To activate add-ons, you simply add some new properties within the "keen" namespace in your events. Detailed documentation for the configuration of our add-ons is available `here <https://keen.io/docs/api/python#data-enrichment>`_.
+A data enrichment is a powerful add-on to enrich the data you're already streaming to Keen IO by pre-processing the data and adding helpful data properties. To activate add-ons, you simply add some new properties within the "keen" namespace in your events. Detailed documentation for the configuration of our add-ons is available `here <https://keen.io/docs/api/python#data-enrichment>`_.
 
 Here is an example of using the `URL parser <https://keen.io/docs/streams/data-enrichment-overview/#addon-url-parser>`_:
 
