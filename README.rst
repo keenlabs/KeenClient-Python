@@ -1,7 +1,7 @@
 Keen IO Official Python Client Library
 ======================================
 
-|build-status|
+|build-status| |pypi-version|
 
 This is the official Python Client for the `Keen IO <https://keen.io/>`_ API. The
 Keen IO API lets developers build analytics features directly into their apps.
@@ -425,11 +425,6 @@ Changelog
 
 This project is in alpha stage at version 0.4.0 . See the full CHANGELOG `here <./CHANGELOG.rst>`_.
 
-To Do
------
-
-* Asynchronous insert
-* Scoped keys
 
 Questions & Support
 -------------------
@@ -447,3 +442,7 @@ This is an open source project and we love involvement from the community! Hit u
 .. |build-status| image:: https://secure.travis-ci.org/keenlabs/KeenClient-Python.png
     :target: http://travis-ci.org/keenlabs/KeenClient-Python
     :alt: Build status
+
+.. |pypi-version| image:: https://img.shields.io/pypi/v/keen.svg?maxAge=600 
+    :target: https://pypi.python.org/pypi/keen/
+    :alt: Keen on PyPI
