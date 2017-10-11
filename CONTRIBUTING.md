@@ -75,10 +75,10 @@ If you find a bug that's not a security vulnerability please head over to the `i
 
 We created these labels to help us organize issues: 
 
--`bugs`
--`docs`
--`enhancements`
--`feature-request`
+- `bugs`
+- `docs`
+- `enhancements`
+- `feature-request`
 
 Please use them when creating an issue where it makes sense!
 
