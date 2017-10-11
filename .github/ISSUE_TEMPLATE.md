@@ -10,7 +10,15 @@ Welcome to the Keen IO Python Client GitHub repo! 👋🎉
 
 A summary of the issue and the browser/OS environment in which it occurs.
 
-Stack traces, error messages, and/or screenshots can be very helpful here.
+Things you can include that are helpful
+
+- Code samples for what produces the error (or a link if the code is long)
+- Error mesages / stack traces
+- Screenshots can be very helpful here.
+
+```python
+print("Hello world")
+```
 
 Note: DO NOT include your credentials in ANY code examples, descriptions, or media you make public.
 
@@ -25,3 +33,4 @@ Any other info e.g. Why do you consider this to be a bug? What did you expect to
 
 * Python Version:
 * Operating System (OSX Sierra 10.12.6, Windows 10, etc):
+* Frameworks + Versions (if applicable):
