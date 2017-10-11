@@ -439,7 +439,7 @@ This is an open source project and we love involvement from the community! Hit u
 
 `Learn more about contributing to this project <./CONTRIBUTING.md>`_.
 
-.. |build-status| image:: https://secure.travis-ci.org/keenlabs/KeenClient-Python.png
+.. |build-status| image:: https://img.shields.io/travis/keenlabs/KeenClient-Python.svg?maxAge=600
     :target: http://travis-ci.org/keenlabs/KeenClient-Python
     :alt: Build status
 
