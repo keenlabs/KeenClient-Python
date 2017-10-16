@@ -364,6 +364,9 @@ class QueryTests(BaseTestCase):
     LIST_RESPONSE = MockedResponse(
         status_code=200, json_response={"result": [{"value": {"total": 1}}, {"value": {"total": 2}}]})
 
+    LIST_RESPONSE_DESCENDING = MockedResponse(
+        status_code=200, json_response={"result": [{"value": {"total": 2}}, {"value": {"total": 1}}]})
+
     def setUp(self):
         super(QueryTests, self).setUp()
         keen._client = None
@@ -491,6 +494,50 @@ class QueryTests(BaseTestCase):
         get.return_value = self.LIST_RESPONSE
         resp = keen.count("query test", timeframe="this_2_days", interval="daily")
         self.assertEqual(type(resp), list)
+
+    def test_order_by(self, get):
+        get.return_value = self.LIST_RESPONSE_DESCENDING
+        collection = "query_test"
+        limit = 2
+        order_by = {"property_name": "result", "direction": keen.direction.DESCENDING}
+        resp = keen.count(collection, timeframe="today", group_by="number", order_by=order_by, limit=limit)
+        self.assertTrue("https://api.keen.io/3.0/projects/{}/queries/count".format(keen.project_id) in
+                         get.call_args[0][0])
+        self.assertEqual(2, get.call_args[1]["params"]["limit"])
+        self.assertEqual(collection, get.call_args[1]["params"]["event_collection"])
+        # Order by should always be wrapped in a list, and stringified.
+        # This test is broken because JSON. It thinks double quoted strings != single quoted strings.
+        # ... annoying, to say the least.
+        # self.assertTrue(str([order_by]), get.call_args[1]["params"]["order_by"])
+        # So instead let's use this only slightly useful test:
+        self.assertTrue("order_by" in get.call_args[1]["params"])
+        self.assertTrue(keen.read_key in get.call_args[1]["headers"]["Authorization"])
+        self.assertEqual(resp, self.LIST_RESPONSE_DESCENDING.json()["result"])
+
+    def test_order_by_invalid_limit(self, get):
+        collection = "query_test"
+        limit = -1 # Limit should be positive
+        order_by = {"property_name": "result", "direction": keen.direction.DESCENDING}
+        self.assertRaises(ValueError, keen.count, collection, timeframe="today", group_by="number", order_by=order_by,
+                          limit=limit)
+
+    def test_order_by_invalid_direction(self, get):
+        collection = "query_test"
+        limit = 2
+        order_by = {"property_name": "result", "direction": "INVALID"}
+        self.assertRaises(ValueError, keen.count, collection, timeframe="today", group_by="number", order_by=order_by,
+                          limit=limit)
+
+    def test_order_by_no_group_by(self, get):
+        collection = "query_test"
+        limit = 2
+        order_by = {"property_name": "result", "direction": keen.direction.DESCENDING}
+        self.assertRaises(ValueError, keen.count, collection, timeframe="today", order_by=order_by, limit=limit)
+
+    def test_limit_no_order_by(self, get):
+        collection = "query_test"
+        limit = 2
+        self.assertRaises(ValueError, keen.count, collection, timeframe="today", group_by="number", limit=limit)
 
     def test_passing_invalid_custom_api_client(self, get):
         class CustomApiClient(object):

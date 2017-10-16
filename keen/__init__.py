@@ -74,7 +74,8 @@ def generate_image_beacon(event_collection, body, timestamp=None):
     return _client.generate_image_beacon(event_collection, body, timestamp=timestamp)
 
 
-def count(event_collection, timeframe=None, timezone=None, interval=None, filters=None, group_by=None, max_age=None):
+def count(event_collection, timeframe=None, timezone=None, interval=None, filters=None, group_by=None, order_by=None,
+          max_age=None, limit=None):
     """ Performs a count query
 
     Counts the number of events that meet the given criteria.
@@ -90,17 +91,23 @@ def count(event_collection, timeframe=None, timezone=None, interval=None, filter
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
+    :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.count(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                         interval=interval, filters=filters, group_by=group_by, max_age=max_age)
+                         interval=interval, filters=filters, group_by=group_by, order_by=order_by,
+                         max_age=max_age, limit=limit)
 
 
 def sum(event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-        group_by=None, max_age=None):
+        group_by=None, order_by=None, max_age=None, limit=None):
     """ Performs a sum query
 
     Adds the values of a target property for events that meet the given criteria.
@@ -117,18 +124,23 @@ def sum(event_collection, target_property, timeframe=None, timezone=None, interv
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
+    :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.sum(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                       interval=interval, filters=filters, group_by=group_by,
-                       target_property=target_property, max_age=max_age)
+                       interval=interval, filters=filters, group_by=group_by, order_by=order_by,
+                       target_property=target_property, max_age=max_age, limit=limit)
 
 
 def minimum(event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-            group_by=None, max_age=None):
+            group_by=None, order_by=None, max_age=None, limit=None):
     """ Performs a minimum query
 
     Finds the minimum value of a target property for events that meet the given criteria.
@@ -145,18 +157,23 @@ def minimum(event_collection, target_property, timeframe=None, timezone=None, in
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
+    :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.minimum(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                           interval=interval, filters=filters, group_by=group_by,
-                           target_property=target_property, max_age=max_age)
+                           interval=interval, filters=filters, group_by=group_by, order_by=order_by,
+                           target_property=target_property, max_age=max_age, limit=limit)
 
 
 def maximum(event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-            group_by=None, max_age=None):
+            group_by=None, order_by=None, max_age=None, limit=None):
     """ Performs a maximum query
 
     Finds the maximum value of a target property for events that meet the given criteria.
@@ -173,18 +190,23 @@ def maximum(event_collection, target_property, timeframe=None, timezone=None, in
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
+    :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.maximum(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                           interval=interval, filters=filters, group_by=group_by,
-                           target_property=target_property, max_age=max_age)
+                           interval=interval, filters=filters, group_by=group_by, order_by=order_by,
+                           target_property=target_property, max_age=max_age, limit=limit)
 
 
 def average(event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-            group_by=None, max_age=None):
+            group_by=None, order_by=None, max_age=None, limit=None):
     """ Performs a average query
 
     Finds the average of a target property for events that meet the given criteria.
@@ -201,18 +223,23 @@ def average(event_collection, target_property, timeframe=None, timezone=None, in
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
+    :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.average(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                           interval=interval, filters=filters, group_by=group_by,
-                           target_property=target_property, max_age=max_age)
+                           interval=interval, filters=filters, group_by=group_by, order_by=order_by,
+                           target_property=target_property, max_age=max_age, limit=limit)
 
 
 def median(event_collection, target_property, timeframe=None, timezone=None, interval=None, filters=None,
-           group_by=None, max_age=None):
+           group_by=None, order_by=None, max_age=None, limit=None):
     """ Performs a median query
 
     Finds the median of a target property for events that meet the given criteria.
@@ -229,18 +256,23 @@ def median(event_collection, target_property, timeframe=None, timezone=None, int
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
+    :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.median(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                          interval=interval, filters=filters, group_by=group_by,
+                          interval=interval, filters=filters, group_by=group_by, order_by=order_by,
                           target_property=target_property, max_age=max_age)
 
 
 def percentile(event_collection, target_property, percentile, timeframe=None, timezone=None, interval=None,
-               filters=None, group_by=None, max_age=None):
+               filters=None, group_by=None, order_by=None, max_age=None, limit=None):
     """ Performs a percentile query
 
     Finds the percentile of a target property for events that meet the given criteria.
@@ -259,6 +291,11 @@ def percentile(event_collection, target_property, percentile, timeframe=None, ti
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
+    :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
 
@@ -272,13 +309,15 @@ def percentile(event_collection, target_property, percentile, timeframe=None, ti
         interval=interval,
         filters=filters,
         group_by=group_by,
+        order_by=order_by,
         target_property=target_property,
         max_age=max_age,
+        limit=limit
     )
 
 
 def count_unique(event_collection, target_property, timeframe=None, timezone=None, interval=None,
-                 filters=None, group_by=None, max_age=None):
+                 filters=None, group_by=None, order_by=None, max_age=None, limit=None):
     """ Performs a count unique query
 
     Counts the unique values of a target property for events that meet the given criteria.
@@ -295,18 +334,23 @@ def count_unique(event_collection, target_property, timeframe=None, timezone=Non
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
+    :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.count_unique(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                interval=interval, filters=filters, group_by=group_by,
-                                target_property=target_property, max_age=max_age)
+                                interval=interval, filters=filters, group_by=group_by, order_by=order_by,
+                                target_property=target_property, max_age=max_age, limit=limit)
 
 
 def select_unique(event_collection, target_property, timeframe=None, timezone=None, interval=None,
-                  filters=None, group_by=None, max_age=None):
+                  filters=None, group_by=None, order_by=None, max_age=None, limit=None):
     """ Performs a select unique query
 
     Returns an array of the unique values of a target property for events that meet the given criteria.
@@ -323,14 +367,19 @@ def select_unique(event_collection, target_property, timeframe=None, timezone=No
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
+    :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
 
     """
     _initialize_client_from_environment()
     return _client.select_unique(event_collection=event_collection, timeframe=timeframe, timezone=timezone,
-                                 interval=interval, filters=filters, group_by=group_by,
-                                 target_property=target_property, max_age=max_age)
+                                 interval=interval, filters=filters, group_by=group_by, order_by=order_by,
+                                 target_property=target_property, max_age=max_age, limit=limit)
 
 
 def extraction(event_collection, timeframe=None, timezone=None, filters=None, latest=None, email=None,
@@ -377,8 +426,8 @@ def funnel(*args, **kwargs):
     return _client.funnel(*args, **kwargs)
 
 
-def multi_analysis(event_collection, analyses, timeframe=None, interval=None,
-                   timezone=None, filters=None, group_by=None, max_age=None):
+def multi_analysis(event_collection, analyses, timeframe=None, interval=None, timezone=None,
+                   filters=None, group_by=None, order_by=None, max_age=None, limit=None):
     """ Performs a multi-analysis query
 
     Returns a dictionary of analysis results.
@@ -397,6 +446,11 @@ def multi_analysis(event_collection, analyses, timeframe=None, interval=None,
     example: [{"property_name":"device", "operator":"eq", "property_value":"iPhone"}]
     :param group_by: string or array of strings, the name(s) of the properties you would
     like to group you results by.  example: "customer.id" or ["browser","operating_system"]
+    :param order_by: dictionary or list of dictionary objects containing the property_name(s)
+    to order by and the desired direction(s) of sorting.
+    Example: {"property_name":"result", "direction":keen.direction.DESCENDING}
+    May not be used without a group_by specified.
+    :param limit: positive integer limiting the displayed results of a query using order_by
     :param max_age: an integer, greater than 30 seconds, the maximum 'staleness' you're
     willing to trade for increased query performance, in seconds
 
@@ -404,7 +458,8 @@ def multi_analysis(event_collection, analyses, timeframe=None, interval=None,
     _initialize_client_from_environment()
     return _client.multi_analysis(event_collection=event_collection, timeframe=timeframe,
                                   interval=interval, timezone=timezone, filters=filters,
-                                  group_by=group_by, analyses=analyses, max_age=max_age)
+                                  group_by=group_by, order_by=order_by, analyses=analyses,
+                                  max_age=max_age, limit=limit)
 
 
 def delete_events(*args, **kwargs):
