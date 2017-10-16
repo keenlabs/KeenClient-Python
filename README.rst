@@ -107,7 +107,8 @@ For more code samples, take a look at Keen's `docs <https://keen.io/docs/api/?py
 
     # The keyword "limit" must be a positive integer. The keyword "order_by" must be a dictionary with a required
     # "property_name" specified and optionally a "direction". The "direction" may be either keen.direction.DESCENDING or
-    # keen.direction.ASCENDING. No other keywords may be used in the "order_by" dictionary.
+    # keen.direction.ASCENDING. Ascending is the default direction used if no "direction" is supplied. No other keywords
+    # may be used in the "order_by" dictionary.
 
     # You may only use "order_by" if you supply a "group_by". You may only use "limit" if you supply an "order_by".
 
