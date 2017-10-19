@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+0.5.0
+``````
++ Added support for Access Keys.
++ Added support for order_by and limit, group_by options.
++ Deprecated python 3.2.
++ Scoped Keys are now deprecated in favor of Access Keys.
++ Now permits more versions of the requests library. (issue #133)
+
+
 0.4.0
 ``````
 
