@@ -17,7 +17,7 @@ Use pip to install!
 
     pip install keen
 
-This client is known to work on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6.
+This client is known to work on Python 2.7, 3.4, 3.5 and 3.6.
 
 For versions of Python < 2.7.9, you’ll need to install pyasn1, ndg-httpsclient, pyOpenSSL.
 
