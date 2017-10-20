@@ -311,6 +311,7 @@ class KeenApi(object):
 
         return response.json()
 
+    @staticmethod
     def _build_access_key_dict(access_key):
         """
         Populates a dictionary payload usable in a POST request from a full access key object.
@@ -332,7 +333,7 @@ class KeenApi(object):
         current_access_key = self.get_access_key(access_key_id)
 
         # Copy and only change the single parameter.
-        payload_dict = self._build_access_key_dict(current_access_key)
+        payload_dict = _build_access_key_dict(current_access_key)
         payload_dict[key] = val
 
         # Now just treat it like a full update.
@@ -361,7 +362,7 @@ class KeenApi(object):
         current_access_key = self.get_access_key(access_key_id)
 
         # Copy and only change the single parameter.
-        payload_dict = self._build_access_key_dict(current_access_key)
+        payload_dict = _build_access_key_dict(current_access_key)
 
         # Turn into sets to avoid duplicates.
         old_permissions = set(payload_dict["permissions"])
@@ -388,7 +389,7 @@ class KeenApi(object):
         current_access_key = self.get_access_key(access_key_id)
 
         # Copy and only change the single parameter.
-        payload_dict = self._build_access_key_dict(current_access_key)
+        payload_dict = _build_access_key_dict(current_access_key)
 
         # Turn into sets to avoid duplicates.
         old_permissions = set(payload_dict["permissions"])
