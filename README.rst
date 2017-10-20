@@ -17,7 +17,7 @@ Use pip to install!
 
     pip install keen
 
-This client is known to work on Python 2.6, 2.7, 3.2, 3.3, 3.4, 3.5 and 3.6.
+This client is known to work on Python 2.7, 3.4, 3.5 and 3.6.
 
 For versions of Python < 2.7.9, you’ll need to install pyasn1, ndg-httpsclient, pyOpenSSL.
 
@@ -470,10 +470,81 @@ returned by the server in the specified time. For example:
 
 This will cause both add_event() and add_events() to timeout after 100 seconds. If this timeout limit is hit, a requests.Timeout will be raised. Due to a bug in the requests library, you might also see an SSLError (https://github.com/kennethreitz/requests/issues/1294)
 
-Create Scoped Keys
+Create Access Keys
 ''''''''''''''''''
 
-The Python client enables you to create `Scoped Keys <https://keen.io/docs/security/#scoped-key>`_ easily. For example:
+The Python client enables the creation and manipulation of `Access Keys <https://keen.io/docs/access/access-keys>`_. Examples:
+
+.. code-block:: python
+
+    from keen.client import KeenClient
+    # You could also simply use: import keen
+    # If you do this, you will need your project ID and master key set in environment variables.
+
+    client = KeenClient(
+        project_id="xxxx",
+        master_key="zzzz"
+    )
+
+    # Create an access key. See: https://keen.io/docs/access/access-keys/#customizing-your-access-key
+    client.create_access_key(name="Dave_Barry_Key", is_enabled=True, permitted=["writes", "cached_queries"],
+                             options={"cached_queries": {"allowed": ["dave_barry_in_cyberspace_sales"]}})
+
+    # Display all access keys associated with this client's project.
+    client.list_access_keys()
+
+    # Get details on a particular access key.
+    client.get_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+    # Revoke (disable) an access key.
+    client.revoke_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+    # Unrevoke (re-enable) an access key.
+    client.unrevoke_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+    # Change just the name of an access key.
+    client.update_access_key_name(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", name="Some_New_Name")
+
+    # Add new access key permissions to existing permissions on a given key.
+    # In this case the set of permissions currently contains "writes" and "cached_queries".
+    # This function call keeps the old permissions and adds "queries" to that set.
+    #     ("writes", "cached_queries") + ("queries") = ("writes", "cached_queries", "queries")
+    client.add_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["queries"])
+
+    # Remove one or more access key permissions from a given key.
+    # In this case the set of permissions currently contains "writes", "cached_queries", and "queries".
+    # This function call will keep the old permissions not explicitly removed here.
+    # So we will remove both "writes" and "queries" from the set, leaving only "cached_queries".
+    #     ("writes", "cached_queries", "queries") - ("writes", "queries") = ("cached_queries")
+    client.remove_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["writes", "queries"])
+
+    # We can also perform a full update on the permissions, replacing all existing permissions with a new list.
+    # In this case our existing permissions contains only "cached_queries".
+    # We will replace this set with the "writes" permission with this function call.
+    #     ("cached_queries") REPLACE-WITH ("writes") = ("writes")
+    client.update_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["writes"])
+
+    # Replace all existing key options with this new options object.
+    client.update_access_key_options(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", options={"writes": {
+        "autofill": {
+            "customer": {
+                "id": "93iskds39kd93id",
+                "name": "Ada Corp."
+            }
+        }
+    }})
+
+    # Replace everything but the key ID with what is supplied here.
+    # If a field is not supplied here, it will be set to a blank value.
+    # In this case, no options are supplied, so all options will be removed.
+    client.update_access_key_full(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", name="Strong_Bad", is_active=True, permitted=["queries"])
+
+
+Create Scoped Keys (**Deprecated**)
+''''''''''''''''''
+
+The Python client enables you to create `Scoped Keys <https://keen.io/docs/security/#scoped-key>`_ easily, but Access Keys are better! 
+If you need to use them anyway, for legacy reasons, here's how:
 
 .. code-block:: python
 
@@ -501,7 +572,7 @@ To run tests:
 Changelog
 ---------
 
-This project is in alpha stage at version 0.4.0 . See the full CHANGELOG `here <./CHANGELOG.rst>`_.
+This project is in alpha stage at version 0.5.0 . See the full CHANGELOG `here <./CHANGELOG.rst>`_.
 
 
 Questions & Support

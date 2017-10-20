@@ -501,7 +501,7 @@ class QueryTests(BaseTestCase):
         limit = 2
         order_by = {"property_name": "result", "direction": keen.direction.DESCENDING}
         resp = keen.count(collection, timeframe="today", group_by="number", order_by=order_by, limit=limit)
-        self.assertTrue("https://api.keen.io/3.0/projects/{}/queries/count".format(keen.project_id) in
+        self.assertTrue("https://api.keen.io/3.0/projects/{0}/queries/count".format(keen.project_id) in
                          get.call_args[0][0])
         self.assertEqual(2, get.call_args[1]["params"]["limit"])
         self.assertEqual(collection, get.call_args[1]["params"]["event_collection"])
@@ -597,7 +597,6 @@ class DeleteTests(BaseTestCase):
         self.assertEqual("https://api.keen.io/3.0/projects/1k4jb23kjbkjkjsd/events/foo", delete.call_args[0][0])
         # Check that the master_key is in the Authorization header.
         self.assertTrue(keen.master_key in delete.call_args[1]["headers"]["Authorization"])
-
 
 @patch("requests.Session.get")
 class GetTests(BaseTestCase):
