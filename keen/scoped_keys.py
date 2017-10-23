@@ -2,8 +2,15 @@ import binascii
 import json
 import os
 import six
-from Crypto.Cipher import AES
 
+try:
+    from Crypto.Cipher import AES
+except ImportError as ie:
+    ie.args = (ie.args[0] + ' -- Scoped Keys are deprecated in favor'
+               ' of Access Keys. To use Scoped Keys anyway, run: '
+               '`pip install pycryptodome` and try this again.',)
+    raise ie
+ 
 from keen import Padding
 
 __author__ = 'dkador'

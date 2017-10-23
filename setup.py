@@ -21,7 +21,7 @@ reqs_file = open(os.path.join(setup_path, 'requirements.txt'), 'r')
 reqs = reqs_file.readlines()
 reqs_file.close()
 
-tests_require = ['nose', 'mock', 'responses==0.5.1', 'unittest2']
+tests_require = ['nose', 'mock', 'responses==0.5.1', 'unittest2', 'pycryptodome>=3.4']
 
 setup(
     name="keen",
