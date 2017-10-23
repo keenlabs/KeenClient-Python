@@ -546,7 +546,8 @@ Create Scoped Keys (**Deprecated**)
 The Python client enables you to create `Scoped Keys <https://keen.io/docs/security/#scoped-key>`_ easily, but Access Keys are better! 
 If you need to use them anyway, here's how:
 
-.. code-block:: bash
+::
+
     pip install pycryptodome
 
 .. code-block:: python
