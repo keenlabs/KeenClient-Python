@@ -576,7 +576,7 @@ def update_access_key_permissions(access_key_id, permissions):
     _initialize_client_from_environment()
     return _client.update_access_key_permissions(access_key_id, permissions)
 
-def update_access_key_options(self, access_key_id, options):
+def update_access_key_options(access_key_id, options):
     """
     Replaces all of the options on the access key but does not change
     non-option properties such as permissions or the key's name.

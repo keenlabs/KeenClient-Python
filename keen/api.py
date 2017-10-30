@@ -333,7 +333,7 @@ class KeenApi(object):
         current_access_key = self.get_access_key(access_key_id)
 
         # Copy and only change the single parameter.
-        payload_dict = _build_access_key_dict(current_access_key)
+        payload_dict = KeenApi._build_access_key_dict(current_access_key)
         payload_dict[key] = val
 
         # Now just treat it like a full update.
@@ -362,13 +362,13 @@ class KeenApi(object):
         current_access_key = self.get_access_key(access_key_id)
 
         # Copy and only change the single parameter.
-        payload_dict = _build_access_key_dict(current_access_key)
+        payload_dict = KeenApi._build_access_key_dict(current_access_key)
 
         # Turn into sets to avoid duplicates.
-        old_permissions = set(payload_dict["permissions"])
+        old_permissions = set(payload_dict["permitted"])
         new_permissions = set(permissions)
         combined_permissions = old_permissions.union(new_permissions)
-        payload_dict["permissions"] = list(combined_permissions)
+        payload_dict["permitted"] = list(combined_permissions)
 
         # Now just treat it like a full update.
         return self.update_access_key_full(access_key_id, **payload_dict)
@@ -389,13 +389,13 @@ class KeenApi(object):
         current_access_key = self.get_access_key(access_key_id)
 
         # Copy and only change the single parameter.
-        payload_dict = _build_access_key_dict(current_access_key)
+        payload_dict = KeenApi._build_access_key_dict(current_access_key)
 
         # Turn into sets to avoid duplicates.
-        old_permissions = set(payload_dict["permissions"])
+        old_permissions = set(payload_dict["permitted"])
         removal_permissions = set(permissions)
-        reduced_permissions = old_permissions.difference_update(removal_permissions)
-        payload_dict["permissions"] = list(reduced_permissions)
+        reduced_permissions = old_permissions.difference(removal_permissions)
+        payload_dict["permitted"] = list(reduced_permissions)
 
         # Now just treat it like a full update.
         return self.update_access_key_full(access_key_id, **payload_dict)
@@ -411,7 +411,7 @@ class KeenApi(object):
         :param access_key_id: the 'key' value of the access key to change the permissions of
         :param permissions: the new list of permissions for this key
         """
-        return self._update_access_key_pair(access_key_id, "permissions", permission)
+        return self._update_access_key_pair(access_key_id, "permitted", permissions)
 
     @requires_key(KeenKeys.MASTER)
     def update_access_key_options(self, access_key_id, options):
