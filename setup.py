@@ -25,7 +25,7 @@ tests_require = ['nose', 'mock', 'responses==0.5.1', 'unittest2']
 
 setup(
     name="keen",
-    version="0.5.0",
+    version="0.5.1",
     description="Python Client for Keen IO",
     long_description=codecs.open(os.path.join('README.rst'), 'r', encoding='UTF-8').read(),
     author="Keen IO",

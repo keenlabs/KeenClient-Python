@@ -10,6 +10,7 @@ __author__ = 'BlackVegetable'
 class AccessKeyTests(BaseTestCase):
 
     ACCESS_KEY_NAME = "Bob_Key"
+    ACCESS_KEY_ID = "320104AEFFC569EEE60BCAC9BB064DFF9897E391AB8C59608AC0869AFD291B4E"
     ACCESS_KEY_RESPONSE = MockedResponse(
         status_code=201,
         json_response={'name': "Bob_Key",
@@ -73,24 +74,24 @@ class AccessKeyTests(BaseTestCase):
     @patch("requests.Session.get")
     def test_get_access_key(self, get):
         get.return_value = self.ACCESS_KEY_RESPONSE
-        resp = keen.get_access_key(self.ACCESS_KEY_NAME)
-        self.assertEqual("{0}/{1}".format(self.keys_uri_prefix, self.ACCESS_KEY_NAME), get.call_args[0][0])
+        resp = keen.get_access_key(self.ACCESS_KEY_ID)
+        self.assertEqual("{0}/{1}".format(self.keys_uri_prefix, self.ACCESS_KEY_ID), get.call_args[0][0])
         self._assert_proper_permissions(get, keen.master_key)
         self.assertEqual(resp, self.ACCESS_KEY_RESPONSE.json())
 
     @patch("requests.Session.post")
     def test_revoke_access_key(self, post):
         post.return_value = self.NO_CONTENT_RESPONSE
-        resp = keen.revoke_access_key(self.ACCESS_KEY_NAME)
-        self.assertEqual("{0}/{1}/revoke".format(self.keys_uri_prefix, self.ACCESS_KEY_NAME), post.call_args[0][0])
+        resp = keen.revoke_access_key(self.ACCESS_KEY_ID)
+        self.assertEqual("{0}/{1}/revoke".format(self.keys_uri_prefix, self.ACCESS_KEY_ID), post.call_args[0][0])
         self._assert_proper_permissions(post, keen.master_key)
         self.assertEqual(resp, self.NO_CONTENT_RESPONSE.json())
 
     @patch("requests.Session.post")
     def test_unrevoke_access_key(self, post):
         post.return_value = self.NO_CONTENT_RESPONSE
-        resp = keen.unrevoke_access_key(self.ACCESS_KEY_NAME)
-        self.assertEqual("{0}/{1}/unrevoke".format(self.keys_uri_prefix, self.ACCESS_KEY_NAME), post.call_args[0][0])
+        resp = keen.unrevoke_access_key(self.ACCESS_KEY_ID)
+        self.assertEqual("{0}/{1}/unrevoke".format(self.keys_uri_prefix, self.ACCESS_KEY_ID), post.call_args[0][0])
         self._assert_proper_permissions(post, keen.master_key)
         self.assertEqual(resp, self.NO_CONTENT_RESPONSE.json())
 
@@ -101,11 +102,24 @@ class AccessKeyTests(BaseTestCase):
         # well.
         post.return_value = self.UPDATED_ACCESS_KEY_RESPONSE
         options_dict = {"queries": self.UPDATED_ACCESS_KEY_RESPONSE.json_response["options"]["queries"]}
-        resp = keen.update_access_key_full(self.ACCESS_KEY_NAME,
+        resp = keen.update_access_key_full(self.ACCESS_KEY_ID,
                                            name=self.UPDATED_ACCESS_KEY_RESPONSE.json_response["name"],
                                            is_active=self.UPDATED_ACCESS_KEY_RESPONSE.json_response["is_active"],
                                            permitted=self.UPDATED_ACCESS_KEY_RESPONSE.json_response["permitted"],
                                            options=options_dict)
-        self.assertEqual("{0}/{1}".format(self.keys_uri_prefix, self.ACCESS_KEY_NAME), post.call_args[0][0])
+        self.assertEqual("{0}/{1}".format(self.keys_uri_prefix, self.ACCESS_KEY_ID), post.call_args[0][0])
         self._assert_proper_permissions(post, keen.master_key)
         self.assertEqual(resp, self.UPDATED_ACCESS_KEY_RESPONSE.json())
+
+    @patch("requests.Session.get")
+    @patch("requests.Session.post")
+    def test_sanity_of_update_functions(self, post, get):
+        post.return_value = self.UPDATED_ACCESS_KEY_RESPONSE
+        get.return_value = self.UPDATED_ACCESS_KEY_RESPONSE
+        # Ensure at the very least that the other access key functions don't crash when run.
+        keen.update_access_key_name(self.ACCESS_KEY_ID, name="Marzipan")
+        keen.add_access_key_permissions(self.ACCESS_KEY_ID, ["writes"])
+        keen.remove_access_key_permissions(self.ACCESS_KEY_ID, ["writes"])
+        keen.update_access_key_permissions(self.ACCESS_KEY_ID, ["writes", "cached_queries"])
+        keen.update_access_key_options(self.ACCESS_KEY_ID, options={})
+        self.assertTrue(True) # Best test assertion ever.

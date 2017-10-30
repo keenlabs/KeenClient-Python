@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+0.5.1
+``````
+
++ Fixed various Access Key bugs.
+
 0.5.0
 ``````
 + Added support for Access Keys.
