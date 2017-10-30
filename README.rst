@@ -572,7 +572,7 @@ To run tests:
 Changelog
 ---------
 
-This project is in alpha stage at version 0.5.0 . See the full CHANGELOG `here <./CHANGELOG.rst>`_.
+This project is in alpha stage at version 0.5.1 . See the full CHANGELOG `here <./CHANGELOG.rst>`_.
 
 
 Questions & Support
