@@ -390,3 +390,24 @@ class CachedDatasetsTestCase(BaseTestCase):
         )
 
         self.assertEqual(results, keen_response)
+
+    def test_delete_raises_with_no_keys(self):
+        client = KeenClient(project_id=self.project_id)
+        with self.assertRaises(exceptions.InvalidEnvironmentError):
+            client.cached_datasets.delete("MY_DATASET_NAME")
+
+    def test_create_raises_with_read_key(self):
+        client = KeenClient(project_id=self.project_id, read_key=self.read_key)
+        with self.assertRaises(exceptions.InvalidEnvironmentError):
+            client.cached_datasets.delete("MY_DATASET_NAME")
+
+    @responses.activate
+    def test_delete(self):
+        dataset_name = "MY_DATASET_NAME"
+        url = "{0}/{1}/projects/{2}/datasets/{3}".format(
+            self.client.api.base_url, self.client.api.api_version, self.project_id, dataset_name)
+        responses.add(responses.DELETE, url, status=204)
+
+        response = self.client.cached_datasets.delete(dataset_name)
+
+        self.assertTrue(response)

@@ -59,6 +59,14 @@ class CachedDatasetsInterface:
             HTTPMethods.GET, url, self._get_read_key(), params=query_params
         )
 
+    @requires_key(KeenKeys.MASTER)
+    def delete(self, dataset_name):
+        """ Delete a Cached Dataset. Master Key must be set.
+        """
+        url = "{0}/{1}".format(self._cached_datasets_url, dataset_name)
+        self._get_json(HTTPMethods.DELETE, url, self._get_master_key())
+        return True
+
     def _get_json(self, http_method, url, key, *args, **kwargs):
         response = self.api.fulfill(
             http_method,
