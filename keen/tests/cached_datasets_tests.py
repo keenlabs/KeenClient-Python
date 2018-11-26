@@ -114,3 +114,68 @@ class CachedDatasetsTestCase(BaseTestCase):
             self.project_id,
             self.datasets[0]['dataset_name']
         )
+
+    def test_create_raises_with_no_keys(self):
+        client = KeenClient(project_id=self.project_id)
+
+        with self.assertRaises(exceptions.InvalidEnvironmentError):
+            client.cached_datasets.create(
+                "NEW_DATASET", {}, "product.id", "My new dataset"
+            )
+
+    def test_create_raises_with_read_key(self):
+        client = KeenClient(project_id=self.project_id, read_key=self.read_key)
+
+        with self.assertRaises(exceptions.InvalidEnvironmentError):
+            client.cached_datasets.create(
+                "NEW_DATASET", {}, "product.id", "My new dataset"
+            )
+
+    @responses.activate
+    def test_create(self):
+        dataset_name = "NEW_DATASET"
+        display_name = "My new dataset"
+        query = {
+            "project_id": "PROJECT ID",
+            "analysis_type": "count",
+            "event_collection": "purchases",
+            "filters": [
+                {
+                    "property_name": "price",
+                    "operator": "gte",
+                    "property_value": 100
+                }
+            ],
+            "timeframe": "this_500_days",
+            "timezone": None,
+            "interval": "daily",
+            "group_by": ["ip_geo_info.country"]
+        }
+        index_by = "product.id"
+
+        keen_response = {
+            "project_id": self.project_id,
+            "organization_id": self.organization_id,
+            "dataset_name": dataset_name,
+            "display_name": display_name,
+            "query": query,
+            "index_by": index_by,
+            "last_scheduled_date": "1970-01-01T00:00:00.000Z",
+            "latest_subtimeframe_available": "1970-01-01T00:00:00.000Z",
+            "milliseconds_behind": 3600000
+        }
+
+        url = "{0}/{1}/projects/{2}/datasets/{3}".format(
+            self.client.api.base_url,
+            self.client.api.api_version,
+            self.project_id,
+            dataset_name
+        )
+
+        responses.add(responses.PUT, url, status=201, json=keen_response)
+
+        dataset = self.client.cached_datasets.create(
+            dataset_name, query, index_by, display_name
+        )
+
+        self.assertEqual(dataset, keen_response)
