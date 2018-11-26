@@ -20,6 +20,15 @@ class CachedDatasetsInterface:
                               self._cached_datasets_url,
                               self._get_master_key())
 
+    @requires_key(KeenKeys.READ)
+    def get(self, dataset_name):
+        """ Fetch a single Cached Dataset for a Project. Read key must be set.
+
+        :param dataset_name: Name of Cached Dataset (not `display_name`)
+        """
+        url = "{}/{}".format(self._cached_datasets_url, dataset_name)
+        return self._get_json(HTTPMethods.GET, url, self._get_read_key())
+
     def _get_json(self, http_method, url, key, *args, **kwargs):
         response = self.api.fulfill(
             http_method,

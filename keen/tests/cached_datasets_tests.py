@@ -97,3 +97,20 @@ class CachedDatasetsTestCase(BaseTestCase):
         all_cached_datasets = self.client.cached_datasets.all()
 
         self.assertEquals(all_cached_datasets, keen_response)
+
+    def test_get_one_raises_with_no_keys(self):
+        client = KeenClient(project_id=self.project_id)
+
+        with self.assertRaises(exceptions.InvalidEnvironmentError):
+            client.cached_datasets.get()
+
+    @responses.activate
+    def test_get_one(self):
+        keen_response = self.datasets[0]
+
+        url = "{0}/{1}/projects/{2}/datasets/{3}".format(
+            self.client.api.base_url,
+            self.client.api.api_version,
+            self.project_id,
+            self.datasets[0]['dataset_name']
+        )
