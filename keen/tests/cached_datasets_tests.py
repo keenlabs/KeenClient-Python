@@ -67,3 +67,33 @@ class CachedDatasetsTestCase(BaseTestCase):
                 "milliseconds_behind": 3600000,
             },
         ]
+
+    def test_get_all_raises_with_no_keys(self):
+        client = KeenClient(project_id=self.project_id)
+
+        with self.assertRaises(exceptions.InvalidEnvironmentError):
+            client.cached_datasets.all()
+
+    @responses.activate
+    def test_get_all(self):
+        keen_response = {
+            "datasets": self.datasets,
+            "next_page_url": (
+                "https://api.keen.io/3.0/projects/{0}/datasets?"
+                "limit=LIMIT&after_name={1}"
+            ).format(self.project_id, self.datasets[-1]['dataset_name'])
+        }
+
+        url = "{0}/{1}/projects/{2}/datasets".format(
+            self.client.api.base_url,
+            self.client.api.api_version,
+            self.project_id
+        )
+
+        responses.add(
+            responses.GET, url, status=200, json=keen_response
+        )
+
+        all_cached_datasets = self.client.cached_datasets.all()
+
+        self.assertEquals(all_cached_datasets, keen_response)
