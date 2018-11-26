@@ -406,6 +406,85 @@ You can manage your `saved queries <https://keen.io/docs/api/?shell#saved-querie
     # Delete a saved query (use the new resource name since we just changed it)
     client.saved_queries.delete("cached-query-name")
 
+Cached Datasets
+'''''''''''''''
+.. code-block:: python
+
+    # Create your KeenClient
+    from keen.client import KeenClient
+
+    client = KeenClient(
+        project_id="xxxx",  # your project ID
+        read_key="zzzz",
+        master_key="abcd" 
+    )
+
+    # Create a Cached Dataset
+    dataset_name = "NEW_DATASET"
+    display_name = "My new dataset"
+    query = {
+        "project_id": "PROJECT ID",
+        "analysis_type": "count",
+        "event_collection": "purchases",
+        "filters": [
+            {
+                "property_name": "price",
+                "operator": "gte",
+                "property_value": 100
+            }
+        ],
+        "timeframe": "this_500_days",
+        "timezone": None,
+        "interval": "daily",
+        "group_by": ["ip_geo_info.country"]
+    }
+    index_by = "product.id"
+    client.cached_datasets.create(
+        dataset_name,
+        query,
+        index_by,
+        display_name
+    )
+
+    # Get all Cached Datasets
+    client.cached_datasets.all()
+
+    # Get one Cached Dataset
+    client.cached_datasets.get(dataset_name)
+
+    # Retrieve Cached Dataset results
+    index_by = "a_project_id"
+    timeframe ="this_2_hours"
+    client.cached_datasets.results(
+        dataset_name,
+        index_by,
+        timeframe
+    )
+
+    # Using an absolute timeframe
+    timeframe = {
+        "start": "2018-11-02T00:00:00.000Z",
+        "end": "2018-11-02T02:00:00.000Z"
+    }
+    client.cached_datasets.results(
+        dataset_name,
+        index_by,
+        timeframe
+    )
+
+    # Using multiple index_by values
+    index_by = {
+        "project.id": "a_project_id",
+        "project.foo": "bar"
+    }
+    client.cached_datasets.results(
+        "dataset_with_multiple_indexes",
+        index_by,
+        timeframe
+    )
+
+    # Delete a Cached Dataset
+    client.cached_datasets.delete(dataset_name)
 
 Overwriting event timestamps
 ''''''''''''''''''''''''''''
