@@ -26,14 +26,14 @@ class CachedDatasetsInterface:
 
         :param dataset_name: Name of Cached Dataset (not `display_name`)
         """
-        url = "{}/{}".format(self._cached_datasets_url, dataset_name)
+        url = "{0}/{1}".format(self._cached_datasets_url, dataset_name)
         return self._get_json(HTTPMethods.GET, url, self._get_read_key())
 
     @requires_key(KeenKeys.MASTER)
     def create(self, dataset_name, query, index_by, display_name):
         """ Create a Cached Dataset for a Project. Master key must be set.
         """
-        url = "{}/{}".format(self._cached_datasets_url, dataset_name)
+        url = "{0}/{1}".format(self._cached_datasets_url, dataset_name)
         payload = {
             "query": query,
             "index_by": index_by,
