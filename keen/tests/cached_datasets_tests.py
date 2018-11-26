@@ -1,3 +1,5 @@
+import json
+
 import responses
 
 from keen import exceptions
@@ -179,3 +181,212 @@ class CachedDatasetsTestCase(BaseTestCase):
         )
 
         self.assertEqual(dataset, keen_response)
+
+    def test_results_raises_with_no_keys(self):
+        client = KeenClient(project_id=self.project_id)
+
+        with self.assertRaises(exceptions.InvalidEnvironmentError):
+            client.cached_datasets.results(
+                "DATASET_ONE", "product.id", "this_100_days"
+            )
+
+    @responses.activate
+    def test_results(self):
+        keen_response = {
+            "result": [
+                {
+                    "timeframe": {
+                        "start": "2016-11-02T00:00:00.000Z",
+                        "end": "2016-11-02T00:01:00.000Z"
+                    },
+                    "value": [
+                        {
+                            "exception.name": "ValueError",
+                            "result": 20
+                        },
+                        {
+                            "exception.name": "KeyError",
+                            "result": 18
+                        }
+                    ]
+                },
+                {
+                    "timeframe": {
+                        "start": "2016-11-02T01:00:00.000Z",
+                        "end": "2016-11-02T02:00:00.000Z"
+                    },
+                    "value": [
+                        {
+                            "exception.name": "ValueError",
+                            "result": 1
+                        },
+                        {
+                            "exception.name": "KeyError",
+                            "result": 13
+                        }
+                    ]
+                }
+            ]
+        }
+
+        dataset_name = self.datasets[0]["dataset_name"]
+        index_by = self.project_id
+        timeframe = "this_two_hours"
+
+        url = "{0}/{1}/projects/{2}/datasets/{3}/results?index_by={4}&timeframe={5}".format(
+            self.client.api.base_url,
+            self.client.api.api_version,
+            self.project_id,
+            dataset_name,
+            index_by,
+            timeframe
+        )
+
+        responses.add(
+            responses.GET,
+            url,
+            status=200,
+            json=keen_response,
+            match_querystring=True
+        )
+
+        results = self.client.cached_datasets.results(
+            dataset_name, index_by, timeframe
+        )
+
+        self.assertEqual(results, keen_response)
+
+    @responses.activate
+    def test_results_absolute_timeframe(self):
+        keen_response = {
+            "result": [
+                {
+                    "timeframe": {
+                        "start": "2016-11-02T00:00:00.000Z",
+                        "end": "2016-11-02T00:01:00.000Z"
+                    },
+                    "value": [
+                        {
+                            "exception.name": "ValueError",
+                            "result": 20
+                        },
+                        {
+                            "exception.name": "KeyError",
+                            "result": 18
+                        }
+                    ]
+                },
+                {
+                    "timeframe": {
+                        "start": "2016-11-02T01:00:00.000Z",
+                        "end": "2016-11-02T02:00:00.000Z"
+                    },
+                    "value": [
+                        {
+                            "exception.name": "ValueError",
+                            "result": 1
+                        },
+                        {
+                            "exception.name": "KeyError",
+                            "result": 13
+                        }
+                    ]
+                }
+            ]
+        }
+
+        dataset_name = self.datasets[0]["dataset_name"]
+        index_by = self.project_id
+        timeframe = {
+            "start": "2016-11-02T00:00:00.000Z",
+            "end": "2016-11-02T02:00:00.000Z"
+        }
+
+        url = "{0}/{1}/projects/{2}/datasets/{3}/results?index_by={4}&timeframe={5}".format(
+            self.client.api.base_url,
+            self.client.api.api_version,
+            self.project_id,
+            dataset_name,
+            index_by,
+            json.dumps(timeframe)
+        )
+
+        responses.add(
+            responses.GET,
+            url,
+            status=200,
+            json=keen_response,
+            match_querystring=True
+        )
+
+        results = self.client.cached_datasets.results(
+            dataset_name, index_by, timeframe
+        )
+
+        self.assertEqual(results, keen_response)
+
+    @responses.activate
+    def test_results_multiple_index_by(self):
+        keen_response = {
+            "result": [
+                {
+                    "timeframe": {
+                        "start": "2016-11-02T00:00:00.000Z",
+                        "end": "2016-11-02T00:01:00.000Z"
+                    },
+                    "value": [
+                        {
+                            "exception.name": "ValueError",
+                            "result": 20
+                        },
+                        {
+                            "exception.name": "KeyError",
+                            "result": 18
+                        }
+                    ]
+                },
+                {
+                    "timeframe": {
+                        "start": "2016-11-02T01:00:00.000Z",
+                        "end": "2016-11-02T02:00:00.000Z"
+                    },
+                    "value": [
+                        {
+                            "exception.name": "ValueError",
+                            "result": 1
+                        },
+                        {
+                            "exception.name": "KeyError",
+                            "result": 13
+                        }
+                    ]
+                }
+            ]
+        }
+
+        dataset_name = self.datasets[0]["dataset_name"]
+        index_by = [self.project_id, 'another_id']
+        timeframe = "this_two_hours"
+
+        url = "{0}/{1}/projects/{2}/datasets/{3}/results?index_by={4}&timeframe={5}".format(
+            self.client.api.base_url,
+            self.client.api.api_version,
+            self.project_id,
+            dataset_name,
+            json.dumps(index_by),
+            timeframe
+        )
+
+        responses.add(
+            responses.GET,
+            url,
+            status=200,
+            json=keen_response,
+            match_querystring=True
+        )
+
+        results = self.client.cached_datasets.results(
+            dataset_name, index_by, timeframe
+        )
+
+        self.assertEqual(results, keen_response)

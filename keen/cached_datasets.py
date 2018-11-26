@@ -41,6 +41,24 @@ class CachedDatasetsInterface:
         }
         return self._get_json(HTTPMethods.PUT, url, self._get_master_key(), json=payload)
 
+    @requires_key(KeenKeys.READ)
+    def results(self, dataset_name, index_by, timeframe):
+        """ Retrieve results from a Cached Dataset. Read key must be set.
+        """
+        url = "{0}/{1}/results".format(self._cached_datasets_url, dataset_name)
+
+        index_by = index_by if isinstance(index_by, str) else json.dumps(index_by)
+        timeframe = timeframe if isinstance(timeframe, str) else json.dumps(timeframe)
+
+        query_params = {
+            "index_by": index_by,
+            "timeframe": timeframe
+        }
+
+        return self._get_json(
+            HTTPMethods.GET, url, self._get_read_key(), params=query_params
+        )
+
     def _get_json(self, http_method, url, key, *args, **kwargs):
         response = self.api.fulfill(
             http_method,
