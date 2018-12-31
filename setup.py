@@ -49,5 +49,5 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    license=print ((open('LICENSE.txt','r')).read())
+    license=print((open('LICENSE.txt','r')).read())
 )
