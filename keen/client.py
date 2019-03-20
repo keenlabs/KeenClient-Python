@@ -2,7 +2,7 @@ import base64
 import copy
 import json
 import sys
-from keen import persistence_strategies, exceptions, saved_queries
+from keen import persistence_strategies, exceptions, saved_queries, cached_datasets
 from keen.api import KeenApi
 from keen.persistence_strategies import BasePersistenceStrategy
 
@@ -98,6 +98,7 @@ class KeenClient(object):
         self.get_timeout = get_timeout
         self.post_timeout = post_timeout
         self.saved_queries = saved_queries.SavedQueriesInterface(self.api)
+        self.cached_datasets = cached_datasets.CachedDatasetsInterface(self.api)
 
     if sys.version_info[0] < 3:
         @staticmethod
