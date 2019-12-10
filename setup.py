@@ -25,7 +25,7 @@ tests_require = ['nose', 'mock', 'responses==0.5.1', 'unittest2']
 
 setup(
     name="keen",
-    version="0.5.1",
+    version="0.5.2",
     description="Python Client for Keen IO",
     long_description=codecs.open(os.path.join('README.rst'), 'r', encoding='UTF-8').read(),
     author="Keen IO",
@@ -47,6 +47,8 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ]
 )

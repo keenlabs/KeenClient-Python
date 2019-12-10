@@ -5,7 +5,7 @@ from functools import wraps
 from keen import exceptions
 
 
-VERSION = "0.5.1"
+VERSION = "0.5.2"
 
 def version():
     """
