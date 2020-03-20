@@ -95,6 +95,14 @@ class AccessKeyTests(BaseTestCase):
         self._assert_proper_permissions(post, keen.master_key)
         self.assertEqual(resp, self.NO_CONTENT_RESPONSE.json())
 
+    @patch("requests.Session.delete")
+    def test_delete_access_key(self, delete):
+        delete.return_value = self.NO_CONTENT_RESPONSE
+        resp = keen.delete_access_key(self.ACCESS_KEY_ID)
+        self.assertEqual("{0}/{1}".format(self.keys_uri_prefix, self.ACCESS_KEY_ID), delete.call_args[0][0])
+        self._assert_proper_permissions(delete, keen.master_key)
+        self.assertEqual(resp, True)
+
     @patch("requests.Session.post")
     def test_update_access_key_full(self, post):
         # The update tests have a significant amount of logic that will not be tested via blackbox testing without

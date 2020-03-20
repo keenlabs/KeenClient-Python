@@ -567,45 +567,48 @@ The Python client enables the creation and manipulation of `Access Keys <https:/
     )
 
     # Create an access key. See: https://keen.io/docs/access/access-keys/#customizing-your-access-key
-    client.create_access_key(name="Dave_Barry_Key", is_enabled=True, permitted=["writes", "cached_queries"],
+    client.create_access_key(name="Dave_Barry_Key", is_active=True, permitted=["writes", "cached_queries"],
                              options={"cached_queries": {"allowed": ["dave_barry_in_cyberspace_sales"]}})
 
     # Display all access keys associated with this client's project.
     client.list_access_keys()
 
     # Get details on a particular access key.
-    client.get_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    client.get_access_key(key="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
     # Revoke (disable) an access key.
-    client.revoke_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    client.revoke_access_key(key="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
     # Unrevoke (re-enable) an access key.
-    client.unrevoke_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    client.unrevoke_access_key(key="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+    # Delete an access key
+    client.delete_access_key(key="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
     # Change just the name of an access key.
-    client.update_access_key_name(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", name="Some_New_Name")
+    client.update_access_key_name(key="ABCDEFGHIJKLMNOPQRSTUVWXYZ", name="Some_New_Name")
 
     # Add new access key permissions to existing permissions on a given key.
     # In this case the set of permissions currently contains "writes" and "cached_queries".
     # This function call keeps the old permissions and adds "queries" to that set.
     #     ("writes", "cached_queries") + ("queries") = ("writes", "cached_queries", "queries")
-    client.add_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["queries"])
+    client.add_access_key_permissions(key="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["queries"])
 
     # Remove one or more access key permissions from a given key.
     # In this case the set of permissions currently contains "writes", "cached_queries", and "queries".
     # This function call will keep the old permissions not explicitly removed here.
     # So we will remove both "writes" and "queries" from the set, leaving only "cached_queries".
     #     ("writes", "cached_queries", "queries") - ("writes", "queries") = ("cached_queries")
-    client.remove_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["writes", "queries"])
+    client.remove_access_key_permissions(key="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["writes", "queries"])
 
     # We can also perform a full update on the permissions, replacing all existing permissions with a new list.
     # In this case our existing permissions contains only "cached_queries".
     # We will replace this set with the "writes" permission with this function call.
     #     ("cached_queries") REPLACE-WITH ("writes") = ("writes")
-    client.update_access_key_permissions(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["writes"])
+    client.update_access_key_permissions(key="ABCDEFGHIJKLMNOPQRSTUVWXYZ", permissions=["writes"])
 
     # Replace all existing key options with this new options object.
-    client.update_access_key_options(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", options={"writes": {
+    client.update_access_key_options(key="ABCDEFGHIJKLMNOPQRSTUVWXYZ", options={"writes": {
         "autofill": {
             "customer": {
                 "id": "93iskds39kd93id",
@@ -617,7 +620,7 @@ The Python client enables the creation and manipulation of `Access Keys <https:/
     # Replace everything but the key ID with what is supplied here.
     # If a field is not supplied here, it will be set to a blank value.
     # In this case, no options are supplied, so all options will be removed.
-    client.update_access_key_full(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", name="Strong_Bad", is_active=True, permitted=["queries"])
+    client.update_access_key_full(key="ABCDEFGHIJKLMNOPQRSTUVWXYZ", name="Strong_Bad", is_active=True, permitted=["queries"])
 
 
 Create Scoped Keys (**Deprecated**)
@@ -652,7 +655,7 @@ To run tests:
 Changelog
 ---------
 
-This project is in alpha stage at version 0.5.2. See the full `CHANGELOG <./CHANGELOG.rst>`_.
+This project is in alpha stage at version 0.6.0. See the full `CHANGELOG <./CHANGELOG.rst>`_.
 
 
 Questions & Support
