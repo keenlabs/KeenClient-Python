@@ -1,12 +1,17 @@
 Changelog
 ---------
 
+0.6.1
+``````
+
++ Dropped support for Python 3.4
+
+
 0.6.0
 ``````
 
 + Added the delete_access_key method
 + Renamed the argument names in Access Key API (breaking change)
-+ Dropped support for Python 3.4
 
 
 0.5.2
