@@ -325,7 +325,7 @@ class KeenApi(object):
             "options": access_key["options"]
         }
 
-    def _update_access_key_pair(self, key, key, val):
+    def _update_access_key_pair(self, key, field, val):
         """
         Helper for updating access keys in a DRY fashion.
         """
@@ -334,7 +334,7 @@ class KeenApi(object):
 
         # Copy and only change the single parameter.
         payload_dict = KeenApi._build_access_key_dict(current_access_key)
-        payload_dict[key] = val
+        payload_dict[field] = val
 
         # Now just treat it like a full update.
         return self.update_access_key_full(key, **payload_dict)
