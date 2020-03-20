@@ -621,7 +621,7 @@ The Python client enables the creation and manipulation of `Access Keys <https:/
 
 
 Create Scoped Keys (**Deprecated**)
-''''''''''''''''''
+'''''''''''''''''''''''''''''''''''
 
 The Python client enables you to create `Scoped Keys <https://keen.io/docs/security/#scoped-key>`_ easily, but Access Keys are better! 
 If you need to use them anyway, for legacy reasons, here's how:
@@ -652,7 +652,7 @@ To run tests:
 Changelog
 ---------
 
-This project is in alpha stage at version 0.5.2. See the full CHANGELOG `here <./CHANGELOG.rst>`_.
+This project is in alpha stage at version 0.5.2. See the full `CHANGELOG <./CHANGELOG.rst>`_.
 
 
 Questions & Support
