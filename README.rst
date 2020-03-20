@@ -582,6 +582,9 @@ The Python client enables the creation and manipulation of `Access Keys <https:/
     # Unrevoke (re-enable) an access key.
     client.unrevoke_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
+    # Delete an access key
+    client.delete_access_key(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
     # Change just the name of an access key.
     client.update_access_key_name(access_key_id="ABCDEFGHIJKLMNOPQRSTUVWXYZ", name="Some_New_Name")
 

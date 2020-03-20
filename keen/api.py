@@ -481,6 +481,20 @@ class KeenApi(object):
         self._error_handling(response)
         return response.json()
 
+    @requires_key(KeenKeys.MASTER)
+    def delete_access_key(self, access_key_id):
+        """
+        Deletes an access key.
+
+        :param access_key_id: the 'key' value of the access key to delete
+        """
+        url = "{0}/{1}/projects/{2}/keys/{3}".format(self.base_url, self.api_version, self.project_id, access_key_id)
+        headers = utilities.headers(self.master_key)
+        response = self.fulfill(HTTPMethods.DELETE, url, headers=headers, timeout=self.get_timeout)
+
+        self._error_handling(response)
+        return True
+
     def _error_handling(self, res):
         """
         Helper function to do the error handling

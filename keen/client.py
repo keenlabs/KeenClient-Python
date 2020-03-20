@@ -304,6 +304,14 @@ class KeenClient(object):
         """
         return self.api.unrevoke_access_key(access_key_id)
 
+    def delete_access_key(self, access_key_id):
+        """
+        Deletes an access key.
+
+        :param access_key_id: the 'key' value of the access key to delete
+        """
+        return self.api.delete_access_key(access_key_id)
+
     def _base64_encode(self, string_to_encode):
         """ Base64 encodes a string, with either Python 2 or 3.
 

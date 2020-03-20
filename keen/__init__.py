@@ -618,3 +618,13 @@ def unrevoke_access_key(access_key_id):
     """
     _initialize_client_from_environment()
     return _client.unrevoke_access_key(access_key_id)
+
+
+def delete_access_key(access_key_id):
+    """
+    Deletes an access key.
+
+    :param access_key_id: the 'key' value of the access key to delete
+    """
+    _initialize_client_from_environment()
+    return _client.delete_access_key(access_key_id)
