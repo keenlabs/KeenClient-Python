@@ -297,14 +297,14 @@ class KeenApi(object):
         return response.json()
 
     @requires_key(KeenKeys.MASTER)
-    def get_access_key(self, access_key_id):
+    def get_access_key(self, key):
         """
         Returns details on a particular access key. A master key must be set first.
 
-        :param access_key_id: the 'key' value of the access key to retreive data from
+        :param key: the 'key' value of the access key to retreive data from
         """
         url = "{0}/{1}/projects/{2}/keys/{3}".format(self.base_url, self.api_version, self.project_id,
-                                                     access_key_id)
+                                                     key)
         headers = utilities.headers(self.master_key)
         response = self.fulfill(HTTPMethods.GET, url, headers=headers, timeout=self.get_timeout)
         self._error_handling(response)
@@ -325,41 +325,41 @@ class KeenApi(object):
             "options": access_key["options"]
         }
 
-    def _update_access_key_pair(self, access_key_id, key, val):
+    def _update_access_key_pair(self, key, key, val):
         """
         Helper for updating access keys in a DRY fashion.
         """
         # Get current state via HTTPS.
-        current_access_key = self.get_access_key(access_key_id)
+        current_access_key = self.get_access_key(key)
 
         # Copy and only change the single parameter.
         payload_dict = KeenApi._build_access_key_dict(current_access_key)
         payload_dict[key] = val
 
         # Now just treat it like a full update.
-        return self.update_access_key_full(access_key_id, **payload_dict)
+        return self.update_access_key_full(key, **payload_dict)
 
     @requires_key(KeenKeys.MASTER)
-    def update_access_key_name(self, access_key_id, name):
+    def update_access_key_name(self, key, name):
         """
         Updates only the name portion of an access key.
 
-        :param access_key_id: the 'key' value of the access key to change the name of
+        :param key: the 'key' value of the access key to change the name of
         :param name: the new name to give this access key
         """
-        return self._update_access_key_pair(access_key_id, "name", name)
+        return self._update_access_key_pair(key, "name", name)
         
     @requires_key(KeenKeys.MASTER)
-    def add_access_key_permissions(self, access_key_id, permissions):
+    def add_access_key_permissions(self, key, permissions):
         """
         Adds to the existing list of permissions on this key with the contents of this list.
         Will not remove any existing permissions or modify the remainder of the key.
 
-        :param access_key_id: the 'key' value of the access key to add permissions to
+        :param key: the 'key' value of the access key to add permissions to
         :param permissions: the new permissions to add to the existing list of permissions
         """
         # Get current state via HTTPS.
-        current_access_key = self.get_access_key(access_key_id)
+        current_access_key = self.get_access_key(key)
 
         # Copy and only change the single parameter.
         payload_dict = KeenApi._build_access_key_dict(current_access_key)
@@ -371,10 +371,10 @@ class KeenApi(object):
         payload_dict["permitted"] = list(combined_permissions)
 
         # Now just treat it like a full update.
-        return self.update_access_key_full(access_key_id, **payload_dict)
+        return self.update_access_key_full(key, **payload_dict)
 
     @requires_key(KeenKeys.MASTER)
-    def remove_access_key_permissions(self, access_key_id, permissions):
+    def remove_access_key_permissions(self, key, permissions):
         """
         Removes a list of permissions from the existing list of permissions.
         Will not remove all existing permissions unless all such permissions are included
@@ -382,11 +382,11 @@ class KeenApi(object):
 
         See also: revoke_access_key()
 
-        :param access_key_id: the 'key' value of the access key to remove some permissions from
+        :param key: the 'key' value of the access key to remove some permissions from
         :param permissions: the permissions you wish to remove from this access key
         """
         # Get current state via HTTPS.
-        current_access_key = self.get_access_key(access_key_id)
+        current_access_key = self.get_access_key(key)
 
         # Copy and only change the single parameter.
         payload_dict = KeenApi._build_access_key_dict(current_access_key)
@@ -398,47 +398,47 @@ class KeenApi(object):
         payload_dict["permitted"] = list(reduced_permissions)
 
         # Now just treat it like a full update.
-        return self.update_access_key_full(access_key_id, **payload_dict)
+        return self.update_access_key_full(key, **payload_dict)
 
     @requires_key(KeenKeys.MASTER)
-    def update_access_key_permissions(self, access_key_id, permissions):
+    def update_access_key_permissions(self, key, permissions):
         """
         Replaces all of the permissions on the access key but does not change
         non-permission properties such as the key's name.
 
         See also: add_access_key_permissions() and remove_access_key_permissions().
 
-        :param access_key_id: the 'key' value of the access key to change the permissions of
+        :param key: the 'key' value of the access key to change the permissions of
         :param permissions: the new list of permissions for this key
         """
-        return self._update_access_key_pair(access_key_id, "permitted", permissions)
+        return self._update_access_key_pair(key, "permitted", permissions)
 
     @requires_key(KeenKeys.MASTER)
-    def update_access_key_options(self, access_key_id, options):
+    def update_access_key_options(self, key, options):
         """
         Replaces all of the options on the access key but does not change
         non-option properties such as permissions or the key's name.
 
-        :param access_key_id: the 'key' value of the access key to change the options of
+        :param key: the 'key' value of the access key to change the options of
         :param options: the new dictionary of options for this key
         """
-        return self._update_access_key_pair(access_key_id, "options", options)
+        return self._update_access_key_pair(key, "options", options)
 
 
     @requires_key(KeenKeys.MASTER)
-    def update_access_key_full(self, access_key_id, name, is_active, permitted, options):
+    def update_access_key_full(self, key, name, is_active, permitted, options):
         """
         Replaces the 'name', 'is_active', 'permitted', and 'options' values of a given key.
         A master key must be set first.
 
-        :param access_key_id: the 'key' value of the access key for which the values will be replaced
+        :param key: the 'key' value of the access key for which the values will be replaced
         :param name: the new name desired for this access key
         :param is_active: whether the key should become enabled (True) or revoked (False)
         :param permitted: the new list of permissions desired for this access key
         :param options: the new dictionary of options for this access key
         """
         url = "{0}/{1}/projects/{2}/keys/{3}".format(self.base_url, self.api_version,
-                                                     self.project_id, access_key_id)
+                                                     self.project_id, key)
         headers = utilities.headers(self.master_key)
         payload_dict = {
             "name": name,
@@ -452,14 +452,14 @@ class KeenApi(object):
         return response.json()
 
     @requires_key(KeenKeys.MASTER)
-    def revoke_access_key(self, access_key_id):
+    def revoke_access_key(self, key):
         """
         Revokes an access key. "Bad dog! No biscuit!"
 
-        :param access_key_id: the 'key' value of the access key to revoke
+        :param key: the 'key' value of the access key to revoke
         """
         url = "{0}/{1}/projects/{2}/keys/{3}/revoke".format(self.base_url, self.api_version,
-                                                            self.project_id, access_key_id)
+                                                            self.project_id, key)
         headers = utilities.headers(self.master_key)
         response = self.fulfill(HTTPMethods.POST, url, headers=headers, timeout=self.get_timeout)
 
@@ -467,14 +467,14 @@ class KeenApi(object):
         return response.json()
 
     @requires_key(KeenKeys.MASTER)
-    def unrevoke_access_key(self, access_key_id):
+    def unrevoke_access_key(self, key):
         """
         Re-enables an access key.
 
-        :param access_key_id: the 'key' value of the access key to re-enable (unrevoke)
+        :param key: the 'key' value of the access key to re-enable (unrevoke)
         """
         url = "{0}/{1}/projects/{2}/keys/{3}/unrevoke".format(self.base_url, self.api_version,
-                                                              self.project_id, access_key_id)
+                                                              self.project_id, key)
         headers = utilities.headers(self.master_key)
         response = self.fulfill(HTTPMethods.POST, url, headers=headers, timeout=self.get_timeout)
 
@@ -482,13 +482,13 @@ class KeenApi(object):
         return response.json()
 
     @requires_key(KeenKeys.MASTER)
-    def delete_access_key(self, access_key_id):
+    def delete_access_key(self, key):
         """
         Deletes an access key.
 
-        :param access_key_id: the 'key' value of the access key to delete
+        :param key: the 'key' value of the access key to delete
         """
-        url = "{0}/{1}/projects/{2}/keys/{3}".format(self.base_url, self.api_version, self.project_id, access_key_id)
+        url = "{0}/{1}/projects/{2}/keys/{3}".format(self.base_url, self.api_version, self.project_id, key)
         headers = utilities.headers(self.master_key)
         response = self.fulfill(HTTPMethods.DELETE, url, headers=headers, timeout=self.get_timeout)
 
