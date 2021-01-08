@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+0.7.0
+``````
+
++ Do not force TLSv1 which is deprecated
+
+
 0.6.1
 ``````
 
