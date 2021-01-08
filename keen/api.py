@@ -34,12 +34,11 @@ class KeenAdapter(HTTPAdapter):
 
     def init_poolmanager(self, connections, maxsize, block=False):
 
-        """ Initialize pool manager with forced TLSv1 support. """
+        """ Initialize pool manager """
 
         self.poolmanager = PoolManager(num_pools=connections,
                                        maxsize=maxsize,
-                                       block=block,
-                                       ssl_version=ssl.PROTOCOL_TLSv1)
+                                       block=block)
 
 
 class KeenApi(object):
