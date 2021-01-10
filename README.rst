@@ -627,12 +627,16 @@ Create Scoped Keys (**Deprecated**)
 '''''''''''''''''''''''''''''''''''
 
 The Python client enables you to create `Scoped Keys <https://keen.io/docs/security/#scoped-key>`_ easily, but Access Keys are better! 
-If you need to use them anyway, for legacy reasons, here's how:
+If you need to use them anyway, here's how:
+
+::
+
+    pip install pycryptodome
 
 .. code-block:: python
 
     from keen.client import KeenClient
-    from keen import scoped_keys
+    from keen import scoped_keys # You must have pycryptodome installed!
 
     api_key = KEEN_MASTER_KEY
 
