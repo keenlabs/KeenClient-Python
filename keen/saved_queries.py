@@ -128,7 +128,7 @@ class SavedQueriesInterface:
         # for 'group_by', 'interval' or 'timezone', but those aren't accepted values when updating.
         old_query = old_saved_query[query_attr_name] # expected
 
-        # Shallow copy since we want the entire object heirarchy to start with.
+        # Shallow copy since we want the entire object hierarchy to start with.
         for (key, value) in six.iteritems(old_query):
             if value:
                 new_saved_query[query_attr_name][key] = value

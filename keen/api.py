@@ -300,7 +300,7 @@ class KeenApi(object):
         """
         Returns details on a particular access key. A master key must be set first.
 
-        :param key: the 'key' value of the access key to retreive data from
+        :param key: the 'key' value of the access key to retrieve data from
         """
         url = "{0}/{1}/projects/{2}/keys/{3}".format(self.base_url, self.api_version, self.project_id,
                                                      key)
